@@ -1,6 +1,5 @@
 import type { NextPage } from "next";
-import { GetStaticProps } from "next";
-import { InferGetStaticPropsType } from "next";
+import { GetStaticProps, InferGetStaticPropsType } from "next";
 
 import useFetch from "../lib/Pages/HomeLogic";
 import favouriteDishes from "../dishes-favourite";
