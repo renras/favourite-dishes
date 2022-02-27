@@ -1,6 +1,7 @@
 import type { NextPage } from "next";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 
+import Darkmode from "darkmode-js";
 import useFetch from "../lib/Pages/HomeLogic";
 import favouriteDishes from "../dishes-favourite";
 import Search from "../components/Search/Search";
@@ -13,6 +14,8 @@ const Home: NextPage = ({
   const { inputHandleChange, filterHandleChange, dishes, text } = useFetch({
     favouriteDishes,
   });
+
+  new Darkmode().showWidget();
 
   return (
     <>
