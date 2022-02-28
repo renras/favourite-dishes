@@ -1,5 +1,6 @@
 import type { NextPage } from "next";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
+import Head from "next/head";
 
 import Darkmode from "darkmode-js";
 import useFetch from "../lib/Pages/HomeLogic";
@@ -19,6 +20,9 @@ const Home: NextPage = ({
 
   return (
     <>
+      <Head>
+        <title>My Favourite Dishes</title>
+      </Head>
       <Search onChange={(e) => inputHandleChange(e)} value={text} />
       <Filter
         onChange={(e) => filterHandleChange(e)}
