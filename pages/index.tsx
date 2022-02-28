@@ -22,6 +22,10 @@ const Home: NextPage = ({
     <>
       <Head>
         <title>My Favourite Dishes</title>
+        <meta
+          name="description"
+          content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
+        />
       </Head>
       <Search onChange={(e) => inputHandleChange(e)} value={text} />
       <Filter
