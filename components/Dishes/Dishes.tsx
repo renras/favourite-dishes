@@ -1,6 +1,7 @@
 import React from "react";
 
 import Card from "../Card/Card";
+import styles from "./Dishes.module.css";
 
 interface Dish {
   name: string;
@@ -16,7 +17,7 @@ interface Props {
 
 const Dishes = ({ dishes }: Props) => {
   return (
-    <>
+    <div className={styles.dishes}>
       {dishes.map((dish: Dish) => (
         <Card
           key={dish.id}
@@ -26,7 +27,7 @@ const Dishes = ({ dishes }: Props) => {
           rating={dish.rating}
         />
       ))}
-    </>
+    </div>
   );
 };
 
