@@ -11,27 +11,27 @@ interface Props {
 }
 
 const Card = ({ name, image, description, rating }: Props) => {
-  const [isImageHidden, setIsImageHidden] = useState(true);
+  const [isImageBlurred, setIsImageBlurred] = useState(true);
 
   const imgClickHandler = () => {
-    setIsImageHidden(!isImageHidden);
+    setIsImageBlurred(false);
   };
 
   return (
     <div>
       <div
-        className={`${styles.imageWrapper_1} ${
-          !isImageHidden && styles.hidden
+        className={`${styles.imageWrapper} ${
+          isImageBlurred ? styles.blur : styles.showImage
         }`}
         onClick={imgClickHandler}
       >
-        <button>NSFW Click to view image</button>
-      </div>
-      <div
-        className={`${styles.imageWrapper_2} ${isImageHidden && styles.hidden}`}
-        onClick={imgClickHandler}
-      >
         <Image src={image} alt={name} width={200} height={200} />
+        <button
+          onClick={imgClickHandler}
+          className={(!isImageBlurred && styles.hidden) || ""}
+        >
+          NSFW Click to view image
+        </button>
       </div>
       <h2 className={styles.title}>{name}</h2>
       <div className={styles.text}>
