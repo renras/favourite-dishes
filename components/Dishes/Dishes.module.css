@@ -1,0 +1,5 @@
+.dishes {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(0px, 200px));
+  gap: 5rem;
+}
