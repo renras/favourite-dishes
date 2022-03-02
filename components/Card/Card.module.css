@@ -15,7 +15,7 @@
 
 .text {
   animation: bottom-to-top 1s ease-in-out 1s;
-  animation-fill-mode: backwards;
+  animation-fill-mode: before;
 }
 
 @keyframes bottom-to-top {
