@@ -12,3 +12,36 @@
     opacity: 1;
   }
 }
+
+.imgWrapper {
+  width: 200px;
+  height: 200px;
+}
+
+.img {
+  position: relative;
+  transition: all 1s;
+  width: 200px;
+  height: 200px;
+}
+
+.goBack {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 20;
+
+  animation: reveal 1s ease-in-out 0.5s;
+  animation-fill-mode: backwards;
+}
+
+@keyframes reveal {
+  0% {
+    transform: scale(0);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
