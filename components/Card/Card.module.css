@@ -29,31 +29,31 @@
   }
 }
 
-.imageWrapper {
+.imageWrapper_1 {
   border: 1px solid black;
   height: 200px;
   background: gray;
   position: relative;
 }
 
-.imageWrapper button {
+.imageWrapper_1 button {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
 }
 
-.blur img {
-  filter: blur(10px);
+.imageWrapper_2 {
+  animation: fade-in 1s ease-in-out;
 }
 
-.imageWrapper img {
-  opacity: 5;
-  transition: 1s;
-}
-
-.showImage img {
-  opacity: 1;
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
 }
 
 .hidden {
