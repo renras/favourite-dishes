@@ -5,4 +5,7 @@ const nextConfig = {
 
 module.exports = {
   nextConfig,
+  images: {
+    domains: ["www.willflyforfood.net"],
+  },
 };
