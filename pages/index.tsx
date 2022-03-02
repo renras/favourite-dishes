@@ -26,6 +26,7 @@ const Home: NextPage = ({
           name="description"
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
         />
+        <meta name="robots" content="all" />
       </Head>
       <Search onChange={(e) => inputHandleChange(e)} value={text} />
       <Filter
