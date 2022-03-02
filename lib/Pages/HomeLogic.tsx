@@ -6,6 +6,7 @@ interface Dish {
   description: string;
   rating: number;
   id: number;
+  placeholder: string;
 }
 
 const useFetch = ({ favouriteDishes }: { favouriteDishes: Dish[] }) => {

@@ -8,9 +8,10 @@ interface Props {
   image: string;
   description: string;
   rating: number;
+  placeholder: string;
 }
 
-const Card = ({ name, image, description, rating }: Props) => {
+const Card = ({ name, image, description, rating, placeholder }: Props) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const imgRef = useRef<HTMLImageElement>(null);
 
@@ -52,7 +53,13 @@ const Card = ({ name, image, description, rating }: Props) => {
           onClick={() => setIsFullScreen(true)}
         >
           <div ref={imgRef} className={styles.img} onClick={imgClickHandler}>
-            <Image src={image} alt={name} layout="fill" priority />
+            <Image
+              src={image}
+              alt={name}
+              layout="fill"
+              placeholder="blur"
+              blurDataURL={placeholder}
+            />
           </div>
         </div>
         <h2>{name}</h2>

@@ -9,6 +9,7 @@ interface Dish {
   description: string;
   rating: number;
   id: number;
+  placeholder: string;
 }
 
 interface Props {
@@ -25,6 +26,7 @@ const Dishes = ({ dishes }: Props) => {
           image={dish.image}
           description={dish.description}
           rating={dish.rating}
+          placeholder={dish.placeholder}
         />
       ))}
     </div>
