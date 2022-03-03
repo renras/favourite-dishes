@@ -23,6 +23,7 @@ const Home: NextPage = ({
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
   const [dishes, setDishes] = useState<Dish[]>(favouriteDishes);
   const [text, setText] = useState("");
+  const [showModal, setShowModal] = useState(false);
 
   const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);
@@ -56,6 +57,10 @@ const Home: NextPage = ({
 
   new Darkmode().showWidget();
 
+  const toggleModal = () => {
+    setShowModal(!showModal);
+  };
+
   return (
     <>
       <Head>
@@ -70,6 +75,7 @@ const Home: NextPage = ({
         onChange={(e) => filterHandleChange(e)}
         options={["Ascending", "Descending"]}
       />
+      <button onClick={toggleModal}>Add Food</button>
       <Dishes dishes={dishes} />
     </>
   );
