@@ -9,6 +9,8 @@ import Search from "../components/Search/Search";
 import Filter from "../components/Filter/Filter";
 import Dishes from "../components/Dishes/Dishes";
 import Modal from "../components/Modal/Modal";
+import Form from "../components/Form/Form";
+import GoBackButton from "../components/GoBackButton/GoBackButton";
 
 interface Dish {
   name: string;
@@ -78,7 +80,12 @@ const Home: NextPage = ({
       />
       <button onClick={toggleModal}>Add Food</button>
       <Dishes dishes={dishes} />
-      {showModal && <Modal showModal={showModal}>This is Modal!!!!!!!!</Modal>}
+      {showModal && (
+        <Modal showModal={showModal}>
+          <GoBackButton clickHandler={toggleModal} />
+          <Form />
+        </Modal>
+      )}
     </>
   );
 };

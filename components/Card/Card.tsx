@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 
 import Image from "next/image";
 import styles from "./Card.module.css";
+import GoBackButton from "../GoBackButton/GoBackButton";
 
 interface Props {
   name: string;
@@ -43,9 +44,11 @@ const Card = ({ name, image, description, rating, placeholder }: Props) => {
   return (
     <>
       {isFullScreen && (
-        <button className={styles.goBack} onClick={goBackHandler}>
-          Go Back
-        </button>
+        <GoBackButton
+          clickHandler={goBackHandler}
+          animate={true}
+          style={styles.goBack}
+        />
       )}
       <div className={styles.card}>
         <div
