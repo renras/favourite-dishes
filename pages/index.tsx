@@ -62,6 +62,7 @@ const Home: NextPage = ({
 
   const toggleModal = () => {
     setShowModal(!showModal);
+    document.documentElement.style.setProperty("--overflow", "auto");
   };
 
   return (
@@ -81,7 +82,7 @@ const Home: NextPage = ({
       <button onClick={toggleModal}>Add Food</button>
       <Dishes dishes={dishes} />
       {showModal && (
-        <Modal showModal={showModal}>
+        <Modal>
           <GoBackButton clickHandler={toggleModal} />
           <Form />
         </Modal>
