@@ -62,6 +62,7 @@ const Home: NextPage = ({
 
   const toggleModal = () => {
     setShowModal(!showModal);
+    document.documentElement.style.setProperty("--overflow", "auto");
   };
 
   return (
