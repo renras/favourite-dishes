@@ -21,7 +21,7 @@ const Modal = ({ children, showModal }: Props) => {
 
   if (typeof window === "object") {
     return ReactDom.createPortal(
-      <div className={styles.background}>{children}</div>,
+      <div className={styles.modal}>{children}</div>,
       document.getElementById("portal") as HTMLElement
     );
   }
