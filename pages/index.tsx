@@ -8,6 +8,7 @@ import favouriteDishes from "../dishes-favourite";
 import Search from "../components/Search/Search";
 import Filter from "../components/Filter/Filter";
 import Dishes from "../components/Dishes/Dishes";
+import Modal from "../components/Modal/Modal";
 
 interface Dish {
   name: string;
@@ -77,6 +78,7 @@ const Home: NextPage = ({
       />
       <button onClick={toggleModal}>Add Food</button>
       <Dishes dishes={dishes} />
+      {showModal && <Modal>This is Modal!!!!!!!!</Modal>}
     </>
   );
 };
