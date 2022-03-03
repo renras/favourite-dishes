@@ -10,11 +10,15 @@ interface Dish {
 }
 
 interface InitialState {
-  dishes: Dish[] | null;
+  dishes: Dish[];
+  inputText: string;
+  showModal: boolean;
 }
 
 const initialState: InitialState = {
-  dishes: null,
+  dishes: [] as Dish[],
+  inputText: "",
+  showModal: false,
 };
 
 const AppContext = createContext<{
@@ -25,12 +29,18 @@ const AppContext = createContext<{
   dispatch: () => null,
 });
 
-type Action = { type: "SET_DISHES"; payload: Dish[] };
-
+type Action =
+  | { type: "SET_DISHES"; payload: Dish[] }
+  | { type: "SET_INPUT_TEXT"; payload: string }
+  | { type: "TOGGLE_MODAL"; payload: boolean };
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
     case "SET_DISHES":
       return { ...state, dishes: action.payload };
+    case "SET_INPUT_TEXT":
+      return { ...state, inputText: action.payload };
+    case "TOGGLE_MODAL":
+      return { ...state, showModal: action.payload };
     default:
       return state;
   }

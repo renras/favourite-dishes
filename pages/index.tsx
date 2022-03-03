@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect } from "react";
 import type { NextPage } from "next";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
@@ -25,49 +25,52 @@ interface Dish {
 const Home: NextPage = ({
   favouriteDishes,
 }: InferGetStaticPropsType<typeof getStaticProps>) => {
-  const [dishes, setDishes] = useState<Dish[]>(favouriteDishes);
-  const [text, setText] = useState("");
-  const [showModal, setShowModal] = useState(false);
-  const appContext = useContext(AppContext);
+  const { state, dispatch } = useContext(AppContext);
 
-  // set dishes in reducer
-  // appContext.dispatch({ type: "SET_DISHES", payload: favouriteDishes });
-  console.log(appContext);
+  useEffect(() => {
+    const darkmode = new Darkmode();
+    darkmode.showWidget();
+
+    const setDishes = (dishes: Dish[]) => {
+      dispatch({ type: "SET_DISHES", payload: dishes });
+    };
+
+    setDishes(favouriteDishes);
+  }, [dispatch, favouriteDishes]);
 
   const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setText(e.target.value);
+    dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
 
     if (e.target.value === "") {
-      setDishes(favouriteDishes);
+      dispatch({ type: "SET_DISHES", payload: favouriteDishes });
       return;
     }
 
-    const newDishes = dishes.filter((dish: Dish) =>
+    const newDishes = favouriteDishes.filter((dish: Dish) =>
       dish.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
-    setDishes(newDishes);
+
+    dispatch({ type: "SET_DISHES", payload: newDishes });
   };
 
   const filterHandleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === "Ascending") {
-      const newDish = favouriteDishes.sort(
+      const newDish = state.dishes.sort(
         (a: Dish, b: Dish) => a.rating - b.rating
       );
-      setDishes([...newDish]);
+      dispatch({ type: "SET_DISHES", payload: newDish });
     }
 
     if (e.target.value === "Descending") {
-      const newDish = favouriteDishes.sort(
+      const newDish = state.dishes.sort(
         (a: Dish, b: Dish) => b.rating - a.rating
       );
-      setDishes([...newDish]);
+      dispatch({ type: "SET_DISHES", payload: newDish });
     }
   };
 
-  new Darkmode().showWidget();
-
   const toggleModal = () => {
-    setShowModal(!showModal);
+    dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 
@@ -80,14 +83,14 @@ const Home: NextPage = ({
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
         />
       </Head>
-      <Search onChange={(e) => inputHandleChange(e)} value={text} />
+      <Search onChange={(e) => inputHandleChange(e)} value={state.inputText} />
       <Filter
         onChange={(e) => filterHandleChange(e)}
         options={["Ascending", "Descending"]}
       />
       <button onClick={toggleModal}>Add Food</button>
-      <Dishes dishes={dishes} />
-      {showModal && (
+      <Dishes dishes={state.dishes} />
+      {state.showModal && (
         <Modal>
           <GoBackButton clickHandler={toggleModal} />
           <Form />
