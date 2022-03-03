@@ -78,7 +78,7 @@ const Home: NextPage = ({
       />
       <button onClick={toggleModal}>Add Food</button>
       <Dishes dishes={dishes} />
-      {showModal && <Modal>This is Modal!!!!!!!!</Modal>}
+      {showModal && <Modal showModal={showModal}>This is Modal!!!!!!!!</Modal>}
     </>
   );
 };
