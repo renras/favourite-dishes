@@ -24,3 +24,10 @@
   width: 200px;
   height: 200px;
 }
+
+.goBack {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 20;
+}

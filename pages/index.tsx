@@ -10,6 +10,7 @@ import Filter from "../components/Filter/Filter";
 import Dishes from "../components/Dishes/Dishes";
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
+import GoBackButton from "../components/GoBackButton/GoBackButton";
 
 interface Dish {
   name: string;
@@ -81,6 +82,7 @@ const Home: NextPage = ({
       <Dishes dishes={dishes} />
       {showModal && (
         <Modal showModal={showModal}>
+          <GoBackButton clickHandler={toggleModal} />
           <Form />
         </Modal>
       )}

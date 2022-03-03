@@ -44,7 +44,11 @@ const Card = ({ name, image, description, rating, placeholder }: Props) => {
   return (
     <>
       {isFullScreen && (
-        <GoBackButton clickHandler={goBackHandler} animate={true} />
+        <GoBackButton
+          clickHandler={goBackHandler}
+          animate={true}
+          style={styles.goBack}
+        />
       )}
       <div className={styles.card}>
         <div
