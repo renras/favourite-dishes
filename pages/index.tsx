@@ -19,7 +19,7 @@ interface Dish {
   description: string;
   rating: number;
   id: number;
-  placeholder: string;
+  placeholder?: string;
 }
 
 const Home: NextPage = ({

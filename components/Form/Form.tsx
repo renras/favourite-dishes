@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import styles from "./Form.module.css";
+import AppContext from "../../context/AppContext";
 
 type IFormInput = {
   title: string;
@@ -16,9 +17,25 @@ const Form = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
+  const { state, dispatch } = useContext(AppContext);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+    // add food
+    dispatch({
+      type: "ADD_DISH",
+      payload: {
+        id: state.dishes.length,
+        name: data.title,
+        image: data.imgUrl,
+        description: data.description,
+        rating: data.rating,
+      },
+    });
+
+    // close modal
+    dispatch({ type: "TOGGLE_MODAL", payload: false });
+
+    document.documentElement.style.setProperty("--overflow", "auto");
   };
 
   return (
@@ -41,7 +58,8 @@ const Form = () => {
         placeholder="url of image"
         {...register("imgUrl", {
           required: true,
-          pattern: /^(http(s?):)([/|.|\w|\s|-])*\.(?:jpg|png)$/g,
+          pattern:
+            /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
         })}
       />
       {errors.imgUrl?.type === "required" && <p>Image url is required</p>}

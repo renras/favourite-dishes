@@ -71,7 +71,7 @@ const Card = ({ name, image, description, rating, placeholder }: Props) => {
               src={image}
               alt={name}
               layout="fill"
-              placeholder="blur"
+              placeholder={placeholder ? "blur" : "empty"}
               blurDataURL={placeholder}
             />
           </div>
