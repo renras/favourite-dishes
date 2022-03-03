@@ -81,7 +81,7 @@ const Home: NextPage = ({
       <button onClick={toggleModal}>Add Food</button>
       <Dishes dishes={dishes} />
       {showModal && (
-        <Modal showModal={showModal}>
+        <Modal>
           <GoBackButton clickHandler={toggleModal} />
           <Form />
         </Modal>

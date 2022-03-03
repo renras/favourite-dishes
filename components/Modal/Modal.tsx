@@ -5,19 +5,12 @@ import styles from "./Modal.module.css";
 
 interface Props {
   children: React.ReactNode;
-  showModal: boolean;
 }
 
-const Modal = ({ children, showModal }: Props) => {
+const Modal = ({ children }: Props) => {
   useEffect(() => {
-    if (showModal) {
-      document.documentElement.style.setProperty("--overflow", "hidden");
-    }
-
-    if (!showModal) {
-      document.documentElement.style.setProperty("--overflow", "auto");
-    }
-  }, [showModal]);
+    document.documentElement.style.setProperty("--overflow", "hidden");
+  }, []);
 
   if (typeof window === "object") {
     return ReactDom.createPortal(
