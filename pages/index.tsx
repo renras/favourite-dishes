@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useContext, useState } from "react";
 import type { NextPage } from "next";
 import { GetStaticProps, InferGetStaticPropsType } from "next";
 import Head from "next/head";
+import AppContext from "../context/AppContext";
 
 import Darkmode from "darkmode-js";
 import favouriteDishes from "../dishes-favourite";
@@ -27,6 +28,11 @@ const Home: NextPage = ({
   const [dishes, setDishes] = useState<Dish[]>(favouriteDishes);
   const [text, setText] = useState("");
   const [showModal, setShowModal] = useState(false);
+  const appContext = useContext(AppContext);
+
+  // set dishes in reducer
+  // appContext.dispatch({ type: "SET_DISHES", payload: favouriteDishes });
+  console.log(appContext);
 
   const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setText(e.target.value);

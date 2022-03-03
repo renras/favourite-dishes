@@ -1,37 +1,46 @@
 import React, { createContext, useReducer } from "react";
 
-const AppContext = createContext<InitialState | null>(null);
+interface Dish {
+  name: string;
+  image: string;
+  description: string;
+  rating: number;
+  id: number;
+  placeholder: string;
+}
 
 interface InitialState {
-  name: string;
+  dishes: Dish[] | null;
 }
 
 const initialState: InitialState = {
-  name: "React",
+  dishes: null,
 };
 
-type Action = { type: "SET_NAME"; payload: string };
+const AppContext = createContext<{
+  state: InitialState;
+  dispatch: React.Dispatch<Action>;
+}>({
+  state: initialState,
+  dispatch: () => null,
+});
+
+type Action = { type: "SET_DISHES"; payload: Dish[] };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
-    case "SET_NAME":
-      return {
-        ...state,
-        name: action.payload,
-      };
+    case "SET_DISHES":
+      return { ...state, dishes: action.payload };
     default:
       return state;
   }
 };
 
-export const AppContextProvider = ({
-  children,
-}: {
-  children: React.ReactNode;
-}) => {
+export const AppContextProvider: React.FC = ({ children }) => {
   const [state, dispatch] = useReducer(reducer, initialState);
+
   return (
-    <AppContext.Provider value={{ ...state, ...dispatch }}>
+    <AppContext.Provider value={{ state, dispatch }}>
       {children}
     </AppContext.Provider>
   );
