@@ -28,21 +28,17 @@ const Home: NextPage = ({
 
   useEffect(() => {
     const darkmode = new Darkmode();
-
-    if (state.showDarkModeWidget) {
-      darkmode.showWidget();
-    }
+    darkmode.showWidget();
 
     const setDishes = (dishes: Dish[]) => {
       dispatch({ type: "SET_DISHES", payload: dishes });
     };
 
     setDishes(favouriteDishes);
-  }, [dispatch, favouriteDishes, state.showDarkModeWidget]);
+  }, [dispatch, favouriteDishes]);
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
-    dispatch({ type: "TOGGLE_DARK_MODE", payload: false });
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 

@@ -34,7 +34,6 @@ const Options = () => {
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
-    dispatch({ type: "TOGGLE_DARK_MODE", payload: false });
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 
