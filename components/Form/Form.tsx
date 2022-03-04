@@ -32,7 +32,6 @@ const Form = () => {
     });
 
     dispatch({ type: "TOGGLE_MODAL", payload: false });
-    dispatch({ type: "TOGGLE_DARK_MODE", payload: true });
 
     document.documentElement.style.setProperty("--overflow", "auto");
   };
