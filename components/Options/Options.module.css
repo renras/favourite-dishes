@@ -1,8 +1,5 @@
 .options {
-  margin: 0;
   display: flex;
-  flex-flow: row wrap;
-  width: 100%;
+  flex-wrap: wrap;
   justify-content: space-between;
-  gap: 1rem;
 }
