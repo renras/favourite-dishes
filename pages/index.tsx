@@ -30,14 +30,17 @@ const Home: NextPage = ({
 
   useEffect(() => {
     const darkmode = new Darkmode();
-    darkmode.showWidget();
+
+    if (state.showDarkModeWidget) {
+      darkmode.showWidget();
+    }
 
     const setDishes = (dishes: Dish[]) => {
       dispatch({ type: "SET_DISHES", payload: dishes });
     };
 
     setDishes(favouriteDishes);
-  }, [dispatch, favouriteDishes]);
+  }, [dispatch, favouriteDishes, state.showDarkModeWidget]);
 
   const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
@@ -72,6 +75,7 @@ const Home: NextPage = ({
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
+    dispatch({ type: "TOGGLE_DARK_MODE", payload: false });
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 

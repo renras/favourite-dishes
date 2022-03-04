@@ -20,7 +20,6 @@ const Form = () => {
   const { state, dispatch } = useContext(AppContext);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    // add food
     dispatch({
       type: "ADD_DISH",
       payload: {
@@ -32,8 +31,8 @@ const Form = () => {
       },
     });
 
-    // close modal
     dispatch({ type: "TOGGLE_MODAL", payload: false });
+    dispatch({ type: "TOGGLE_DARK_MODE", payload: true });
 
     document.documentElement.style.setProperty("--overflow", "auto");
   };
@@ -63,9 +62,7 @@ const Form = () => {
         })}
       />
       {errors.imgUrl?.type === "required" && <p>Image url is required</p>}
-      {errors.imgUrl?.type === "pattern" && (
-        <p>Enter a valid url. Only accepts images in jpg/png format.</p>
-      )}
+      {errors.imgUrl?.type === "pattern" && <p>Enter a valid url.</p>}
       <input
         placeholder="description"
         {...register("description", {

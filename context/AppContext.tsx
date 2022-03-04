@@ -13,6 +13,7 @@ interface InitialState {
   dishes: Dish[];
   inputText: string;
   showModal: boolean;
+  showDarkModeWidget: boolean;
   filteredDishes: Dish[];
 }
 
@@ -20,6 +21,7 @@ const initialState: InitialState = {
   dishes: [] as Dish[],
   inputText: "",
   showModal: false,
+  showDarkModeWidget: true,
   filteredDishes: [] as Dish[],
 };
 
@@ -36,7 +38,8 @@ type Action =
   | { type: "SET_INPUT_TEXT"; payload: string }
   | { type: "TOGGLE_MODAL"; payload: boolean }
   | { type: "ADD_DISH"; payload: Dish }
-  | { type: "FILTER_DISHES"; payload: Dish[] };
+  | { type: "FILTER_DISHES"; payload: Dish[] }
+  | { type: "TOGGLE_DARK_MODE"; payload: boolean };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
@@ -50,6 +53,8 @@ const reducer = (state: InitialState, action: Action) => {
       return { ...state, dishes: [...state.dishes, action.payload] };
     case "FILTER_DISHES":
       return { ...state, filteredDishes: action.payload };
+    case "TOGGLE_DARK_MODE":
+      return { ...state, showDarkModeWidget: action.payload };
     default:
       return state;
   }
