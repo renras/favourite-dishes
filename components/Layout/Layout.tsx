@@ -1,12 +1,14 @@
 import React from "react";
 
+import styles from "./Layout.module.css";
+
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
-      <header>
+      <header className={styles.header}>
         <h1>Favourite Dishes</h1>
       </header>
-      <main>{children}</main>
+      <main className={styles.main}>{children}</main>
     </>
   );
 };
