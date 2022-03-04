@@ -5,31 +5,12 @@ import Search from "../../components/Search/Search";
 import Filter from "../../components/Filter/Filter";
 import styles from "./Options.module.css";
 
-interface Dish {
-  name: string;
-  image: string;
-  description: string;
-  rating: number;
-  id: number;
-  placeholder?: string;
-}
-
 const Options = () => {
   const { state, dispatch } = useContext(AppContext);
 
   const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
-
-    if (e.target.value === "") {
-      dispatch({ type: "FILTER_DISHES", payload: state.dishes });
-      return;
-    }
-
-    const newDishes = state.dishes.filter((dish: Dish) =>
-      dish.name.toLowerCase().includes(e.target.value.toLowerCase())
-    );
-
-    dispatch({ type: "FILTER_DISHES", payload: newDishes });
+    dispatch({ type: "FILTER_DISHES" });
   };
 
   const toggleModal = () => {
@@ -39,18 +20,14 @@ const Options = () => {
 
   const filterHandleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === "Ascending") {
-      const newDish = state.dishes.sort(
-        (a: Dish, b: Dish) => a.rating - b.rating
-      );
-      dispatch({ type: "FILTER_DISHES", payload: newDish });
+      dispatch({ type: "SET_SORT", payload: "ASCENDING" });
     }
 
     if (e.target.value === "Descending") {
-      const newDish = state.dishes.sort(
-        (a: Dish, b: Dish) => b.rating - a.rating
-      );
-      dispatch({ type: "FILTER_DISHES", payload: newDish });
+      dispatch({ type: "SET_SORT", payload: "DESCENDING" });
     }
+
+    dispatch({ type: "FILTER_DISHES" });
   };
 
   return (
