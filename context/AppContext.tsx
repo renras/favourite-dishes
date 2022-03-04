@@ -1,5 +1,7 @@
 import React, { createContext, useReducer } from "react";
 
+import data from "../dishes-favourite";
+
 interface Dish {
   name: string;
   image: string;
@@ -15,14 +17,16 @@ interface InitialState {
   showModal: boolean;
   showDarkModeWidget: boolean;
   filteredDishes: Dish[];
+  sort: "none" | "ASCENDING" | "DESCENDING";
 }
 
 const initialState: InitialState = {
-  dishes: [] as Dish[],
+  dishes: data,
   inputText: "",
   showModal: false,
   showDarkModeWidget: true,
-  filteredDishes: [] as Dish[],
+  filteredDishes: data,
+  sort: "none",
 };
 
 const AppContext = createContext<{
@@ -38,12 +42,16 @@ type Action =
   | { type: "SET_INPUT_TEXT"; payload: string }
   | { type: "TOGGLE_MODAL"; payload: boolean }
   | { type: "ADD_DISH"; payload: Dish }
-  | { type: "FILTER_DISHES"; payload: Dish[] };
+  | { type: "FILTER_DISHES" }
+  | { type: "SET_SORT"; payload: "none" | "ASCENDING" | "DESCENDING" };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
     case "SET_DISHES":
-      return { ...state, dishes: action.payload };
+      return {
+        ...state,
+        dishes: action.payload,
+      };
     case "SET_INPUT_TEXT":
       return { ...state, inputText: action.payload };
     case "TOGGLE_MODAL":
@@ -51,7 +59,27 @@ const reducer = (state: InitialState, action: Action) => {
     case "ADD_DISH":
       return { ...state, dishes: [...state.dishes, action.payload] };
     case "FILTER_DISHES":
-      return { ...state, filteredDishes: action.payload };
+      const newDishes = state.dishes.filter((dish) =>
+        dish.name.toLowerCase().includes(state.inputText.toLowerCase())
+      );
+
+      if (state.sort === "ASCENDING") {
+        return {
+          ...state,
+          filteredDishes: newDishes.sort((a, b) => a.rating - b.rating),
+        };
+      }
+
+      if (state.sort === "DESCENDING") {
+        return {
+          ...state,
+          filteredDishes: newDishes.sort((a, b) => b.rating - a.rating),
+        };
+      }
+
+      return { ...state, filteredDishes: newDishes };
+    case "SET_SORT":
+      return { ...state, sort: action.payload };
     default:
       return state;
   }
