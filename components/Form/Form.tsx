@@ -24,7 +24,7 @@ const Form = () => {
     dispatch({
       type: "ADD_DISH",
       payload: {
-        id: state.dishes.length,
+        id: state.dishes.length + 1,
         name: data.title,
         image: data.imgUrl,
         description: data.description,
