@@ -12,6 +12,7 @@ import Dishes from "../components/Dishes/Dishes";
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
 import GoBackButton from "../components/GoBackButton/GoBackButton";
+import styles from "../styles/index.module.css";
 
 interface Dish {
   name: string;
@@ -29,14 +30,17 @@ const Home: NextPage = ({
 
   useEffect(() => {
     const darkmode = new Darkmode();
-    darkmode.showWidget();
+
+    if (state.showDarkModeWidget) {
+      darkmode.showWidget();
+    }
 
     const setDishes = (dishes: Dish[]) => {
       dispatch({ type: "SET_DISHES", payload: dishes });
     };
 
     setDishes(favouriteDishes);
-  }, [dispatch, favouriteDishes]);
+  }, [dispatch, favouriteDishes, state.showDarkModeWidget]);
 
   const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
@@ -71,6 +75,7 @@ const Home: NextPage = ({
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
+    dispatch({ type: "TOGGLE_DARK_MODE", payload: false });
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 
@@ -83,12 +88,17 @@ const Home: NextPage = ({
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
         />
       </Head>
-      <Search onChange={(e) => inputHandleChange(e)} value={state.inputText} />
-      <Filter
-        onChange={(e) => filterHandleChange(e)}
-        options={["Ascending", "Descending"]}
-      />
-      <button onClick={toggleModal}>Add Food</button>
+      <div className={styles.options}>
+        <Search
+          onChange={(e) => inputHandleChange(e)}
+          value={state.inputText}
+        />
+        <Filter
+          onChange={(e) => filterHandleChange(e)}
+          options={["Ascending", "Descending"]}
+        />
+        <button onClick={toggleModal}>Add Food</button>
+      </div>
       <Dishes
         dishes={
           state.filteredDishes.length > 0 ? state.filteredDishes : state.dishes
