@@ -29,7 +29,7 @@ const Options = () => {
       dish.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
 
-    dispatch({ type: "SET_DISHES", payload: newDishes });
+    dispatch({ type: "FILTER_DISHES", payload: newDishes });
   };
 
   const toggleModal = () => {
