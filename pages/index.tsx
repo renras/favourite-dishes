@@ -42,11 +42,11 @@ const Home: NextPage = ({
     dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
 
     if (e.target.value === "") {
-      dispatch({ type: "SET_DISHES", payload: favouriteDishes });
+      dispatch({ type: "FILTER_DISHES", payload: state.dishes });
       return;
     }
 
-    const newDishes = favouriteDishes.filter((dish: Dish) =>
+    const newDishes = state.dishes.filter((dish: Dish) =>
       dish.name.toLowerCase().includes(e.target.value.toLowerCase())
     );
 
@@ -58,14 +58,14 @@ const Home: NextPage = ({
       const newDish = state.dishes.sort(
         (a: Dish, b: Dish) => a.rating - b.rating
       );
-      dispatch({ type: "SET_DISHES", payload: newDish });
+      dispatch({ type: "FILTER_DISHES", payload: newDish });
     }
 
     if (e.target.value === "Descending") {
       const newDish = state.dishes.sort(
         (a: Dish, b: Dish) => b.rating - a.rating
       );
-      dispatch({ type: "SET_DISHES", payload: newDish });
+      dispatch({ type: "FILTER_DISHES", payload: newDish });
     }
   };
 
@@ -89,7 +89,11 @@ const Home: NextPage = ({
         options={["Ascending", "Descending"]}
       />
       <button onClick={toggleModal}>Add Food</button>
-      <Dishes dishes={state.dishes} />
+      <Dishes
+        dishes={
+          state.filteredDishes.length > 0 ? state.filteredDishes : state.dishes
+        }
+      />
       {state.showModal && (
         <Modal>
           <GoBackButton clickHandler={toggleModal} />
