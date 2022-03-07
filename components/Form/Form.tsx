@@ -1,8 +1,7 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useForm, SubmitHandler } from "react-hook-form";
 
 import styles from "./Form.module.css";
-import AppContext from "../../context/AppContext";
 
 type IFormInput = {
   title: string;
@@ -11,36 +10,21 @@ type IFormInput = {
   rating: number;
 };
 
-const Form = () => {
+const Form = ({
+  formSubmitHandler,
+}: {
+  formSubmitHandler: SubmitHandler<IFormInput>;
+}) => {
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const { state, dispatch } = useContext(AppContext);
-
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    dispatch({
-      type: "ADD_DISH",
-      payload: {
-        id: state.dishes.length + 1,
-        name: data.title,
-        image: data.imgUrl,
-        description: data.description,
-        rating: data.rating,
-      },
-    });
-    dispatch({ type: "SET_INPUT_TEXT", payload: "" });
-    dispatch({ type: "FILTER_DISHES" });
-    dispatch({ type: "TOGGLE_MODAL", payload: false });
-
-    document.documentElement.style.setProperty("--overflow", "auto");
-  };
 
   return (
     <form
       className={styles.form}
-      onSubmit={handleSubmit(onSubmit)}
+      onSubmit={handleSubmit(formSubmitHandler)}
       data-testid="form"
     >
       <input
