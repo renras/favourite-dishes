@@ -9,7 +9,12 @@ const Filter = ({ onChange, options }: Props) => {
   return (
     <div>
       <label htmlFor="rating">Sort list by rating:</label>
-      <select name="rating" id="rating" onChange={(e) => onChange(e)}>
+      <select
+        data-testid="select"
+        name="rating"
+        id="rating"
+        onChange={(e) => onChange(e)}
+      >
         <option hidden></option>
         {options.map((value: string, index: number) => (
           <option key={index} value={value}>

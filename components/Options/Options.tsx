@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import AppContext from "../../context/AppContext";
 
 import Search from "../../components/Search/Search";
-import Filter from "../../components/Filter/Filter";
+import Filter from "../Filter/Select";
 import styles from "./Options.module.css";
 
 const Options = () => {
