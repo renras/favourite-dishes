@@ -10,6 +10,13 @@ import Form from "../components/Form/Form";
 import GoBackButton from "../components/GoBackButton/GoBackButton";
 import Options from "../components/Options/Options";
 
+interface IFormInput {
+  title: string;
+  imgUrl: string;
+  description: string;
+  rating: number;
+}
+
 const Home: NextPage = () => {
   const { state, dispatch } = useContext(AppContext);
 
@@ -20,6 +27,24 @@ const Home: NextPage = () => {
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
+    document.documentElement.style.setProperty("--overflow", "auto");
+  };
+
+  const submitForm = (data: IFormInput) => {
+    dispatch({
+      type: "ADD_DISH",
+      payload: {
+        id: state.dishes.length + 1,
+        name: data.title,
+        image: data.imgUrl,
+        description: data.description,
+        rating: data.rating,
+      },
+    });
+    dispatch({ type: "SET_INPUT_TEXT", payload: "" });
+    dispatch({ type: "FILTER_DISHES" });
+    dispatch({ type: "TOGGLE_MODAL", payload: false });
+
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 
@@ -37,7 +62,7 @@ const Home: NextPage = () => {
       {state.showModal && (
         <Modal>
           <GoBackButton clickHandler={toggleModal} />
-          <Form />
+          <Form submitForm={(data: IFormInput) => submitForm(data)} />
         </Modal>
       )}
     </>
