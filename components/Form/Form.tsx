@@ -38,7 +38,11 @@ const Form = () => {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit(onSubmit)}>
+    <form
+      className={styles.form}
+      onSubmit={handleSubmit(onSubmit)}
+      data-testid="form"
+    >
       <input
         placeholder="title"
         {...register("title", {
