@@ -62,6 +62,7 @@ const Card = ({ name, image, description, rating, placeholder }: Props) => {
           onClick={() => setIsFullScreen(true)}
         >
           <div
+            data-testid="img-wrapper"
             ref={imgRef}
             style={divStyle}
             className={styles.img}
