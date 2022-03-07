@@ -4,17 +4,18 @@ import Head from "next/head";
 import AppContext from "../context/AppContext";
 
 import Darkmode from "darkmode-js";
-import Dishes from "../components/Dishes/Dishes";
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
-import GoBackButton from "../components/GoBackButton/GoBackButton";
-import Options from "../components/Options/Options";
+import styles from "../styles/index.module.css";
+import Card from "../components/Card/Card";
 
-interface IFormInput {
-  title: string;
-  imgUrl: string;
+interface Dish {
+  name: string;
+  image: string;
   description: string;
   rating: number;
+  id: number;
+  placeholder?: string;
 }
 
 const Home: NextPage = () => {
@@ -30,22 +31,21 @@ const Home: NextPage = () => {
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 
-  const submitForm = (data: IFormInput) => {
-    dispatch({
-      type: "ADD_DISH",
-      payload: {
-        id: state.dishes.length + 1,
-        name: data.title,
-        image: data.imgUrl,
-        description: data.description,
-        rating: data.rating,
-      },
-    });
-    dispatch({ type: "SET_INPUT_TEXT", payload: "" });
+  const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
     dispatch({ type: "FILTER_DISHES" });
-    dispatch({ type: "TOGGLE_MODAL", payload: false });
+  };
 
-    document.documentElement.style.setProperty("--overflow", "auto");
+  const selectHandleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    if (e.target.value === "Ascending") {
+      dispatch({ type: "SET_SORT", payload: "ASCENDING" });
+    }
+
+    if (e.target.value === "Descending") {
+      dispatch({ type: "SET_SORT", payload: "DESCENDING" });
+    }
+
+    dispatch({ type: "FILTER_DISHES" });
   };
 
   return (
@@ -57,12 +57,45 @@ const Home: NextPage = () => {
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
         />
       </Head>
-      <Options />
-      <Dishes dishes={state.filteredDishes} />
+      <div className={styles.options}>
+        <input
+          type="text"
+          placeholder="Search.."
+          onChange={(e) => inputHandleChange(e)}
+        />
+        <div>
+          <label htmlFor="rating">Sort list by rating:</label>
+          <select
+            data-testid="select"
+            name="rating"
+            id="rating"
+            onChange={(e) => selectHandleChange(e)}
+          >
+            <option hidden></option>
+            <option>ASCENDING</option>
+            <option>DESCENDING</option>
+          </select>
+        </div>
+        <button onClick={toggleModal}>Add Food</button>
+      </div>
+      <div className={styles.dishes}>
+        {state.filteredDishes.map((dish: Dish) => (
+          <Card
+            key={dish.id}
+            name={dish.name}
+            image={dish.image}
+            description={dish.description}
+            rating={dish.rating}
+            placeholder={dish.placeholder || ""}
+          />
+        ))}
+      </div>
       {state.showModal && (
         <Modal>
-          <GoBackButton clickHandler={toggleModal} />
-          <Form submitForm={(data: IFormInput) => submitForm(data)} />
+          <button className={styles.animate} onClick={toggleModal}>
+            Go Back
+          </button>
+          <Form />
         </Modal>
       )}
     </>
