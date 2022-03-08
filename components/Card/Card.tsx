@@ -49,10 +49,7 @@ const Card = ({ name, image, description, rating, placeholder }: Props) => {
   return (
     <>
       {isFullScreen && (
-        <button
-          className={`${styles.animate} ${styles.goBack}`}
-          onClick={goBackHandler}
-        >
+        <button className={styles.goBack} onClick={goBackHandler}>
           Go Back
         </button>
       )}
