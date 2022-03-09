@@ -10,6 +10,7 @@ import styles from "../styles/index.module.css";
 import Card from "../components/Card/Card";
 import Search from "../components/Search/Search";
 import Select from "../components/Select/Select";
+import Button from "../components/Button/Button";
 
 interface Dish {
   name: string;
@@ -193,7 +194,7 @@ const Home: NextPage = () => {
             options={["ASCENDING, DESCENDING"]}
           />
         </div>
-        <button onClick={toggleModal}>Add Food</button>
+        <Button onClick={toggleModal}>Add Food</Button>
       </div>
       <div className={styles.dishes}>
         {state.filteredDishes.map((dish: Dish) => (
