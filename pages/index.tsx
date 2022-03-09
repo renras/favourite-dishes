@@ -18,13 +18,137 @@ interface Dish {
   placeholder?: string;
 }
 
+interface Movie {
+  id?: number;
+  title?: string;
+  overview?: string;
+  rating?: number;
+}
+
 const Home: NextPage = () => {
   const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
     const darkmode = new Darkmode();
     darkmode.showWidget();
-  });
+
+    const getRequestToken = () => {
+      const requestToken = fetch(
+        "https://api.themoviedb.org/3/authentication/token/new?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+        {
+          method: "GET",
+          redirect: "follow",
+        }
+      )
+        .then((response) => response.text())
+        .then((result) => JSON.parse(result).request_token)
+        .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (requestToken) resolve(requestToken);
+      });
+    };
+
+    const validateRequestToken = (requestToken: string) => {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const raw = JSON.stringify({
+        username: "renzovisperas07",
+        password: "Ili563RSPioCB",
+        request_token: requestToken,
+      });
+
+      const requestOptions: RequestInit = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      const isValidateSuccess = fetch(
+        "https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          if (JSON.parse(result).success) {
+            return JSON.parse(result).request_token;
+          }
+        })
+        .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (isValidateSuccess) resolve(isValidateSuccess);
+      });
+    };
+
+    const getSessionId = (requestToken: string) => {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const raw = JSON.stringify({
+        request_token: requestToken,
+      });
+
+      const requestOptions: RequestInit = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      const sessionId = fetch(
+        "https://api.themoviedb.org/3/authentication/session/new?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          if (JSON.parse(result).success === true)
+            return JSON.parse(result).session_id;
+        })
+        .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (sessionId) {
+          resolve(sessionId);
+        }
+      });
+    };
+
+    const fetchFavoriteMoviesApi = (sessionId: string) => {
+      const favoriteMoviesApi = fetch(
+        `https://api.themoviedb.org/3/account/{account_id}/favorite/movies?session_id=${sessionId}&api_key=c992102db9c5fe7f53262e1c9ac7f3cf`,
+        {
+          method: "GET",
+          redirect: "follow",
+        }
+      )
+        .then((response) => response.text())
+        .then((result) => JSON.parse(result).results)
+        .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (favoriteMoviesApi) resolve(favoriteMoviesApi);
+      });
+    };
+
+    const getFavoriteMovies = async () => {
+      const requestToken = await getRequestToken();
+      const isValidateSuccess = await validateRequestToken(
+        requestToken as string
+      );
+      const validatedRequestToken = await isValidateSuccess;
+      const sessionId = await getSessionId(validatedRequestToken as string);
+      const favoriteMovies = await fetchFavoriteMoviesApi(sessionId as string);
+      dispatch({
+        type: "SET_FAVORITE_MOVIES",
+        payload: (await favoriteMovies) as Movie[],
+      });
+    };
+
+    getFavoriteMovies();
+  }, [dispatch]);
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });

@@ -2,6 +2,13 @@ import React, { createContext, useReducer } from "react";
 
 import data from "../dishes-favourite";
 
+interface Movie {
+  id?: number;
+  title?: string;
+  overview?: string;
+  rating?: number;
+}
+
 interface Dish {
   name: string;
   image: string;
@@ -18,6 +25,7 @@ interface InitialState {
   showDarkModeWidget: boolean;
   filteredDishes: Dish[];
   sort: "none" | "ASCENDING" | "DESCENDING";
+  favoriteMovies: Movie[] | null;
 }
 
 const initialState: InitialState = {
@@ -27,6 +35,7 @@ const initialState: InitialState = {
   showDarkModeWidget: true,
   filteredDishes: data,
   sort: "none",
+  favoriteMovies: null,
 };
 
 const AppContext = createContext<{
@@ -43,7 +52,9 @@ type Action =
   | { type: "TOGGLE_MODAL"; payload: boolean }
   | { type: "ADD_DISH"; payload: Dish }
   | { type: "FILTER_DISHES" }
-  | { type: "SET_SORT"; payload: "none" | "ASCENDING" | "DESCENDING" };
+  | { type: "SET_SORT"; payload: "none" | "ASCENDING" | "DESCENDING" }
+  | { type: "SET_REQUEST_TOKEN"; payload: string }
+  | { type: "SET_FAVORITE_MOVIES"; payload: Movie[] };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
@@ -80,6 +91,10 @@ const reducer = (state: InitialState, action: Action) => {
       return { ...state, filteredDishes: newDishes };
     case "SET_SORT":
       return { ...state, sort: action.payload };
+    case "SET_REQUEST_TOKEN":
+      return { ...state, requestToken: action.payload };
+    case "SET_FAVORITE_MOVIES":
+      return { ...state, favoriteMovies: action.payload };
     default:
       return state;
   }
