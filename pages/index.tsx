@@ -8,6 +8,9 @@ import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
 import styles from "../styles/index.module.css";
 import Card from "../components/Card/Card";
+import Search from "../components/ui/Search/Search";
+import Select from "../components/ui/Select/Select";
+import Button from "../components/ui/Button/Button";
 
 interface Dish {
   name: string;
@@ -155,12 +158,12 @@ const Home: NextPage = () => {
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 
-  const inputHandleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
     dispatch({ type: "FILTER_DISHES" });
   };
 
-  const selectHandleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
     if (e.target.value === "Ascending") {
       dispatch({ type: "SET_SORT", payload: "ASCENDING" });
     }
@@ -182,25 +185,16 @@ const Home: NextPage = () => {
         />
       </Head>
       <div className={styles.options}>
-        <input
-          type="text"
-          placeholder="Search.."
-          onChange={(e) => inputHandleChange(e)}
-        />
+        <Search onChange={(e) => inputChangeHandler(e)} />
         <div>
           <label htmlFor="rating">Sort list by rating:</label>
-          <select
-            data-testid="select"
+          <Select
+            onChange={(e) => selectChangeHandler(e)}
             name="rating"
-            id="rating"
-            onChange={(e) => selectHandleChange(e)}
-          >
-            <option hidden></option>
-            <option>ASCENDING</option>
-            <option>DESCENDING</option>
-          </select>
+            options={["ASCENDING, DESCENDING"]}
+          />
         </div>
-        <button onClick={toggleModal}>Add Food</button>
+        <Button onClick={toggleModal}>Add Food</Button>
       </div>
       <div className={styles.dishes}>
         {state.filteredDishes.map((dish: Dish) => (
