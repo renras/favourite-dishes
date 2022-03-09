@@ -82,7 +82,7 @@ const Home: NextPage = () => {
           <Select
             onChange={(e) => selectChangeHandler(e)}
             name="rating"
-            options={["ASCENDING, DESCENDING"]}
+            options={["Ascending", "Descending"]}
           />
         </div>
         <Button onClick={toggleModal}>Add Food</Button>
