@@ -12,22 +12,8 @@ import Search from "../components/ui/Search/Search";
 import Select from "../components/ui/Select/Select";
 import Button from "../components/ui/Button/Button";
 import { getFavoriteMovies } from "../lib/tmdb-api";
-
-interface Dish {
-  name: string;
-  image: string;
-  description: string;
-  rating: number;
-  id: number;
-  placeholder?: string;
-}
-
-interface Movie {
-  id?: number;
-  title?: string;
-  overview?: string;
-  rating?: number;
-}
+import { Dish } from "../context/AppContext";
+import { Movie } from "../context/AppContext";
 
 const Home: NextPage = () => {
   const { state, dispatch } = useContext(AppContext);
@@ -68,6 +54,13 @@ const Home: NextPage = () => {
     dispatch({ type: "FILTER_DISHES" });
   };
 
+  const showFavoriteDishes = () => {
+    dispatch({
+      type: "SET_SHOW_FAVORITE_DISHES",
+      payload: !state.showFavoriteDishes,
+    });
+  };
+
   return (
     <>
       <Head>
@@ -77,6 +70,9 @@ const Home: NextPage = () => {
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
         />
       </Head>
+      <div className={styles.buttonGroup}>
+        <Button onClick={showFavoriteDishes}>Show Favorite Dishes</Button>
+      </div>
       <div className={styles.options}>
         <Search onChange={(e) => inputChangeHandler(e)} />
         <div>
@@ -90,16 +86,29 @@ const Home: NextPage = () => {
         <Button onClick={toggleModal}>Add Food</Button>
       </div>
       <div className={styles.dishes}>
-        {state.filteredDishes.map((dish: Dish) => (
-          <Card
-            key={dish.id}
-            name={dish.name}
-            image={dish.image}
-            description={dish.description}
-            rating={dish.rating}
-            placeholder={dish.placeholder || ""}
-          />
-        ))}
+        {state.showFavoriteDishes &&
+          state.filteredDishes.map((dish: Dish) => (
+            <Card
+              key={dish.id}
+              name={dish.name}
+              image={dish.image}
+              description={dish.description}
+              rating={dish.rating}
+              placeholder={dish.placeholder || ""}
+            />
+          ))}
+        {!state.showFavoriteDishes &&
+          state.favoriteMovies?.map((movie: Movie) => (
+            <Card
+              key={movie.id}
+              name={movie.title as string}
+              image={
+                "https://images.pexels.com/photos/5662857/pexels-photo-5662857.png?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200"
+              }
+              description={movie.overview as string}
+              rating={Math.floor((movie.vote_average as number) / 2)}
+            />
+          ))}
       </div>
       {state.showModal && (
         <Modal>

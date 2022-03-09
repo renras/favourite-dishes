@@ -8,7 +8,7 @@ interface Props {
   image: string;
   description: string;
   rating: number;
-  placeholder: string;
+  placeholder?: string;
 }
 
 const fullScreenDivStyle: CSSProperties = {
