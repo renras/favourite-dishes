@@ -1,0 +1,7 @@
+.dishes {
+  display: grid;
+  justify-content: space-between;
+  grid-template-columns: repeat(auto-fill, 200px);
+  gap: 1rem;
+  width: 100%;
+}

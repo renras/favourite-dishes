@@ -2,14 +2,15 @@ import React, { createContext, useReducer } from "react";
 
 import data from "../dishes-favourite";
 
-interface Movie {
+export interface Movie {
   id?: number;
   title?: string;
   overview?: string;
   rating?: number;
+  vote_average?: number;
 }
 
-interface Dish {
+export interface Dish {
   name: string;
   image: string;
   description: string;
@@ -27,7 +28,6 @@ interface InitialState {
   sort: "none" | "ASCENDING" | "DESCENDING";
   favoriteMovies: Movie[] | null;
   showFavoriteDishes: boolean;
-  showFavoriteMovies: boolean;
 }
 
 const initialState: InitialState = {
@@ -39,7 +39,6 @@ const initialState: InitialState = {
   sort: "none",
   favoriteMovies: null,
   showFavoriteDishes: true,
-  showFavoriteMovies: false,
 };
 
 const AppContext = createContext<{
@@ -59,8 +58,7 @@ type Action =
   | { type: "SET_SORT"; payload: "none" | "ASCENDING" | "DESCENDING" }
   | { type: "SET_REQUEST_TOKEN"; payload: string }
   | { type: "SET_FAVORITE_MOVIES"; payload: Movie[] }
-  | { type: "SET_SHOW_FAVORITE_DISHES"; payload: boolean }
-  | { type: "SET_SHOW_FAVORITE_MOVIES"; payload: boolean };
+  | { type: "SET_SHOW_FAVORITE_DISHES"; payload: boolean };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
@@ -103,8 +101,6 @@ const reducer = (state: InitialState, action: Action) => {
       return { ...state, favoriteMovies: action.payload };
     case "SET_SHOW_FAVORITE_DISHES":
       return { ...state, showFavoriteDishes: action.payload };
-    case "SET_SHOW_FAVORITE_MOVIES":
-      return { ...state, showFavoriteMovies: action.payload };
     default:
       return state;
   }

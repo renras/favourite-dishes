@@ -105,7 +105,6 @@ export const getFavoriteMovies = async () => {
   const validatedRequestToken = await isValidateSuccess;
   const sessionId = await getSessionId(validatedRequestToken as string);
   const favoriteMovies = await fetchFavoriteMoviesApi(sessionId as string);
-  console.log(favoriteMovies);
 
   return await favoriteMovies;
 };
