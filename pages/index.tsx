@@ -76,13 +76,47 @@ const Home: NextPage = () => {
       });
     };
 
+    const getSessionId = (requestToken: string) => {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+
+      const raw = JSON.stringify({
+        request_token: requestToken,
+      });
+
+      const requestOptions: RequestInit = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      const sessionId = fetch(
+        "https://api.themoviedb.org/3/authentication/session/new?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          if (JSON.parse(result).success === true)
+            return JSON.parse(result).session_id;
+        })
+        .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (sessionId) {
+          resolve(sessionId);
+        }
+      });
+    };
+
     const getFavoriteMovies = async () => {
       const requestToken = await getRequestToken();
       const isValidateSuccess = await validateRequestToken(
         requestToken as string
       );
       const validatedRequestToken = await isValidateSuccess;
-      console.log(await validatedRequestToken);
+      const sessionId = getSessionId(validatedRequestToken as string);
+      console.log(await sessionId);
     };
 
     getFavoriteMovies();
