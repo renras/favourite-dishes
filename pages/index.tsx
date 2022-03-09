@@ -1,7 +1,7 @@
 import { useContext, useEffect } from "react";
-import type { NextPage } from "next";
 import Head from "next/head";
 import AppContext from "../context/AppContext";
+import { NextPage } from "next";
 
 import Darkmode from "darkmode-js";
 import Modal from "../components/Modal/Modal";
@@ -15,7 +15,11 @@ import { getFavoriteMovies } from "../lib/tmdb-api";
 import { Dish } from "../context/AppContext";
 import { Movie } from "../context/AppContext";
 
-const Home: NextPage = () => {
+interface Props {
+  favoriteMovies: Movie[];
+}
+
+const Home: NextPage<Props> = ({ favoriteMovies }) => {
   const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
@@ -25,12 +29,12 @@ const Home: NextPage = () => {
     const setFavoriteMovies = async () => {
       dispatch({
         type: "SET_FAVORITE_MOVIES",
-        payload: (await getFavoriteMovies()) as Movie[],
+        payload: favoriteMovies,
       });
     };
 
     setFavoriteMovies();
-  }, [dispatch]);
+  }, [dispatch, favoriteMovies]);
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
@@ -129,3 +133,17 @@ const Home: NextPage = () => {
 };
 
 export default Home;
+
+export async function getStaticProps() {
+  const favoriteMovies = await getFavoriteMovies(
+    process.env.TMDB_API_KEY as string,
+    process.env.TMDB_USERNAME as string,
+    process.env.TMDB_PASSWORD as string
+  );
+
+  return {
+    props: {
+      favoriteMovies,
+    },
+  };
+}
