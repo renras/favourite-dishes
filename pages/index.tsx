@@ -64,14 +64,20 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>My Favourite Dishes</title>
+        <title>
+          {state.showFavoriteDishes ? "Favorite Dishes" : "Favorite Movies"}
+        </title>
         <meta
           name="description"
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
         />
       </Head>
       <div className={styles.buttonGroup}>
-        <Button onClick={showFavoriteDishes}>Show Favorite Dishes</Button>
+        <Button onClick={showFavoriteDishes}>
+          {state.showFavoriteDishes
+            ? "Show Favorite Movies"
+            : "Show Favorite Dishes"}
+        </Button>
       </div>
       <div className={styles.options}>
         <Search onChange={(e) => inputChangeHandler(e)} />
@@ -80,7 +86,7 @@ const Home: NextPage = () => {
           <Select
             onChange={(e) => selectChangeHandler(e)}
             name="rating"
-            options={["ASCENDING, DESCENDING"]}
+            options={["Ascending", "Descending"]}
           />
         </div>
         <Button onClick={toggleModal}>Add Food</Button>
