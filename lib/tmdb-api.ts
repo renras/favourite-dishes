@@ -1,6 +1,6 @@
-export const getRequestToken = () => {
+export const getRequestToken = (apiKey: string) => {
   const requestToken = fetch(
-    "https://api.themoviedb.org/3/authentication/token/new?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+    `https://api.themoviedb.org/3/authentication/token/new?api_key=${apiKey}`,
     {
       method: "GET",
       redirect: "follow",
@@ -15,13 +15,18 @@ export const getRequestToken = () => {
   });
 };
 
-export const validateRequestToken = (requestToken: string) => {
+export const validateRequestToken = (
+  requestToken: string,
+  username: string,
+  password: string,
+  apiKey: string
+) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
   const raw = JSON.stringify({
-    username: "renzovisperas07",
-    password: "Ili563RSPioCB",
+    username: username,
+    password: password,
     request_token: requestToken,
   });
 
@@ -33,7 +38,7 @@ export const validateRequestToken = (requestToken: string) => {
   };
 
   const isValidateSuccess = fetch(
-    "https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+    `https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=${apiKey}`,
     requestOptions
   )
     .then((response) => response.text())
@@ -49,7 +54,7 @@ export const validateRequestToken = (requestToken: string) => {
   });
 };
 
-export const getSessionId = (requestToken: string) => {
+export const getSessionId = (requestToken: string, apiKey: string) => {
   const myHeaders = new Headers();
   myHeaders.append("Content-Type", "application/json");
 
@@ -65,7 +70,7 @@ export const getSessionId = (requestToken: string) => {
   };
 
   const sessionId = fetch(
-    "https://api.themoviedb.org/3/authentication/session/new?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+    `https://api.themoviedb.org/3/authentication/session/new?api_key=${apiKey}`,
     requestOptions
   )
     .then((response) => response.text())
@@ -82,9 +87,9 @@ export const getSessionId = (requestToken: string) => {
   });
 };
 
-export const fetchFavoriteMoviesApi = (sessionId: string) => {
+export const fetchFavoriteMoviesApi = (sessionId: string, apiKey: string) => {
   const favoriteMoviesApi = fetch(
-    `https://api.themoviedb.org/3/account/{account_id}/favorite/movies?session_id=${sessionId}&api_key=c992102db9c5fe7f53262e1c9ac7f3cf`,
+    `https://api.themoviedb.org/3/account/{account_id}/favorite/movies?session_id=${sessionId}&api_key=${apiKey}`,
     {
       method: "GET",
       redirect: "follow",
@@ -99,12 +104,24 @@ export const fetchFavoriteMoviesApi = (sessionId: string) => {
   });
 };
 
-export const getFavoriteMovies = async () => {
-  const requestToken = await getRequestToken();
-  const isValidateSuccess = await validateRequestToken(requestToken as string);
+export const getFavoriteMovies = async (
+  apiKey: string,
+  username: string,
+  password: string
+) => {
+  const requestToken = await getRequestToken(apiKey);
+  const isValidateSuccess = await validateRequestToken(
+    requestToken as string,
+    username,
+    password,
+    apiKey
+  );
   const validatedRequestToken = await isValidateSuccess;
-  const sessionId = await getSessionId(validatedRequestToken as string);
-  const favoriteMovies = await fetchFavoriteMoviesApi(sessionId as string);
+  const sessionId = await getSessionId(validatedRequestToken as string, apiKey);
+  const favoriteMovies = await fetchFavoriteMoviesApi(
+    sessionId as string,
+    apiKey
+  );
 
   return await favoriteMovies;
 };
