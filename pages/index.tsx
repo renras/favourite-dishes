@@ -64,7 +64,9 @@ const Home: NextPage = () => {
   return (
     <>
       <Head>
-        <title>My Favourite Dishes</title>
+        <title>
+          {state.showFavoriteDishes ? "Favorite Dishes" : "Favorite Movies"}
+        </title>
         <meta
           name="description"
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
