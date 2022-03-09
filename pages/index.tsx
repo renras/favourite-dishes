@@ -18,6 +18,13 @@ interface Dish {
   placeholder?: string;
 }
 
+interface Movie {
+  id?: number;
+  title?: string;
+  overview?: string;
+  rating?: number;
+}
+
 const Home: NextPage = () => {
   const { state, dispatch } = useContext(AppContext);
 
@@ -134,11 +141,14 @@ const Home: NextPage = () => {
       const validatedRequestToken = await isValidateSuccess;
       const sessionId = await getSessionId(validatedRequestToken as string);
       const favoriteMovies = await fetchFavoriteMoviesApi(sessionId as string);
-      console.log(await favoriteMovies);
+      dispatch({
+        type: "SET_FAVORITE_MOVIES",
+        payload: (await favoriteMovies) as Movie[],
+      });
     };
 
     getFavoriteMovies();
-  }, [dispatch, state.requestToken]);
+  }, [dispatch]);
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
