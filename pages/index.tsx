@@ -26,7 +26,7 @@ const Home: NextPage = () => {
     darkmode.showWidget();
 
     const getRequestToken = () => {
-      fetch(
+      const requestToken = fetch(
         "https://api.themoviedb.org/3/authentication/token/new?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
         {
           method: "GET",
@@ -34,18 +34,58 @@ const Home: NextPage = () => {
         }
       )
         .then((response) => response.text())
-        .then((result) =>
-          dispatch({
-            type: "SET_REQUEST_TOKEN",
-            payload: JSON.parse(result).request_token,
-          })
-        )
+        .then((result) => JSON.parse(result).request_token)
         .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (requestToken) resolve(requestToken);
+      });
     };
 
-    if (state.requestToken) console.log(state.requestToken);
+    const validateRequestToken = (requestToken: string) => {
+      const myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
 
-    getRequestToken();
+      const raw = JSON.stringify({
+        username: "renzovisperas07",
+        password: "Ili563RSPioCB",
+        request_token: requestToken,
+      });
+
+      const requestOptions: RequestInit = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow",
+      };
+
+      const isValidateSuccess = fetch(
+        "https://api.themoviedb.org/3/authentication/token/validate_with_login?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+        requestOptions
+      )
+        .then((response) => response.text())
+        .then((result) => {
+          if (JSON.parse(result).success) {
+            return JSON.parse(result).request_token;
+          }
+        })
+        .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (isValidateSuccess) resolve(isValidateSuccess);
+      });
+    };
+
+    const getFavoriteMovies = async () => {
+      const requestToken = await getRequestToken();
+      const isValidateSuccess = await validateRequestToken(
+        requestToken as string
+      );
+      const validatedRequestToken = await isValidateSuccess;
+      console.log(await validatedRequestToken);
+    };
+
+    getFavoriteMovies();
   }, [dispatch, state.requestToken]);
 
   const toggleModal = () => {
