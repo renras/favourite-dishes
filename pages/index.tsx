@@ -24,7 +24,29 @@ const Home: NextPage = () => {
   useEffect(() => {
     const darkmode = new Darkmode();
     darkmode.showWidget();
-  });
+
+    const getRequestToken = () => {
+      fetch(
+        "https://api.themoviedb.org/3/authentication/token/new?api_key=c992102db9c5fe7f53262e1c9ac7f3cf",
+        {
+          method: "GET",
+          redirect: "follow",
+        }
+      )
+        .then((response) => response.text())
+        .then((result) =>
+          dispatch({
+            type: "SET_REQUEST_TOKEN",
+            payload: JSON.parse(result).request_token,
+          })
+        )
+        .catch((error) => console.log("error", error));
+    };
+
+    if (state.requestToken) console.log(state.requestToken);
+
+    getRequestToken();
+  }, [dispatch, state.requestToken]);
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
