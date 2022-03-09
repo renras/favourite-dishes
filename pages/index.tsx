@@ -109,14 +109,32 @@ const Home: NextPage = () => {
       });
     };
 
+    const fetchFavoriteMoviesApi = (sessionId: string) => {
+      const favoriteMoviesApi = fetch(
+        `https://api.themoviedb.org/3/account/{account_id}/favorite/movies?session_id=${sessionId}&api_key=c992102db9c5fe7f53262e1c9ac7f3cf`,
+        {
+          method: "GET",
+          redirect: "follow",
+        }
+      )
+        .then((response) => response.text())
+        .then((result) => JSON.parse(result).results)
+        .catch((error) => console.log("error", error));
+
+      return new Promise((resolve) => {
+        if (favoriteMoviesApi) resolve(favoriteMoviesApi);
+      });
+    };
+
     const getFavoriteMovies = async () => {
       const requestToken = await getRequestToken();
       const isValidateSuccess = await validateRequestToken(
         requestToken as string
       );
       const validatedRequestToken = await isValidateSuccess;
-      const sessionId = getSessionId(validatedRequestToken as string);
-      console.log(await sessionId);
+      const sessionId = await getSessionId(validatedRequestToken as string);
+      const favoriteMovies = await fetchFavoriteMoviesApi(sessionId as string);
+      console.log(await favoriteMovies);
     };
 
     getFavoriteMovies();
