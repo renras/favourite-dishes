@@ -73,7 +73,11 @@ const Home: NextPage = () => {
         />
       </Head>
       <div className={styles.buttonGroup}>
-        <Button onClick={showFavoriteDishes}>Show Favorite Dishes</Button>
+        <Button onClick={showFavoriteDishes}>
+          {state.showFavoriteDishes
+            ? "Show Favorite Movies"
+            : "Show Favorite Dishes"}
+        </Button>
       </div>
       <div className={styles.options}>
         <Search onChange={(e) => inputChangeHandler(e)} />
