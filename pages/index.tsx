@@ -8,9 +8,9 @@ import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
 import styles from "../styles/index.module.css";
 import Card from "../components/Card/Card";
-import Search from "../components/Search/Search";
-import Select from "../components/Select/Select";
-import Button from "../components/Button/Button";
+import Search from "../components/ui/Search/Search";
+import Select from "../components/ui/Select/Select";
+import Button from "../components/ui/Button/Button";
 
 interface Dish {
   name: string;
