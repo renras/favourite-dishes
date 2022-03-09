@@ -77,6 +77,10 @@ const Home: NextPage = () => {
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
         />
       </Head>
+      <div className={styles.buttonGroup}>
+        <Button>Show Favorite Foods</Button>
+        <Button>Show Favorite Movies</Button>
+      </div>
       <div className={styles.options}>
         <Search onChange={(e) => inputChangeHandler(e)} />
         <div>
