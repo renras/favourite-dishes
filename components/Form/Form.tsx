@@ -64,17 +64,10 @@ const Form = () => {
         placeholder="description"
         {...register("description", {
           required: true,
-          pattern: /^[a-zA-z0-9]+(\s[a-zA-z0-9]+)*\.?$/g,
         })}
       />
       {errors.description?.type === "required" && (
         <p>Description is required</p>
-      )}
-      {errors.description?.type === "pattern" && (
-        <p>
-          Description should contain only letters, and a single space between
-          each word.
-        </p>
       )}
       <input
         placeholder="rating"
