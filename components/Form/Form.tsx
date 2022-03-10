@@ -2,6 +2,7 @@ import React, { useContext } from "react";
 import AppContext from "../../context/AppContext";
 import { useForm, SubmitHandler } from "react-hook-form";
 import isURL from "validator/lib/isURL";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 import styles from "./Form.module.css";
 
@@ -82,7 +83,21 @@ const Form = () => {
       {errors.rating?.type === ("min" || "max") && (
         <p>Pick a number from 1 to 5</p>
       )}
-      <input type="tel" placeholder="phone number" {...register("phone")} />
+      <input
+        type="tel"
+        placeholder="phone number"
+        {...register("phone", {
+          required: true,
+          validate: {
+            isValidPhoneNumber: (value) =>
+              isValidPhoneNumber(value as string, "PH"),
+          },
+        })}
+      />
+      {errors.phone?.type === "required" && <p>Phone number is required</p>}
+      {errors.phone?.type === "isValidPhoneNumber" && (
+        <p>Enter a valid phone number.</p>
+      )}
       <input type="submit" />
     </form>
   );
