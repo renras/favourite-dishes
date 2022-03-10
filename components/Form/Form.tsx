@@ -47,16 +47,9 @@ const Form = () => {
         placeholder="title"
         {...register("title", {
           required: true,
-          pattern: /^[a-zA-z]+(\s[a-zA-z]+)*$/g,
         })}
       />
       {errors.title?.type === "required" && <p>Title is required</p>}
-      {errors.title?.type === "pattern" && (
-        <p>
-          Title should contain only letters, and a single space between each
-          word.
-        </p>
-      )}
       <input
         placeholder="url of image"
         {...register("imgUrl", {
