@@ -10,6 +10,7 @@ interface IFormInput {
   imgUrl: string;
   description: string;
   rating: number;
+  phone?: string;
 }
 
 const Form = () => {
@@ -81,7 +82,7 @@ const Form = () => {
       {errors.rating?.type === ("min" || "max") && (
         <p>Pick a number from 1 to 5</p>
       )}
-      <input />
+      <input type="tel" placeholder="phone number" {...register("phone")} />
       <input type="submit" />
     </form>
   );
