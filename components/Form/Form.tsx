@@ -31,6 +31,7 @@ const Form = () => {
         image: data.imgUrl,
         description: data.description,
         rating: data.rating,
+        phone: data.phone,
       },
     });
     dispatch({ type: "SET_INPUT_TEXT", payload: "" });

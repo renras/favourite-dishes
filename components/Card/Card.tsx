@@ -9,6 +9,7 @@ interface Props {
   description: string;
   rating: number;
   placeholder?: string;
+  phone?: string;
 }
 
 const fullScreenDivStyle: CSSProperties = {
@@ -29,7 +30,14 @@ const closingDivStyle: CSSProperties = {
   zIndex: 1,
 };
 
-const Card = ({ name, image, description, rating, placeholder }: Props) => {
+const Card = ({
+  name,
+  image,
+  description,
+  rating,
+  placeholder,
+  phone,
+}: Props) => {
   const [isFullScreen, setIsFullScreen] = useState(false);
   const [divStyle, setDivStyle] = useState<CSSProperties>({});
   const imgRef = useRef<HTMLImageElement>(null);
@@ -77,6 +85,7 @@ const Card = ({ name, image, description, rating, placeholder }: Props) => {
         <h2>{name}</h2>
         <p>{description}</p>
         <p>Rating: {rating}</p>
+        {phone && <p>Phone: {phone}</p>}
       </div>
     </>
   );
