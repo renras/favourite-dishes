@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import AppContext from "../../context/AppContext";
 import { useForm, SubmitHandler } from "react-hook-form";
+import isURL from "validator/lib/isURL";
 
 import styles from "./Form.module.css";
 
@@ -54,12 +55,11 @@ const Form = () => {
         placeholder="url of image"
         {...register("imgUrl", {
           required: true,
-          pattern:
-            /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
+          validate: (value) => isURL(value),
         })}
       />
       {errors.imgUrl?.type === "required" && <p>Image url is required</p>}
-      {errors.imgUrl?.type === "pattern" && <p>Enter a valid url.</p>}
+      {errors.imgUrl?.type === "validate" && <p>Enter a valid url.</p>}
       <input
         placeholder="description"
         {...register("description", {
