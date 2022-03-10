@@ -45,6 +45,7 @@ const Form = () => {
       data-testid="form"
     >
       <input
+        type="text"
         placeholder="title"
         {...register("title", {
           required: true,
@@ -52,6 +53,7 @@ const Form = () => {
       />
       {errors.title?.type === "required" && <p>Title is required</p>}
       <input
+        type="text"
         placeholder="url of image"
         {...register("imgUrl", {
           required: true,
@@ -61,6 +63,7 @@ const Form = () => {
       {errors.imgUrl?.type === "required" && <p>Image url is required</p>}
       {errors.imgUrl?.type === "validate" && <p>Enter a valid url.</p>}
       <input
+        type="text"
         placeholder="description"
         {...register("description", {
           required: true,
@@ -70,11 +73,15 @@ const Form = () => {
         <p>Description is required</p>
       )}
       <input
+        type="number"
         placeholder="rating"
-        {...register("rating", { required: true, pattern: /^[1-5]$/ })}
+        {...register("rating", { required: true, min: 1, max: 5 })}
       />
       {errors.rating?.type === "required" && <p>Rating is required</p>}
-      {errors.rating?.type === "pattern" && <p>Pick a number from 1 to 5</p>}
+      {errors.rating?.type === ("min" || "max") && (
+        <p>Pick a number from 1 to 5</p>
+      )}
+      <input />
       <input type="submit" />
     </form>
   );
