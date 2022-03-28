@@ -17,6 +17,7 @@ export interface Dish {
   rating: number;
   id: number;
   placeholder?: string;
+  phone?: string;
 }
 
 interface InitialState {

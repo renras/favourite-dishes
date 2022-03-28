@@ -105,6 +105,7 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
               description={dish.description}
               rating={dish.rating}
               placeholder={dish.placeholder || ""}
+              phone={dish.phone || ""}
             />
           ))}
         {!state.showFavoriteDishes &&

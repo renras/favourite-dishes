@@ -1,6 +1,8 @@
 import React, { useContext } from "react";
 import AppContext from "../../context/AppContext";
 import { useForm, SubmitHandler } from "react-hook-form";
+import isURL from "validator/lib/isURL";
+import { isValidPhoneNumber } from "libphonenumber-js";
 
 import styles from "./Form.module.css";
 
@@ -9,6 +11,7 @@ interface IFormInput {
   imgUrl: string;
   description: string;
   rating: number;
+  phone?: string;
 }
 
 const Form = () => {
@@ -28,6 +31,7 @@ const Form = () => {
         image: data.imgUrl,
         description: data.description,
         rating: data.rating,
+        phone: data.phone,
       },
     });
     dispatch({ type: "SET_INPUT_TEXT", payload: "" });
@@ -44,51 +48,57 @@ const Form = () => {
       data-testid="form"
     >
       <input
+        type="text"
         placeholder="title"
         {...register("title", {
           required: true,
-          pattern: /^[a-zA-z]+(\s[a-zA-z]+)*$/g,
         })}
       />
       {errors.title?.type === "required" && <p>Title is required</p>}
-      {errors.title?.type === "pattern" && (
-        <p>
-          Title should contain only letters, and a single space between each
-          word.
-        </p>
-      )}
       <input
+        type="text"
         placeholder="url of image"
         {...register("imgUrl", {
           required: true,
-          pattern:
-            /[(http(s)?):\/\/(www\.)?a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)/,
+          validate: (value) => isURL(value),
         })}
       />
       {errors.imgUrl?.type === "required" && <p>Image url is required</p>}
-      {errors.imgUrl?.type === "pattern" && <p>Enter a valid url.</p>}
+      {errors.imgUrl?.type === "validate" && <p>Enter a valid url.</p>}
       <input
+        type="text"
         placeholder="description"
         {...register("description", {
           required: true,
-          pattern: /^[a-zA-z0-9]+(\s[a-zA-z0-9]+)*\.?$/g,
         })}
       />
       {errors.description?.type === "required" && (
         <p>Description is required</p>
       )}
-      {errors.description?.type === "pattern" && (
-        <p>
-          Description should contain only letters, and a single space between
-          each word.
-        </p>
-      )}
       <input
+        type="number"
         placeholder="rating"
-        {...register("rating", { required: true, pattern: /^[1-5]$/ })}
+        {...register("rating", { required: true, min: 1, max: 5 })}
       />
       {errors.rating?.type === "required" && <p>Rating is required</p>}
-      {errors.rating?.type === "pattern" && <p>Pick a number from 1 to 5</p>}
+      {errors.rating?.type === ("min" || "max") && (
+        <p>Pick a number from 1 to 5</p>
+      )}
+      <input
+        type="tel"
+        placeholder="phone number"
+        {...register("phone", {
+          required: true,
+          validate: {
+            isValidPhoneNumber: (value) =>
+              isValidPhoneNumber(value as string, "PH"),
+          },
+        })}
+      />
+      {errors.phone?.type === "required" && <p>Phone number is required</p>}
+      {errors.phone?.type === "isValidPhoneNumber" && (
+        <p>Enter a valid phone number.</p>
+      )}
       <input type="submit" />
     </form>
   );
