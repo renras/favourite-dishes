@@ -4,6 +4,8 @@ import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 interface Props {
   name: string;
@@ -22,6 +24,9 @@ const Card = ({
   placeholder,
   phone,
 }: Props) => {
+  const starIconCount = rating;
+  const starBorderIconCount = 5 - rating;
+
   return (
     <>
       <MuiCard sx={{ maxWidth: 345 }}>
@@ -46,7 +51,22 @@ const Card = ({
           {phone && <p>Phone: {phone}</p>}
         </CardContent>
         <CardActions sx={{ padding: "16px" }}>
-          <Typography component="p">Rating: {rating}</Typography>
+          <Typography
+            component="p"
+            sx={{ marginRight: "1rem", fontWeight: "medium" }}
+          >
+            Rating:
+          </Typography>
+          {[...Array(starIconCount)].map((element, index) => (
+            <div key={index}>
+              <StarIcon sx={{ color: "#fbc02d" }} />
+            </div>
+          ))}
+          {[...Array(starBorderIconCount)].map((element, index) => (
+            <div key={index}>
+              <StarBorderIcon sx={{ color: "#fbc02d" }} />
+            </div>
+          ))}
         </CardActions>
       </MuiCard>
     </>
