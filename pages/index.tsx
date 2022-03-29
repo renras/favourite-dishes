@@ -2,8 +2,10 @@ import { useContext, useEffect } from "react";
 import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
-
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
 import Darkmode from "darkmode-js";
+
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
 import styles from "../styles/index.module.css";
@@ -87,13 +89,13 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
       </div>
       <div className={styles.options}>
         <Search onChange={(e) => inputChangeHandler(e)} />
-        <div>
-          <label htmlFor="rating">Sort list by rating:</label>
+        <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
+          <Typography component="p">Sort List By Rating:</Typography>
           <Select
             onChange={(e) => selectChangeHandler(e)}
             options={["Ascending", "Descending"]}
           />
-        </div>
+        </Box>
         <Button onClick={toggleModal}>Add Food</Button>
       </div>
       <div className={styles.dishes}>
