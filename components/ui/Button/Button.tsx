@@ -1,4 +1,5 @@
 import React from "react";
+import MuiButton from "@mui/material/Button";
 
 interface Props {
   onClick?: (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => void;
@@ -6,7 +7,11 @@ interface Props {
 }
 
 const Button = ({ onClick, children }: Props) => {
-  return <button onClick={onClick}>{children}</button>;
+  return (
+    <MuiButton variant="contained" onClick={onClick}>
+      {children}
+    </MuiButton>
+  );
 };
 
 export default Button;

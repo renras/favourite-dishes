@@ -31,6 +31,15 @@ const Card = ({
     description.length > 150
   );
 
+  const starIcons = [];
+  const starBorderIcons = [];
+  for (let i = 0; i < starIconCount; i++) {
+    starIcons.push(<StarIcon key={i} sx={{ color: "#fbc02d" }} />);
+  }
+  for (let i = 0; i < starBorderIconCount; i++) {
+    starBorderIcons.push(<StarBorderIcon key={i} sx={{ color: "#fbc02d" }} />);
+  }
+
   return (
     <>
       <MuiCard sx={{ maxWidth: 345 }}>
@@ -50,7 +59,7 @@ const Card = ({
             {name}
           </Typography>
 
-          <Typography variant="body2" component="p">
+          <Typography variant="body2" component="p" gutterBottom>
             {isDescriptionLong ? (
               <>
                 {description.substring(0, 100)}...
@@ -78,16 +87,8 @@ const Card = ({
           >
             Rating:
           </Typography>
-          {[...Array(starIconCount)].map((element, index) => (
-            <div key={index}>
-              <StarIcon sx={{ color: "#fbc02d" }} />
-            </div>
-          ))}
-          {[...Array(starBorderIconCount)].map((element, index) => (
-            <div key={index}>
-              <StarBorderIcon sx={{ color: "#fbc02d" }} />
-            </div>
-          ))}
+          {starIcons}
+          {starBorderIcons}
         </CardActions>
       </MuiCard>
     </>
