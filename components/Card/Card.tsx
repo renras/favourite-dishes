@@ -3,6 +3,7 @@ import styles from "./Card.module.css";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import Typography from "@mui/material/Typography";
+import CardActions from "@mui/material/CardActions";
 
 interface Props {
   name: string;
@@ -42,9 +43,11 @@ const Card = ({
           <Typography variant="body2" component="p">
             {description}
           </Typography>
-          <p>Rating: {rating}</p>
           {phone && <p>Phone: {phone}</p>}
         </CardContent>
+        <CardActions sx={{ padding: "16px" }}>
+          <Typography component="p">Rating: {rating}</Typography>
+        </CardActions>
       </MuiCard>
     </>
   );

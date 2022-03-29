@@ -3,14 +3,6 @@
   border: 1px solid black;
 }
 
-.card h2 {
-  font-size: 2rem;
-}
-
-.card p {
-  font-size: 1.6rem;
-}
-
 @keyframes left-to-right {
   0% {
     transform: translateX(-100%);
