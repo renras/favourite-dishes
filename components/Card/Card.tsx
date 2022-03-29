@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Image from "next/image";
 import styles from "./Card.module.css";
 import MuiCard from "@mui/material/Card";
@@ -26,6 +27,9 @@ const Card = ({
 }: Props) => {
   const starIconCount = rating;
   const starBorderIconCount = 5 - rating;
+  const [isDescriptionLong, setIsDescriptionLong] = useState(
+    description.length > 150
+  );
 
   return (
     <>
@@ -45,8 +49,25 @@ const Card = ({
           <Typography variant="h6" component="h2" gutterBottom>
             {name}
           </Typography>
+
           <Typography variant="body2" component="p">
-            {description}
+            {isDescriptionLong ? (
+              <>
+                {description.substring(0, 100)}...
+                <Typography
+                  variant="body2"
+                  component="span"
+                  sx={{ marginLeft: ".5rem", cursor: "pointer" }}
+                  className={styles.readMore}
+                  color="primary"
+                  onClick={() => setIsDescriptionLong(false)}
+                >
+                  Read More
+                </Typography>
+              </>
+            ) : (
+              description
+            )}
           </Typography>
           {phone && <p>Phone: {phone}</p>}
         </CardContent>
