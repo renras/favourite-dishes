@@ -1,7 +1,12 @@
-import { useState, useRef, CSSProperties } from "react";
-
+import { useState } from "react";
 import Image from "next/image";
 import styles from "./Card.module.css";
+import MuiCard from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
+import CardActions from "@mui/material/CardActions";
+import StarIcon from "@mui/icons-material/Star";
+import StarBorderIcon from "@mui/icons-material/StarBorder";
 
 interface Props {
   name: string;
@@ -12,24 +17,6 @@ interface Props {
   phone?: string;
 }
 
-const fullScreenDivStyle: CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  zIndex: 1,
-};
-
-const closingDivStyle: CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "200px",
-  height: "200px",
-  zIndex: 1,
-};
-
 const Card = ({
   name,
   image,
@@ -38,55 +25,71 @@ const Card = ({
   placeholder,
   phone,
 }: Props) => {
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [divStyle, setDivStyle] = useState<CSSProperties>({});
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  const imgClickHandler = () => {
-    setDivStyle(fullScreenDivStyle);
-  };
-
-  const goBackHandler = () => {
-    setIsFullScreen(false);
-    setDivStyle(closingDivStyle);
-    setTimeout(() => {
-      setDivStyle({});
-    }, 800);
-  };
+  const starIconCount = rating;
+  const starBorderIconCount = 5 - rating;
+  const [isDescriptionLong, setIsDescriptionLong] = useState(
+    description.length > 150
+  );
 
   return (
     <>
-      {isFullScreen && (
-        <button className={styles.goBack} onClick={goBackHandler}>
-          Go Back
-        </button>
-      )}
-      <div className={styles.card}>
-        <div
-          className={styles.imgWrapper}
-          onClick={() => setIsFullScreen(true)}
-        >
-          <div
-            data-testid="img-wrapper"
-            ref={imgRef}
-            style={divStyle}
-            className={styles.img}
-            onClick={imgClickHandler}
+      <MuiCard sx={{ maxWidth: 345 }}>
+        <Image
+          className={styles.image}
+          src={image}
+          alt={name}
+          width={345}
+          height={140}
+          placeholder={placeholder ? "blur" : "empty"}
+          blurDataURL={placeholder}
+          objectFit="cover"
+          objectPosition="center"
+        />
+        <CardContent>
+          <Typography variant="h6" component="h2" gutterBottom>
+            {name}
+          </Typography>
+
+          <Typography variant="body2" component="p">
+            {isDescriptionLong ? (
+              <>
+                {description.substring(0, 100)}...
+                <Typography
+                  variant="body2"
+                  component="span"
+                  sx={{ marginLeft: ".5rem", cursor: "pointer" }}
+                  className={styles.readMore}
+                  color="primary"
+                  onClick={() => setIsDescriptionLong(false)}
+                >
+                  Read More
+                </Typography>
+              </>
+            ) : (
+              description
+            )}
+          </Typography>
+          {phone && <p>Phone: {phone}</p>}
+        </CardContent>
+        <CardActions sx={{ padding: "16px" }}>
+          <Typography
+            component="p"
+            sx={{ marginRight: "1rem", fontWeight: "medium" }}
           >
-            <Image
-              src={image}
-              alt={name}
-              layout="fill"
-              placeholder={placeholder ? "blur" : "empty"}
-              blurDataURL={placeholder}
-            />
-          </div>
-        </div>
-        <h2>{name}</h2>
-        <p>{description}</p>
-        <p>Rating: {rating}</p>
-        {phone && <p>Phone: {phone}</p>}
-      </div>
+            Rating:
+          </Typography>
+          {[...Array(starIconCount)].map((element, index) => (
+            <div key={index}>
+              <StarIcon sx={{ color: "#fbc02d" }} />
+            </div>
+          ))}
+          {[...Array(starBorderIconCount)].map((element, index) => (
+            <div key={index}>
+              <StarBorderIcon sx={{ color: "#fbc02d" }} />
+            </div>
+          ))}
+        </CardActions>
+      </MuiCard>
     </>
   );
 };

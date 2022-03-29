@@ -6,10 +6,10 @@
 
 .dishes {
   display: grid;
+  grid-template-columns: repeat(auto-fit, 345px);
+  align-items: start;
   justify-content: space-between;
-  grid-template-columns: repeat(auto-fill, 200px);
-  gap: 1rem;
-  width: 100%;
+  gap: 100px 50px;
 }
 
 .buttonGroup {
