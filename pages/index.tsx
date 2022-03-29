@@ -7,6 +7,7 @@ import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Darkmode from "darkmode-js";
 import MuiButton from "@mui/material/Button";
+import { ToastContainer } from "react-toastify";
 
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
@@ -175,6 +176,7 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
           <Form />
         </Modal>
       )}
+      <ToastContainer />
     </>
   );
 };

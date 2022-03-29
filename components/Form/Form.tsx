@@ -9,6 +9,8 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
+import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 interface IFormInput {
   title: string;
@@ -38,6 +40,21 @@ const Form = () => {
         phone: data.phone,
       },
     });
+
+    const notify = () => {
+      toast.success("Dish Added!", {
+        position: "bottom-left",
+        autoClose: 1000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        draggable: true,
+        progress: undefined,
+      });
+    };
+
+    notify();
+
     dispatch({ type: "SET_INPUT_TEXT", payload: "" });
     dispatch({ type: "FILTER_DISHES" });
     dispatch({ type: "TOGGLE_MODAL", payload: false });
