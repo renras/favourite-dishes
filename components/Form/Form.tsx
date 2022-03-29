@@ -88,14 +88,13 @@ const Form = () => {
         type="tel"
         placeholder="phone number"
         {...register("phone", {
-          required: true,
+          required: false,
           validate: {
             isValidPhoneNumber: (value) =>
-              isValidPhoneNumber(value as string, "PH"),
+              isValidPhoneNumber(value as string, "PH") || value === "",
           },
         })}
       />
-      {errors.phone?.type === "required" && <p>Phone number is required</p>}
       {errors.phone?.type === "isValidPhoneNumber" && (
         <p>Enter a valid phone number.</p>
       )}

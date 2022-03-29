@@ -92,7 +92,7 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
       <Container
         maxWidth="xl"
         disableGutters
-        sx={{ display: "flex", gap: "20px" }}
+        sx={{ display: "flex", gap: "20px", marginTop: "50px" }}
       >
         <MuiButton
           variant="text"
@@ -120,6 +120,7 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
         </MuiButton>
       </Container>
       <Container
+        disableGutters
         maxWidth="xl"
         sx={{
           paddingTop: "25px",
@@ -135,7 +136,7 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
               options={["Ascending", "Descending"]}
             />
           </Box>
-          <Button onClick={toggleModal}>Add Food</Button>
+          <Button onClick={toggleModal}>Add Dish</Button>
         </div>
         <Container
           maxWidth={false}
