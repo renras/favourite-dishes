@@ -2,27 +2,30 @@ import { useContext, useEffect } from "react";
 import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
+import Darkmode from "darkmode-js";
+import { ToastContainer } from "react-toastify";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../lib/firebase-config";
+import { getFavoriteMovies } from "../lib/tmdb-api";
+
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import Darkmode from "darkmode-js";
 import MuiButton from "@mui/material/Button";
-import { ToastContainer } from "react-toastify";
-
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
 import styles from "../styles/index.module.css";
 import Card from "../components/Card/Card";
 import Search from "../components/ui/Search/Search";
 import Select from "../components/ui/Select/Select";
-import { getFavoriteMovies } from "../lib/tmdb-api";
 import { Dish } from "../context/AppContext";
 import { Movie } from "../context/AppContext";
 
 interface Props {
   favoriteMovies: Movie[];
+  favoriteDishes: Dish[];
 }
 
-const Home: NextPage<Props> = ({ favoriteMovies }) => {
+const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
   const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
@@ -37,7 +40,27 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
     };
 
     setFavoriteMovies();
-  }, [dispatch, favoriteMovies]);
+
+    const setFavoriteDishes = async () => {
+      dispatch({
+        type: "SET_DISHES",
+        payload: favoriteDishes,
+      });
+    };
+
+    setFavoriteDishes();
+
+    const setFilteredDishes = async () => {
+      dispatch({
+        type: "SET_FILTERED_DISHES",
+        payload: favoriteDishes,
+      });
+    };
+
+    setFilteredDishes();
+  }, [dispatch, favoriteMovies, favoriteDishes]);
+
+  console.log(state.dishes);
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
@@ -154,7 +177,6 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
                 image={dish.image}
                 description={dish.description}
                 rating={dish.rating}
-                placeholder={dish.placeholder || ""}
                 phone={dish.phone || ""}
               />
             ))}
@@ -191,9 +213,17 @@ export async function getStaticProps() {
     process.env.TMDB_PASSWORD as string
   );
 
+  const dishesCollectionRef = collection(db, "favorite-dishes");
+  const data = await getDocs(dishesCollectionRef);
+  const favoriteDishes = data.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+
   return {
     props: {
       favoriteMovies,
+      favoriteDishes,
     },
   };
 }

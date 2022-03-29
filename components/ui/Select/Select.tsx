@@ -9,6 +9,7 @@ interface Props {
 const Select = ({ onChange, options }: Props) => {
   return (
     <TextField
+      defaultValue=""
       label="Sort List By Rating"
       select
       onChange={onChange}

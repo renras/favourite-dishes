@@ -18,6 +18,7 @@
     "@types/react-dom": "^17.0.13",
     "@types/validator": "^13.7.1",
     "darkmode-js": "^1.5.7",
+    "firebase": "^9.6.10",
     "libphonenumber-js": "^1.9.49",
     "next": "12.1.0",
     "normalize.css": "^8.0.1",
