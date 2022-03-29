@@ -5,11 +5,10 @@
 }
 
 .dishes {
-  display: grid;
-  justify-content: space-between;
-  grid-template-columns: repeat(auto-fill, 200px);
-  gap: 1rem;
-  width: 100%;
+  display: flex;
+  flex-flow: row wrap;
+  row-gap: 5rem;
+  column-gap: 5rem;
 }
 
 .buttonGroup {

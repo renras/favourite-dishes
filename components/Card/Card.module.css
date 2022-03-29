@@ -1,5 +1,14 @@
 .card {
   animation: left-to-right 1s ease-in-out;
+  border: 1px solid black;
+}
+
+.card h2 {
+  font-size: 2rem;
+}
+
+.card p {
+  font-size: 1.6rem;
 }
 
 @keyframes left-to-right {
@@ -11,18 +20,6 @@
     transform: translateX(0%);
     opacity: 1;
   }
-}
-
-.imgWrapper {
-  width: 200px;
-  height: 200px;
-}
-
-.img {
-  position: relative;
-  transition: all 1s;
-  width: 200px;
-  height: 200px;
 }
 
 .goBack {

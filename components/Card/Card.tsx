@@ -1,7 +1,8 @@
-import { useState, useRef, CSSProperties } from "react";
-
 import Image from "next/image";
 import styles from "./Card.module.css";
+import MuiCard from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import Typography from "@mui/material/Typography";
 
 interface Props {
   name: string;
@@ -12,24 +13,6 @@ interface Props {
   phone?: string;
 }
 
-const fullScreenDivStyle: CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  zIndex: 1,
-};
-
-const closingDivStyle: CSSProperties = {
-  position: "fixed",
-  top: 0,
-  left: 0,
-  width: "200px",
-  height: "200px",
-  zIndex: 1,
-};
-
 const Card = ({
   name,
   image,
@@ -38,55 +21,31 @@ const Card = ({
   placeholder,
   phone,
 }: Props) => {
-  const [isFullScreen, setIsFullScreen] = useState(false);
-  const [divStyle, setDivStyle] = useState<CSSProperties>({});
-  const imgRef = useRef<HTMLImageElement>(null);
-
-  const imgClickHandler = () => {
-    setDivStyle(fullScreenDivStyle);
-  };
-
-  const goBackHandler = () => {
-    setIsFullScreen(false);
-    setDivStyle(closingDivStyle);
-    setTimeout(() => {
-      setDivStyle({});
-    }, 800);
-  };
-
   return (
     <>
-      {isFullScreen && (
-        <button className={styles.goBack} onClick={goBackHandler}>
-          Go Back
-        </button>
-      )}
-      <div className={styles.card}>
-        <div
-          className={styles.imgWrapper}
-          onClick={() => setIsFullScreen(true)}
-        >
-          <div
-            data-testid="img-wrapper"
-            ref={imgRef}
-            style={divStyle}
-            className={styles.img}
-            onClick={imgClickHandler}
-          >
-            <Image
-              src={image}
-              alt={name}
-              layout="fill"
-              placeholder={placeholder ? "blur" : "empty"}
-              blurDataURL={placeholder}
-            />
-          </div>
-        </div>
-        <h2>{name}</h2>
-        <p>{description}</p>
-        <p>Rating: {rating}</p>
-        {phone && <p>Phone: {phone}</p>}
-      </div>
+      <MuiCard sx={{ maxWidth: 345 }}>
+        <Image
+          className={styles.image}
+          src={image}
+          alt={name}
+          width={345}
+          height={140}
+          placeholder={placeholder ? "blur" : "empty"}
+          blurDataURL={placeholder}
+          objectFit="cover"
+          objectPosition="center"
+        />
+        <CardContent>
+          <Typography variant="h6" component="h2" gutterBottom>
+            {name}
+          </Typography>
+          <Typography variant="body2" component="p">
+            {description}
+          </Typography>
+          <p>Rating: {rating}</p>
+          {phone && <p>Phone: {phone}</p>}
+        </CardContent>
+      </MuiCard>
     </>
   );
 };
