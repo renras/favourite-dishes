@@ -1,19 +1,18 @@
-import { useContext } from "react";
-import AppContext from "../../context/AppContext";
-
-import styles from "./Layout.module.css";
+import AppBar from "@mui/material/AppBar";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { state } = useContext(AppContext);
-
   return (
     <>
-      <header className={styles.header}>
-        <h1>
-          {state.showFavoriteDishes ? "Favorite Dishes" : "Favorite Movies"}
-        </h1>
-      </header>
-      <main className={styles.main}>{children}</main>
+      <AppBar position="static">
+        <Container maxWidth="xl" disableGutters sx={{ padding: "10px 0" }}>
+          <Typography variant="h4" component="h1">
+            MYFAVORITES
+          </Typography>
+        </Container>
+      </AppBar>
+      <main>{children}</main>
     </>
   );
 };
