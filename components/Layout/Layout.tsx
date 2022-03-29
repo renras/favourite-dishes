@@ -12,7 +12,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
           </Typography>
         </Container>
       </AppBar>
-      <main>{children}</main>
+      <main style={{ paddingBottom: "50px" }}>{children}</main>
     </>
   );
 };

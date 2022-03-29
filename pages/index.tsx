@@ -172,9 +172,6 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
       </Container>
       {state.showModal && (
         <Modal>
-          <button className={styles.animate} onClick={toggleModal}>
-            Go Back
-          </button>
           <Form />
         </Modal>
       )}
