@@ -46,13 +46,15 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
     dispatch({ type: "FILTER_DISHES" });
   };
 
-  const selectChangeHandler = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  const selectChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.value === "Ascending") {
       dispatch({ type: "SET_SORT", payload: "ASCENDING" });
+      console.log("Ascending");
     }
 
     if (e.target.value === "Descending") {
       dispatch({ type: "SET_SORT", payload: "DESCENDING" });
+      console.log("Descending");
     }
 
     dispatch({ type: "FILTER_DISHES" });
@@ -89,7 +91,6 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
           <label htmlFor="rating">Sort list by rating:</label>
           <Select
             onChange={(e) => selectChangeHandler(e)}
-            name="rating"
             options={["Ascending", "Descending"]}
           />
         </div>
