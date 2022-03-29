@@ -2,7 +2,6 @@ import { useContext, useEffect } from "react";
 import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
-import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Darkmode from "darkmode-js";
@@ -15,7 +14,6 @@ import styles from "../styles/index.module.css";
 import Card from "../components/Card/Card";
 import Search from "../components/ui/Search/Search";
 import Select from "../components/ui/Select/Select";
-import Button from "../components/ui/Button/Button";
 import { getFavoriteMovies } from "../lib/tmdb-api";
 import { Dish } from "../context/AppContext";
 import { Movie } from "../context/AppContext";
@@ -43,7 +41,7 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
-    document.documentElement.style.setProperty("--overflow", "auto");
+    document.documentElement.style.setProperty("--overflow", "hidden");
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,17 +126,20 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
           borderTop: "1px solid #e0e0e0",
         }}
       >
-        <div className={styles.options}>
+        <Box sx={{ display: "flex", gap: "20px" }}>
           <Search onChange={(e) => inputChangeHandler(e)} />
-          <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
-            <Typography component="p">Sort List By Rating:</Typography>
-            <Select
-              onChange={(e) => selectChangeHandler(e)}
-              options={["Ascending", "Descending"]}
-            />
-          </Box>
-          <Button onClick={toggleModal}>Add Dish</Button>
-        </div>
+          <Select
+            onChange={(e) => selectChangeHandler(e)}
+            options={["Ascending", "Descending"]}
+          />
+          <MuiButton
+            onClick={toggleModal}
+            variant="contained"
+            sx={{ marginLeft: "auto" }}
+          >
+            Add Dish
+          </MuiButton>
+        </Box>
         <Container
           maxWidth={false}
           disableGutters
