@@ -6,6 +6,7 @@ import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
 import Darkmode from "darkmode-js";
+import MuiButton from "@mui/material/Button";
 
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
@@ -63,12 +64,19 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
     dispatch({ type: "FILTER_DISHES" });
   };
 
-  // const showFavoriteDishes = () => {
-  //   dispatch({
-  //     type: "SET_SHOW_FAVORITE_DISHES",
-  //     payload: !state.showFavoriteDishes,
-  //   });
-  // };
+  const showFavoriteDishes = () => {
+    dispatch({
+      type: "SET_SHOW_FAVORITE_DISHES",
+      payload: true,
+    });
+  };
+
+  const hideFavoriteDishes = () => {
+    dispatch({
+      type: "SET_SHOW_FAVORITE_DISHES",
+      payload: false,
+    });
+  };
 
   return (
     <>
@@ -83,7 +91,40 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
       </Head>
       <Container
         maxWidth="xl"
-        sx={{ paddingTop: "25px", borderTop: "1px solid #e0e0e0" }}
+        disableGutters
+        sx={{ display: "flex", gap: "20px" }}
+      >
+        <MuiButton
+          variant="text"
+          size="large"
+          onClick={showFavoriteDishes}
+          sx={{
+            borderBottom: state.showFavoriteDishes ? "2px solid #1976d2" : "",
+            borderRadius: "0px",
+            color: state.showFavoriteDishes ? "#1976d2" : "#90caf9",
+          }}
+        >
+          Dishes
+        </MuiButton>
+        <MuiButton
+          variant="text"
+          size="large"
+          onClick={hideFavoriteDishes}
+          sx={{
+            borderBottom: !state.showFavoriteDishes ? "2px solid #1976d2" : "",
+            borderRadius: "0px",
+            color: !state.showFavoriteDishes ? "#1976d2" : "#90caf9",
+          }}
+        >
+          Movies
+        </MuiButton>
+      </Container>
+      <Container
+        maxWidth="xl"
+        sx={{
+          paddingTop: "25px",
+          borderTop: "1px solid #e0e0e0",
+        }}
       >
         <div className={styles.options}>
           <Search onChange={(e) => inputChangeHandler(e)} />
