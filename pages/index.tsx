@@ -156,13 +156,15 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
             onChange={(e) => selectChangeHandler(e)}
             options={["Ascending", "Descending"]}
           />
-          <MuiButton
-            onClick={toggleModal}
-            variant="contained"
-            sx={{ marginLeft: "auto" }}
-          >
-            Add Dish
-          </MuiButton>
+          {state.isLoggedIn && (
+            <MuiButton
+              onClick={toggleModal}
+              variant="contained"
+              sx={{ marginLeft: "auto" }}
+            >
+              Add Dish
+            </MuiButton>
+          )}
         </Box>
         <Container
           maxWidth={false}
