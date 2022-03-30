@@ -1,54 +1,48 @@
 import React, { useContext } from "react";
-import AppContext from "../context/AppContext";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, db } from "../lib/firebase-config";
+import { getDoc, doc } from "firebase/firestore";
+import { useRouter } from "next/router";
+import AppContext from "../context/AppContext";
+
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Box from "@mui/material/Box";
 import Link from "next/link";
 
 interface IFormInput {
-  username: string;
   email: string;
   password: string;
-  confirmPassword: string;
 }
 
 const Form = () => {
+  const { dispatch } = useContext(AppContext);
+  const router = useRouter();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const { dispatch } = useContext(AppContext);
+  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    signInWithEmailAndPassword(auth, data.email, data.password)
+      .then((cred) => {
+        const userRef = doc(db, "users", cred.user.uid);
 
-  const onSubmit: SubmitHandler<IFormInput> = () => {
-    document.body.style.cursor = "wait";
-
-    const notify = () => {
-      toast.success("Dish Added!", {
-        position: "bottom-left",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
+        getDoc(userRef).then((doc) => {
+          router.push("/").then(() => {
+            dispatch({ type: "SET_IS_LOGGED_IN", payload: true });
+            dispatch({ type: "SET_USERNAME", payload: doc.data()?.username });
+          });
+        });
+      })
+      .catch((err) => {
+        console.log(err.message);
       });
-    };
-
-    notify();
-
-    dispatch({ type: "SET_INPUT_TEXT", payload: "" });
-    dispatch({ type: "FILTER_DISHES" });
-    dispatch({ type: "TOGGLE_MODAL", payload: false });
-
-    document.documentElement.style.setProperty("--overflow", "auto");
-    location.reload();
   };
 
   return (
@@ -69,6 +63,7 @@ const Form = () => {
           }}
         >
           <Controller
+            defaultValue=""
             name="email"
             control={control}
             rules={{ required: true }}
@@ -81,7 +76,7 @@ const Form = () => {
               />
             )}
           />
-          {errors.username?.type === "required" && (
+          {errors.email?.type === "required" && (
             <Typography
               variant="caption"
               component="p"
@@ -91,6 +86,7 @@ const Form = () => {
             </Typography>
           )}
           <Controller
+            defaultValue=""
             name="password"
             control={control}
             rules={{ required: true }}

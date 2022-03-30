@@ -1,6 +1,6 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { createUserWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
 import { auth, db } from "../lib/firebase-config";
 import { setDoc, doc } from "firebase/firestore";
 import { useRouter } from "next/router";
@@ -34,12 +34,12 @@ const Form = () => {
       return;
     }
 
-    const register = async () => {
-      await createUserWithEmailAndPassword(auth, data.email, data.password)
+    const register = () => {
+      createUserWithEmailAndPassword(auth, data.email, data.password)
         .then(async (cred) => {
           const userRef = doc(db, "users", cred.user.uid);
 
-          return await setDoc(userRef, {
+          return setDoc(userRef, {
             username: data.username,
           }).catch((err) => {
             console.log(err.message);
@@ -61,6 +61,8 @@ const Form = () => {
             };
 
             notify();
+
+            signOut(auth);
 
             return;
           });
