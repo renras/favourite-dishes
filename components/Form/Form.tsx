@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { collection, addDoc } from "firebase/firestore";
 import { db } from "../../lib/firebase-config";
+import { useRouter } from "next/router";
 
 interface IFormInput {
   title: string;
@@ -23,6 +24,7 @@ interface IFormInput {
 }
 
 const Form = () => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -45,8 +47,6 @@ const Form = () => {
 
     addDish();
 
-    document.body.style.cursor = "wait";
-
     const notify = () => {
       toast.success("Dish Added!", {
         position: "bottom-left",
@@ -66,7 +66,7 @@ const Form = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: false });
 
     document.documentElement.style.setProperty("--overflow", "auto");
-    location.reload();
+    router.replace(router.asPath);
   };
 
   const toggleModal = () => {

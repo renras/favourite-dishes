@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase-config";
 import Box from "@mui/material/Box";
+import { useRouter } from "next/router";
 
 interface IFormInput {
   title: string;
@@ -50,6 +51,7 @@ const EditForm = ({
   rating,
   phone,
 }: Props) => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
@@ -72,8 +74,6 @@ const EditForm = ({
 
     update(data);
 
-    document.body.style.cursor = "wait";
-
     const notify = () => {
       toast.success("Dish Edited!", {
         position: "bottom-left",
@@ -93,7 +93,7 @@ const EditForm = ({
     closeEditFormHandler();
 
     document.documentElement.style.setProperty("--overflow", "auto");
-    location.reload();
+    router.replace(router.asPath);
   };
 
   return (
