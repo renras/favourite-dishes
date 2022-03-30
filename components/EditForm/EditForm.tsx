@@ -11,7 +11,7 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { collection, addDoc } from "firebase/firestore";
+import { updateDoc, doc } from "firebase/firestore";
 import { db } from "../../lib/firebase-config";
 import Box from "@mui/material/Box";
 
@@ -25,9 +25,31 @@ interface IFormInput {
 
 interface Props {
   closeEditFormHandler: () => void;
+  id: string;
+  name: string;
+  image: string;
+  description: string;
+  rating: number;
+  phone?: string;
 }
 
-const EditForm = ({ closeEditFormHandler }: Props) => {
+interface Data {
+  title: string;
+  imgUrl: string;
+  description: string;
+  rating: number;
+  phone?: string | undefined;
+}
+
+const EditForm = ({
+  closeEditFormHandler,
+  id,
+  name,
+  image,
+  description,
+  rating,
+  phone,
+}: Props) => {
   const {
     control,
     handleSubmit,
@@ -36,19 +58,19 @@ const EditForm = ({ closeEditFormHandler }: Props) => {
   const { dispatch } = useContext(AppContext);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    const dishesCollectionRef = collection(db, "favorite-dishes");
-
-    const addDish = async () => {
-      await addDoc(dishesCollectionRef, {
+    const update = async (data: Data) => {
+      const collectionDoc = doc(db, "favorite-dishes", id);
+      const newFields = {
         name: data.title,
         image: data.imgUrl,
         description: data.description,
         rating: data.rating,
         phone: data.phone,
-      });
+      };
+      await updateDoc(collectionDoc, newFields);
     };
 
-    addDish();
+    update(data);
 
     const notify = () => {
       toast.success("Dish Edited!", {
@@ -101,6 +123,7 @@ const EditForm = ({ closeEditFormHandler }: Props) => {
           name="title"
           control={control}
           rules={{ required: true }}
+          defaultValue={name}
           render={({ field }) => (
             <TextField {...field} label="Title" variant="outlined" fullWidth />
           )}
@@ -116,6 +139,7 @@ const EditForm = ({ closeEditFormHandler }: Props) => {
         )}
         <Controller
           name="imgUrl"
+          defaultValue={image}
           control={control}
           rules={{ required: true, validate: (value) => isURL(value) }}
           render={({ field }) => (
@@ -149,6 +173,7 @@ const EditForm = ({ closeEditFormHandler }: Props) => {
         <Controller
           name="description"
           control={control}
+          defaultValue={description}
           rules={{ required: true }}
           render={({ field }) => (
             <TextField
@@ -172,6 +197,7 @@ const EditForm = ({ closeEditFormHandler }: Props) => {
         <Controller
           name="rating"
           control={control}
+          defaultValue={rating}
           rules={{ required: true, min: 1, max: 5 }}
           render={({ field }) => (
             <TextField
@@ -205,6 +231,7 @@ const EditForm = ({ closeEditFormHandler }: Props) => {
         <Controller
           name="phone"
           control={control}
+          defaultValue={phone}
           rules={{
             required: false,
             validate: {

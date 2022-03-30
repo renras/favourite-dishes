@@ -174,6 +174,7 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
             state.filteredDishes.map((dish: Dish) => (
               <Card
                 key={dish.id}
+                id={dish.id}
                 name={dish.name}
                 image={dish.image}
                 description={dish.description}
@@ -185,6 +186,7 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
             state.favoriteMovies?.map((movie: Movie) => (
               <Card
                 key={movie.id}
+                id={movie.id}
                 name={movie.title as string}
                 image={
                   "https://images.pexels.com/photos/5662857/pexels-photo-5662857.png?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200"

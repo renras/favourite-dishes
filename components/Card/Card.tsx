@@ -22,15 +22,15 @@ import Modal from "../Modal/Modal";
 import EditForm from "../EditForm/EditForm";
 
 interface Props {
+  id: string | number | undefined;
   name: string;
   image: string;
   description: string;
   rating: number;
-  placeholder?: string;
   phone?: string;
 }
 
-const Card = ({ name, image, description, rating, phone }: Props) => {
+const Card = ({ id, name, image, description, rating, phone }: Props) => {
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const starIconCount = rating;
@@ -153,7 +153,15 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
       </MuiCard>
       {isEditFormOpen && (
         <Modal>
-          <EditForm closeEditFormHandler={closeEditFormHandler} />
+          <EditForm
+            closeEditFormHandler={closeEditFormHandler}
+            id={id as string}
+            name={name}
+            image={image}
+            description={description}
+            rating={rating}
+            phone={phone}
+          />
         </Modal>
       )}
     </>
