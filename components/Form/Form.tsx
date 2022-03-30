@@ -45,6 +45,8 @@ const Form = () => {
 
     addDish();
 
+    document.body.style.cursor = "wait";
+
     const notify = () => {
       toast.success("Dish Added!", {
         position: "bottom-left",
