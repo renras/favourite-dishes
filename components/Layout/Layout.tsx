@@ -4,6 +4,7 @@ import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
+import Link from "next/link";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -15,7 +16,9 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               <Typography variant="h4" component="h1" sx={{ flexGrow: 1 }}>
                 MYFAVORITES
               </Typography>
-              <Button color="inherit">Login</Button>
+              <Link href="/login" passHref>
+                <Button color="inherit">Login</Button>
+              </Link>
             </Toolbar>
           </Container>
         </AppBar>
