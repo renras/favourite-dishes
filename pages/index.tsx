@@ -65,6 +65,7 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
     document.documentElement.style.setProperty("--overflow", "hidden");
+    document.documentElement.style.setProperty("--padding-right", "15px");
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
