@@ -72,6 +72,8 @@ const EditForm = ({
 
     update(data);
 
+    document.body.style.cursor = "wait";
+
     const notify = () => {
       toast.success("Dish Edited!", {
         position: "bottom-left",

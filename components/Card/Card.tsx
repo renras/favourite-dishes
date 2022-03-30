@@ -20,6 +20,8 @@ import ListItemIcon from "@mui/material/ListItemIcon";
 import Box from "@mui/material/Box";
 import Modal from "../Modal/Modal";
 import EditForm from "../EditForm/EditForm";
+import Container from "@mui/material/Container";
+import Button from "@mui/material/Button";
 
 interface Props {
   id: string | number | undefined;
@@ -31,6 +33,8 @@ interface Props {
 }
 
 const Card = ({ id, name, image, description, rating, phone }: Props) => {
+  const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
+    useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const starIconCount = rating;
@@ -48,7 +52,7 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
     starBorderIcons.push(<StarBorderIcon key={i} sx={{ color: "#fbc02d" }} />);
   }
 
-  const editDishHandler = () => {
+  const editCardHandler = () => {
     setIsModalOpen(false);
     setIsEditFormOpen(true);
     document.documentElement.style.setProperty("--overflow", "hidden");
@@ -59,6 +63,12 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
     setIsEditFormOpen(false);
     document.documentElement.style.setProperty("--overflow", "auto");
     document.documentElement.style.setProperty("--padding-right", "0");
+  };
+
+  const showDeleteConfirmation = () => {
+    setIsDeleteConfirmationOpen(true);
+    document.documentElement.style.setProperty("--overflow", "hidden");
+    document.documentElement.style.setProperty("--padding-right", "15px");
   };
 
   return (
@@ -126,7 +136,7 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
               }}
             >
               <MenuList>
-                <MenuItem onClick={editDishHandler}>
+                <MenuItem onClick={editCardHandler}>
                   <ListItemIcon>
                     <EditIcon fontSize="small" sx={{ color: "#b2ff59" }} />
                   </ListItemIcon>
@@ -134,7 +144,7 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
                     Edit Item
                   </Typography>
                 </MenuItem>
-                <MenuItem>
+                <MenuItem onClick={showDeleteConfirmation}>
                   <ListItemIcon>
                     <DeleteIcon fontSize="small" sx={{ color: "#ff5252" }} />
                   </ListItemIcon>
@@ -162,6 +172,38 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
             rating={rating}
             phone={phone}
           />
+        </Modal>
+      )}
+      {isDeleteConfirmationOpen && (
+        <Modal>
+          <Paper>
+            <Container
+              sx={{
+                width: "300px",
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                gap: "25px",
+                padding: "35px",
+              }}
+            >
+              <Typography
+                variant="h6"
+                component="h3"
+                sx={{ textAlign: "center" }}
+              >
+                Are you sure you want to delete this item?
+              </Typography>
+              <Box sx={{ display: "flex", gap: "20px" }}>
+                <Button size="small" variant="outlined" color="error">
+                  Cancel
+                </Button>
+                <Button size="small" variant="contained" color="error">
+                  Yes
+                </Button>
+              </Box>
+            </Container>
+          </Paper>
         </Modal>
       )}
     </>
