@@ -1,5 +1,6 @@
 :root {
   --overflow: auto;
+  --padding-right: 0;
 }
 
 *,
@@ -10,6 +11,7 @@
   box-sizing: border-box;
 }
 
-html {
-  overflow: var(--overflow);
+body {
+  overflow-y: var(--overflow);
+  padding-right: var(--padding-right);
 }

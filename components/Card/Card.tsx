@@ -7,6 +7,16 @@ import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import CardHeader from "@mui/material/CardHeader";
+import IconButton from "@mui/material/IconButton";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import Paper from "@mui/material/Paper";
+import MenuList from "@mui/material/MenuList";
+import MenuItem from "@mui/material/MenuItem";
+import EditIcon from "@mui/icons-material/Edit";
+import DeleteIcon from "@mui/icons-material/Delete";
+import ListItemIcon from "@mui/material/ListItemIcon";
+import Box from "@mui/material/Box";
 
 interface Props {
   name: string;
@@ -18,6 +28,7 @@ interface Props {
 }
 
 const Card = ({ name, image, description, rating, phone }: Props) => {
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const starIconCount = rating;
   const starBorderIconCount = 5 - rating;
   const [isDescriptionLong, setIsDescriptionLong] = useState(
@@ -35,7 +46,17 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
 
   return (
     <>
-      <MuiCard sx={{ maxWidth: 345 }}>
+      <MuiCard sx={{ maxWidth: 345, position: "relative" }}>
+        <CardHeader
+          title={name}
+          action={
+            <>
+              <IconButton onClick={() => setIsModalOpen(!isModalOpen)}>
+                <MoreHorizIcon sx={{ transform: "rotate(90deg)" }} />
+              </IconButton>
+            </>
+          }
+        />
         <Image
           className={styles.image}
           src={image}
@@ -46,10 +67,6 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
           objectPosition="center"
         />
         <CardContent>
-          <Typography variant="h6" component="h2" gutterBottom>
-            {name}
-          </Typography>
-
           <Typography variant="body2" component="p" gutterBottom>
             {isDescriptionLong ? (
               <>
@@ -81,6 +98,41 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
           {starIcons}
           {starBorderIcons}
         </CardActions>
+        {isModalOpen && (
+          <>
+            <Paper
+              sx={{
+                position: "absolute",
+                top: "30px",
+                right: "30px",
+                zIndex: "1",
+              }}
+            >
+              <MenuList>
+                <MenuItem>
+                  <ListItemIcon>
+                    <EditIcon fontSize="small" sx={{ color: "#b2ff59" }} />
+                  </ListItemIcon>
+                  <Typography variant="body2" component="p">
+                    Edit Item
+                  </Typography>
+                </MenuItem>
+                <MenuItem>
+                  <ListItemIcon>
+                    <DeleteIcon fontSize="small" sx={{ color: "#ff5252" }} />
+                  </ListItemIcon>
+                  <Typography variant="body2" component="p">
+                    Delete Item
+                  </Typography>
+                </MenuItem>
+              </MenuList>
+            </Paper>
+            <Box
+              sx={{ position: "fixed", top: 0, right: 0, left: 0, bottom: 0 }}
+              onClick={() => setIsModalOpen(false)}
+            ></Box>
+          </>
+        )}
       </MuiCard>
     </>
   );

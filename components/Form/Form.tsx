@@ -70,6 +70,7 @@ const Form = () => {
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: false });
     document.documentElement.style.setProperty("--overflow", "auto");
+    document.documentElement.style.setProperty("--padding-right", "0");
   };
 
   return (
