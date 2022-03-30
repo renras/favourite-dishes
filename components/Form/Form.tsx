@@ -11,6 +11,8 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { collection, addDoc } from "firebase/firestore";
+import { db } from "../../lib/firebase-config";
 
 interface IFormInput {
   title: string;
@@ -26,20 +28,22 @@ const Form = () => {
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const { state, dispatch } = useContext(AppContext);
+  const { dispatch } = useContext(AppContext);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    dispatch({
-      type: "ADD_DISH",
-      payload: {
-        id: state.dishes.length + 1,
+    const dishesCollectionRef = collection(db, "favorite-dishes");
+
+    const addDish = async () => {
+      await addDoc(dishesCollectionRef, {
         name: data.title,
         image: data.imgUrl,
         description: data.description,
         rating: data.rating,
         phone: data.phone,
-      },
-    });
+      });
+    };
+
+    addDish();
 
     const notify = () => {
       toast.success("Dish Added!", {
@@ -59,6 +63,12 @@ const Form = () => {
     dispatch({ type: "FILTER_DISHES" });
     dispatch({ type: "TOGGLE_MODAL", payload: false });
 
+    document.documentElement.style.setProperty("--overflow", "auto");
+    location.reload();
+  };
+
+  const toggleModal = () => {
+    dispatch({ type: "TOGGLE_MODAL", payload: false });
     document.documentElement.style.setProperty("--overflow", "auto");
   };
 
@@ -85,7 +95,7 @@ const Form = () => {
             color: "#bdbdbd",
             cursor: "pointer",
           }}
-          onClick={() => dispatch({ type: "TOGGLE_MODAL", payload: false })}
+          onClick={toggleModal}
         />
         <Controller
           name="title"

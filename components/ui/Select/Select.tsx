@@ -10,10 +10,11 @@ const Select = ({ onChange, options }: Props) => {
   return (
     <TextField
       defaultValue=""
+      label="Sort List By Rating"
       select
       onChange={onChange}
       size="small"
-      sx={{ width: "150px" }}
+      sx={{ width: "200px" }}
     >
       {options.map((option, index) => (
         <MenuItem key={index} value={option}>

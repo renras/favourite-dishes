@@ -2,29 +2,30 @@ import { useContext, useEffect } from "react";
 import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
-import Typography from "@mui/material/Typography";
+import Darkmode from "darkmode-js";
+import { ToastContainer } from "react-toastify";
+import { collection, getDocs } from "firebase/firestore";
+import { db } from "../lib/firebase-config";
+import { getFavoriteMovies } from "../lib/tmdb-api";
+
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
-import Darkmode from "darkmode-js";
 import MuiButton from "@mui/material/Button";
-import { ToastContainer } from "react-toastify";
-
 import Modal from "../components/Modal/Modal";
 import Form from "../components/Form/Form";
 import styles from "../styles/index.module.css";
 import Card from "../components/Card/Card";
 import Search from "../components/ui/Search/Search";
 import Select from "../components/ui/Select/Select";
-import Button from "../components/ui/Button/Button";
-import { getFavoriteMovies } from "../lib/tmdb-api";
 import { Dish } from "../context/AppContext";
 import { Movie } from "../context/AppContext";
 
 interface Props {
   favoriteMovies: Movie[];
+  favoriteDishes: Dish[];
 }
 
-const Home: NextPage<Props> = ({ favoriteMovies }) => {
+const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
   const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
@@ -39,11 +40,31 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
     };
 
     setFavoriteMovies();
-  }, [dispatch, favoriteMovies]);
+
+    const setFavoriteDishes = async () => {
+      dispatch({
+        type: "SET_DISHES",
+        payload: favoriteDishes,
+      });
+    };
+
+    setFavoriteDishes();
+
+    const setFilteredDishes = async () => {
+      dispatch({
+        type: "SET_FILTERED_DISHES",
+        payload: favoriteDishes,
+      });
+    };
+
+    setFilteredDishes();
+  }, [dispatch, favoriteMovies, favoriteDishes]);
+
+  console.log(state.dishes);
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
-    document.documentElement.style.setProperty("--overflow", "auto");
+    document.documentElement.style.setProperty("--overflow", "hidden");
   };
 
   const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -128,17 +149,20 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
           borderTop: "1px solid #e0e0e0",
         }}
       >
-        <div className={styles.options}>
+        <Box sx={{ display: "flex", gap: "20px" }}>
           <Search onChange={(e) => inputChangeHandler(e)} />
-          <Box sx={{ display: "flex", gap: "20px", alignItems: "center" }}>
-            <Typography component="p">Sort List By Rating:</Typography>
-            <Select
-              onChange={(e) => selectChangeHandler(e)}
-              options={["Ascending", "Descending"]}
-            />
-          </Box>
-          <Button onClick={toggleModal}>Add Dish</Button>
-        </div>
+          <Select
+            onChange={(e) => selectChangeHandler(e)}
+            options={["Ascending", "Descending"]}
+          />
+          <MuiButton
+            onClick={toggleModal}
+            variant="contained"
+            sx={{ marginLeft: "auto" }}
+          >
+            Add Dish
+          </MuiButton>
+        </Box>
         <Container
           maxWidth={false}
           disableGutters
@@ -153,7 +177,6 @@ const Home: NextPage<Props> = ({ favoriteMovies }) => {
                 image={dish.image}
                 description={dish.description}
                 rating={dish.rating}
-                placeholder={dish.placeholder || ""}
                 phone={dish.phone || ""}
               />
             ))}
@@ -190,9 +213,17 @@ export async function getStaticProps() {
     process.env.TMDB_PASSWORD as string
   );
 
+  const dishesCollectionRef = collection(db, "favorite-dishes");
+  const data = await getDocs(dishesCollectionRef);
+  const favoriteDishes = data.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+
   return {
     props: {
       favoriteMovies,
+      favoriteDishes,
     },
   };
 }

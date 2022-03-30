@@ -17,14 +17,7 @@ interface Props {
   phone?: string;
 }
 
-const Card = ({
-  name,
-  image,
-  description,
-  rating,
-  placeholder,
-  phone,
-}: Props) => {
+const Card = ({ name, image, description, rating, phone }: Props) => {
   const starIconCount = rating;
   const starBorderIconCount = 5 - rating;
   const [isDescriptionLong, setIsDescriptionLong] = useState(
@@ -49,8 +42,6 @@ const Card = ({
           alt={name}
           width={345}
           height={140}
-          placeholder={placeholder ? "blur" : "empty"}
-          blurDataURL={placeholder}
           objectFit="cover"
           objectPosition="center"
         />
