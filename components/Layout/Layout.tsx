@@ -9,14 +9,28 @@ import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import AppContext from "../../context/AppContext";
+import { signOut } from "firebase/auth";
+import { auth } from "../../lib/firebase-config";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
-  const { state } = useContext(AppContext);
+  const { dispatch, state } = useContext(AppContext);
+
+  const signOutHandler = () => {
+    signOut(auth);
+    dispatch({
+      type: "SET_USERNAME",
+      payload: "",
+    });
+    dispatch({
+      type: "SET_IS_LOGGED_IN",
+      payload: false,
+    });
+  };
 
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
-        <AppBar position="static">
+        <AppBar position="static" color="primary">
           <Container maxWidth="xl" disableGutters>
             <Toolbar>
               <Typography variant="h4" component="h1" sx={{ flexGrow: 1 }}>
@@ -30,10 +44,8 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
                   <Button
                     size="small"
                     variant="contained"
-                    sx={{
-                      backgroundColor: "#fff",
-                      color: "rgba(0, 0, 0, 0.87)",
-                    }}
+                    color="secondary"
+                    onClick={signOutHandler}
                   >
                     Sign Out
                   </Button>
