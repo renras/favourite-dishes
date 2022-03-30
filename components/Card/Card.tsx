@@ -7,6 +7,9 @@ import Typography from "@mui/material/Typography";
 import CardActions from "@mui/material/CardActions";
 import StarIcon from "@mui/icons-material/Star";
 import StarBorderIcon from "@mui/icons-material/StarBorder";
+import CardHeader from "@mui/material/CardHeader";
+import IconButton from "@mui/material/IconButton";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 
 interface Props {
   name: string;
@@ -36,6 +39,16 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
   return (
     <>
       <MuiCard sx={{ maxWidth: 345 }}>
+        <CardHeader
+          title={name}
+          action={
+            <>
+              <IconButton>
+                <MoreHorizIcon sx={{ transform: "rotate(90deg)" }} />
+              </IconButton>
+            </>
+          }
+        />
         <Image
           className={styles.image}
           src={image}
@@ -46,10 +59,6 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
           objectPosition="center"
         />
         <CardContent>
-          <Typography variant="h6" component="h2" gutterBottom>
-            {name}
-          </Typography>
-
           <Typography variant="body2" component="p" gutterBottom>
             {isDescriptionLong ? (
               <>
