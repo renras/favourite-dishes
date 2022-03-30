@@ -1,6 +1,7 @@
 import { useState, useContext } from "react";
 import Image from "next/image";
 import AppContext from "../../context/AppContext";
+import { useRouter } from "next/router";
 
 import styles from "./Card.module.css";
 import MuiCard from "@mui/material/Card";
@@ -36,6 +37,7 @@ interface Props {
 }
 
 const Card = ({ id, name, image, description, rating, phone }: Props) => {
+  const router = useRouter();
   const { state } = useContext(AppContext);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
     useState(false);
@@ -88,8 +90,7 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
     setIsDeleteConfirmationOpen(false);
     document.documentElement.style.setProperty("--overflow", "auto");
     document.documentElement.style.setProperty("--padding-right", "0");
-    document.body.style.cursor = "wait";
-    location.reload();
+    router.replace(router.asPath);
   };
 
   return (
