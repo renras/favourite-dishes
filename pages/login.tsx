@@ -8,6 +8,8 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import Box from "@mui/material/Box";
+import Link from "next/link";
 
 interface IFormInput {
   username: string;
@@ -106,13 +108,23 @@ const Form = () => {
             Password is required.
           </Typography>
         )}
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ alignSelf: "center", marginTop: "50px" }}
-        >
-          Login
-        </Button>
+        <Box sx={{ display: "flex", gap: "20px", justifyContent: "center" }}>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ alignSelf: "center", marginTop: "50px" }}
+          >
+            Login
+          </Button>
+          <Link href="/register" passHref>
+            <Button
+              variant="outlined"
+              sx={{ alignSelf: "center", marginTop: "50px" }}
+            >
+              Register
+            </Button>
+          </Link>
+        </Box>
       </Paper>
     </Container>
   );
