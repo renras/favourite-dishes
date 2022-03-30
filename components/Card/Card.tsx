@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Image from "next/image";
+
 import styles from "./Card.module.css";
 import MuiCard from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
@@ -17,17 +18,20 @@ import EditIcon from "@mui/icons-material/Edit";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import Box from "@mui/material/Box";
+import Modal from "../Modal/Modal";
+import EditForm from "../EditForm/EditForm";
 
 interface Props {
+  id: string | number | undefined;
   name: string;
   image: string;
   description: string;
   rating: number;
-  placeholder?: string;
   phone?: string;
 }
 
-const Card = ({ name, image, description, rating, phone }: Props) => {
+const Card = ({ id, name, image, description, rating, phone }: Props) => {
+  const [isEditFormOpen, setIsEditFormOpen] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const starIconCount = rating;
   const starBorderIconCount = 5 - rating;
@@ -43,6 +47,19 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
   for (let i = 0; i < starBorderIconCount; i++) {
     starBorderIcons.push(<StarBorderIcon key={i} sx={{ color: "#fbc02d" }} />);
   }
+
+  const editDishHandler = () => {
+    setIsModalOpen(false);
+    setIsEditFormOpen(true);
+    document.documentElement.style.setProperty("--overflow", "hidden");
+    document.documentElement.style.setProperty("--padding-right", "15px");
+  };
+
+  const closeEditFormHandler = () => {
+    setIsEditFormOpen(false);
+    document.documentElement.style.setProperty("--overflow", "auto");
+    document.documentElement.style.setProperty("--padding-right", "0");
+  };
 
   return (
     <>
@@ -109,7 +126,7 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
               }}
             >
               <MenuList>
-                <MenuItem>
+                <MenuItem onClick={editDishHandler}>
                   <ListItemIcon>
                     <EditIcon fontSize="small" sx={{ color: "#b2ff59" }} />
                   </ListItemIcon>
@@ -134,6 +151,19 @@ const Card = ({ name, image, description, rating, phone }: Props) => {
           </>
         )}
       </MuiCard>
+      {isEditFormOpen && (
+        <Modal>
+          <EditForm
+            closeEditFormHandler={closeEditFormHandler}
+            id={id as string}
+            name={name}
+            image={image}
+            description={description}
+            rating={rating}
+            phone={phone}
+          />
+        </Modal>
+      )}
     </>
   );
 };
