@@ -3,7 +3,6 @@ import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
 import Darkmode from "darkmode-js";
-import { ToastContainer } from "react-toastify";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase-config";
 import { getFavoriteMovies } from "../lib/tmdb-api";
@@ -204,7 +203,6 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
           <Form />
         </Modal>
       )}
-      <ToastContainer />
     </>
   );
 };

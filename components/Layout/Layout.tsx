@@ -5,6 +5,8 @@ import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Link from "next/link";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const Layout = ({ children }: { children: React.ReactNode }) => {
   return (
@@ -24,6 +26,7 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
         </AppBar>
       </Box>
       <main style={{ paddingBottom: "50px" }}>{children}</main>
+      <ToastContainer />
     </>
   );
 };

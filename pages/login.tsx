@@ -52,81 +52,88 @@ const Form = () => {
   };
 
   return (
-    <Container
-      component="form"
-      maxWidth="sm"
-      onSubmit={handleSubmit(onSubmit)}
-      data-testid="form"
-      sx={{ marginInline: "auto", marginTop: "100px" }}
-    >
-      <Paper
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-          padding: "75px 50px 50px 50px",
-          position: "relative",
-        }}
+    <>
+      <Container
+        component="form"
+        maxWidth="sm"
+        onSubmit={handleSubmit(onSubmit)}
+        data-testid="form"
+        sx={{ marginInline: "auto", marginTop: "100px" }}
       >
-        <Controller
-          name="email"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextField {...field} label="Email" variant="outlined" fullWidth />
-          )}
-        />
-        {errors.username?.type === "required" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Email is required.
-          </Typography>
-        )}
-        <Controller
-          name="password"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              type="password"
-              label="Password"
-              variant="outlined"
-              fullWidth
-              sx={{ marginTop: "25px" }}
-            />
-          )}
-        />
-        {errors.password?.type === "required" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Password is required.
-          </Typography>
-        )}
-        <Box sx={{ display: "flex", gap: "20px", justifyContent: "center" }}>
-          <Button
-            type="submit"
-            variant="contained"
-            sx={{ alignSelf: "center", marginTop: "50px" }}
-          >
-            Login
-          </Button>
-          <Link href="/register" passHref>
-            <Button
-              variant="outlined"
-              sx={{ alignSelf: "center", marginTop: "50px" }}
+        <Paper
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            padding: "75px 50px 50px 50px",
+            position: "relative",
+          }}
+        >
+          <Controller
+            name="email"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                label="Email"
+                variant="outlined"
+                fullWidth
+              />
+            )}
+          />
+          {errors.username?.type === "required" && (
+            <Typography
+              variant="caption"
+              component="p"
+              sx={{ marginLeft: "5px", color: "#e57373" }}
             >
-              Register
+              Email is required.
+            </Typography>
+          )}
+          <Controller
+            name="password"
+            control={control}
+            rules={{ required: true }}
+            render={({ field }) => (
+              <TextField
+                {...field}
+                type="password"
+                label="Password"
+                variant="outlined"
+                fullWidth
+                sx={{ marginTop: "25px" }}
+              />
+            )}
+          />
+          {errors.password?.type === "required" && (
+            <Typography
+              variant="caption"
+              component="p"
+              sx={{ marginLeft: "5px", color: "#e57373" }}
+            >
+              Password is required.
+            </Typography>
+          )}
+          <Box
+            sx={{
+              display: "flex",
+              gap: "20px",
+              justifyContent: "center",
+              marginTop: "50px",
+            }}
+          >
+            <Button type="submit" variant="contained">
+              Login
             </Button>
-          </Link>
-        </Box>
-      </Paper>
-    </Container>
+            <Button variant="outlined" sx={{ textDecoration: "none" }}>
+              <Link href="/register" passHref>
+                <Typography>Register</Typography>
+              </Link>
+            </Button>
+          </Box>
+        </Paper>
+      </Container>
+    </>
   );
 };
 
