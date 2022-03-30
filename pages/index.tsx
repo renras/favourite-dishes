@@ -113,40 +113,50 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
       </Head>
       <Container
         maxWidth="xl"
-        disableGutters
-        sx={{ display: "flex", gap: "20px", marginTop: "50px" }}
+        sx={{
+          marginTop: "50px",
+        }}
       >
-        <MuiButton
-          variant="text"
-          size="large"
-          onClick={showFavoriteDishes}
+        <Container
+          maxWidth={false}
           sx={{
-            borderBottom: state.showFavoriteDishes ? "2px solid #1976d2" : "",
-            borderRadius: "0px",
-            color: state.showFavoriteDishes ? "#1976d2" : "#90caf9",
+            display: "flex",
+            gap: "20px",
+            borderBottom: "1px solid #e0e0e0",
           }}
         >
-          Dishes
-        </MuiButton>
-        <MuiButton
-          variant="text"
-          size="large"
-          onClick={hideFavoriteDishes}
-          sx={{
-            borderBottom: !state.showFavoriteDishes ? "2px solid #1976d2" : "",
-            borderRadius: "0px",
-            color: !state.showFavoriteDishes ? "#1976d2" : "#90caf9",
-          }}
-        >
-          Movies
-        </MuiButton>
+          <MuiButton
+            variant="text"
+            size="large"
+            onClick={showFavoriteDishes}
+            sx={{
+              borderBottom: state.showFavoriteDishes ? "2px solid #1976d2" : "",
+              borderRadius: "0px",
+              color: state.showFavoriteDishes ? "#1976d2" : "#90caf9",
+            }}
+          >
+            Dishes
+          </MuiButton>
+          <MuiButton
+            variant="text"
+            size="large"
+            onClick={hideFavoriteDishes}
+            sx={{
+              borderBottom: !state.showFavoriteDishes
+                ? "2px solid #1976d2"
+                : "",
+              borderRadius: "0px",
+              color: !state.showFavoriteDishes ? "#1976d2" : "#90caf9",
+            }}
+          >
+            Movies
+          </MuiButton>
+        </Container>
       </Container>
       <Container
-        disableGutters
         maxWidth="xl"
         sx={{
           paddingTop: "25px",
-          borderTop: "1px solid #e0e0e0",
         }}
       >
         <Box sx={{ display: "flex", gap: "20px" }}>
@@ -166,8 +176,8 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
           )}
         </Box>
         <Container
-          maxWidth={false}
           disableGutters
+          maxWidth={false}
           className={styles.dishes}
           sx={{ marginTop: "50px" }}
         >
