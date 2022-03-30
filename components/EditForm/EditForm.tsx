@@ -90,7 +90,7 @@ const EditForm = ({
 
     dispatch({ type: "SET_INPUT_TEXT", payload: "" });
     dispatch({ type: "FILTER_DISHES" });
-    dispatch({ type: "TOGGLE_MODAL", payload: false });
+    closeEditFormHandler();
 
     document.documentElement.style.setProperty("--overflow", "auto");
     location.reload();

@@ -22,6 +22,8 @@ import Modal from "../Modal/Modal";
 import EditForm from "../EditForm/EditForm";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
+import { doc, deleteDoc } from "firebase/firestore";
+import { db } from "../../lib/firebase-config";
 
 interface Props {
   id: string | number | undefined;
@@ -67,8 +69,25 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
 
   const showDeleteConfirmation = () => {
     setIsDeleteConfirmationOpen(true);
+    setIsModalOpen(false);
     document.documentElement.style.setProperty("--overflow", "hidden");
     document.documentElement.style.setProperty("--padding-right", "15px");
+  };
+
+  const cancelHandler = () => {
+    setIsDeleteConfirmationOpen(false);
+    document.documentElement.style.setProperty("--overflow", "auto");
+    document.documentElement.style.setProperty("--padding-right", "0");
+  };
+
+  const deleteHandler = async (id: string) => {
+    const cardDoc = doc(db, "favorite-dishes", id);
+    await deleteDoc(cardDoc);
+    setIsDeleteConfirmationOpen(false);
+    document.documentElement.style.setProperty("--overflow", "auto");
+    document.documentElement.style.setProperty("--padding-right", "0");
+    document.body.style.cursor = "wait";
+    location.reload();
   };
 
   return (
@@ -195,10 +214,20 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
                 Are you sure you want to delete this item?
               </Typography>
               <Box sx={{ display: "flex", gap: "20px" }}>
-                <Button size="small" variant="outlined" color="error">
+                <Button
+                  size="small"
+                  variant="outlined"
+                  color="error"
+                  onClick={cancelHandler}
+                >
                   Cancel
                 </Button>
-                <Button size="small" variant="contained" color="error">
+                <Button
+                  size="small"
+                  variant="contained"
+                  color="error"
+                  onClick={() => deleteHandler(id as string)}
+                >
                   Yes
                 </Button>
               </Box>
