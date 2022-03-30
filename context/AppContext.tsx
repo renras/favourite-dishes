@@ -26,6 +26,8 @@ interface InitialState {
   sort: "none" | "ASCENDING" | "DESCENDING";
   favoriteMovies: Movie[] | null;
   showFavoriteDishes: boolean;
+  isLoggedIn: boolean;
+  username: string | null;
 }
 
 const initialState: InitialState = {
@@ -37,6 +39,8 @@ const initialState: InitialState = {
   sort: "none",
   favoriteMovies: null,
   showFavoriteDishes: true,
+  isLoggedIn: false,
+  username: null,
 };
 
 const AppContext = createContext<{
@@ -57,7 +61,9 @@ type Action =
   | { type: "SET_REQUEST_TOKEN"; payload: string }
   | { type: "SET_FAVORITE_MOVIES"; payload: Movie[] }
   | { type: "SET_SHOW_FAVORITE_DISHES"; payload: boolean }
-  | { type: "SET_FILTERED_DISHES"; payload: Dish[] };
+  | { type: "SET_FILTERED_DISHES"; payload: Dish[] }
+  | { type: "SET_IS_LOGGED_IN"; payload: boolean }
+  | { type: "SET_USERNAME"; payload: string };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
@@ -102,6 +108,10 @@ const reducer = (state: InitialState, action: Action) => {
       return { ...state, showFavoriteDishes: action.payload };
     case "SET_FILTERED_DISHES":
       return { ...state, filteredDishes: action.payload };
+    case "SET_IS_LOGGED_IN":
+      return { ...state, isLoggedIn: action.payload };
+    case "SET_USERNAME":
+      return { ...state, username: action.payload };
     default:
       return state;
   }

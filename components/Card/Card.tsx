@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import Image from "next/image";
+import AppContext from "../../context/AppContext";
 
 import styles from "./Card.module.css";
 import MuiCard from "@mui/material/Card";
@@ -35,6 +36,7 @@ interface Props {
 }
 
 const Card = ({ id, name, image, description, rating, phone }: Props) => {
+  const { state } = useContext(AppContext);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
     useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
@@ -97,9 +99,11 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
           title={name}
           action={
             <>
-              <IconButton onClick={() => setIsModalOpen(!isModalOpen)}>
-                <MoreHorizIcon sx={{ transform: "rotate(90deg)" }} />
-              </IconButton>
+              {state.isLoggedIn && (
+                <IconButton onClick={() => setIsModalOpen(!isModalOpen)}>
+                  <MoreHorizIcon sx={{ transform: "rotate(90deg)" }} />
+                </IconButton>
+              )}
             </>
           }
         />

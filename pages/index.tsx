@@ -3,7 +3,6 @@ import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
 import Darkmode from "darkmode-js";
-import { ToastContainer } from "react-toastify";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase-config";
 import { getFavoriteMovies } from "../lib/tmdb-api";
@@ -156,13 +155,15 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
             onChange={(e) => selectChangeHandler(e)}
             options={["Ascending", "Descending"]}
           />
-          <MuiButton
-            onClick={toggleModal}
-            variant="contained"
-            sx={{ marginLeft: "auto" }}
-          >
-            Add Dish
-          </MuiButton>
+          {state.isLoggedIn && (
+            <MuiButton
+              onClick={toggleModal}
+              variant="contained"
+              sx={{ marginLeft: "auto" }}
+            >
+              Add Dish
+            </MuiButton>
+          )}
         </Box>
         <Container
           maxWidth={false}
@@ -202,7 +203,6 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
           <Form />
         </Modal>
       )}
-      <ToastContainer />
     </>
   );
 };
