@@ -28,6 +28,7 @@ interface InitialState {
   showFavoriteDishes: boolean;
   isLoggedIn: boolean;
   username: string | null;
+  role: string | null;
 }
 
 const initialState: InitialState = {
@@ -41,6 +42,7 @@ const initialState: InitialState = {
   showFavoriteDishes: true,
   isLoggedIn: false,
   username: null,
+  role: null,
 };
 
 const AppContext = createContext<{
@@ -63,7 +65,8 @@ type Action =
   | { type: "SET_SHOW_FAVORITE_DISHES"; payload: boolean }
   | { type: "SET_FILTERED_DISHES"; payload: Dish[] }
   | { type: "SET_IS_LOGGED_IN"; payload: boolean }
-  | { type: "SET_USERNAME"; payload: string };
+  | { type: "SET_USERNAME"; payload: string }
+  | { type: "SET_ROLE"; payload: string };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
@@ -112,6 +115,8 @@ const reducer = (state: InitialState, action: Action) => {
       return { ...state, isLoggedIn: action.payload };
     case "SET_USERNAME":
       return { ...state, username: action.payload };
+    case "SET_ROLE":
+      return { ...state, role: action.payload };
     default:
       return state;
   }

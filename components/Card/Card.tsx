@@ -100,7 +100,7 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
           title={name}
           action={
             <>
-              {state.isLoggedIn && (
+              {state.isLoggedIn && state.role === "Editor" && (
                 <IconButton onClick={() => setIsModalOpen(!isModalOpen)}>
                   <MoreHorizIcon sx={{ transform: "rotate(90deg)" }} />
                 </IconButton>

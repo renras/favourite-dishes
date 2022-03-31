@@ -37,6 +37,7 @@ const Form = () => {
           router.push("/").then(() => {
             dispatch({ type: "SET_IS_LOGGED_IN", payload: true });
             dispatch({ type: "SET_USERNAME", payload: doc.data()?.username });
+            dispatch({ type: "SET_ROLE", payload: doc.data()?.role });
           });
         });
       })

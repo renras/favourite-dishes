@@ -41,6 +41,7 @@ const Form = () => {
 
           return setDoc(userRef, {
             username: data.username,
+            role: "Viewer",
           }).catch((err) => {
             console.log(err.message);
             return;
