@@ -1,10 +1,8 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../lib/firebase-config";
-import { getDoc, doc } from "firebase/firestore";
+import { auth } from "../lib/firebase-config";
 import { useRouter } from "next/router";
-import AppContext from "../context/AppContext";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -21,7 +19,6 @@ interface IFormInput {
 }
 
 const Form = () => {
-  const { dispatch } = useContext(AppContext);
   const router = useRouter();
   const {
     control,
@@ -30,16 +27,8 @@ const Form = () => {
   } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
     signInWithEmailAndPassword(auth, data.email, data.password)
-      .then((cred) => {
-        const userRef = doc(db, "users", cred.user.uid);
-
-        getDoc(userRef).then((doc) => {
-          router.push("/").then(() => {
-            dispatch({ type: "SET_IS_LOGGED_IN", payload: true });
-            dispatch({ type: "SET_USERNAME", payload: doc.data()?.username });
-            dispatch({ type: "SET_ROLE", payload: doc.data()?.role });
-          });
-        });
+      .then(() => {
+        router.push("/");
       })
       .catch((err) => {
         console.log(err.message);

@@ -3,9 +3,11 @@ import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
 import Darkmode from "darkmode-js";
-import { collection, getDocs } from "firebase/firestore";
+import { doc, getDoc, collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase-config";
 import { getFavoriteMovies } from "../lib/tmdb-api";
+import { auth } from "../lib/firebase-config";
+import { onAuthStateChanged } from "firebase/auth";
 
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -28,9 +30,6 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
   const { state, dispatch } = useContext(AppContext);
 
   useEffect(() => {
-    const darkmode = new Darkmode();
-    darkmode.showWidget();
-
     const setFavoriteMovies = async () => {
       dispatch({
         type: "SET_FAVORITE_MOVIES",
@@ -57,9 +56,24 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
     };
 
     setFilteredDishes();
-  }, [dispatch, favoriteMovies, favoriteDishes]);
 
-  console.log(state.dishes);
+    onAuthStateChanged(auth, async (user) => {
+      if (user) {
+        const docRef = doc(db, "users", user.uid);
+        const docSnap = await getDoc(docRef);
+
+        if (docSnap.exists()) {
+          dispatch({ type: "SET_ROLE", payload: docSnap.data().role });
+          dispatch({ type: "SET_USERNAME", payload: docSnap.data().username });
+          dispatch({ type: "SET_IS_LOGGED_IN", payload: true });
+        }
+      } else {
+        console.log("No user logged in");
+      }
+    });
+  }, [dispatch, favoriteMovies, favoriteDishes]);
+  const darkmode = new Darkmode();
+  darkmode.showWidget();
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });

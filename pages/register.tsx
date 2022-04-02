@@ -39,7 +39,7 @@ const Form = () => {
         .then(async (cred) => {
           const userRef = doc(db, "users", cred.user.uid);
 
-          return setDoc(userRef, {
+          return await setDoc(userRef, {
             username: data.username,
             role: "Viewer",
           }).catch((err) => {
