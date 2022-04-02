@@ -118,6 +118,7 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
         }}
       >
         <Container
+          disableGutters
           maxWidth={false}
           sx={{
             display: "flex",
