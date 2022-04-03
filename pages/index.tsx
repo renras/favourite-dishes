@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useState, useContext, useEffect } from "react";
 import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
@@ -6,7 +6,7 @@ import Darkmode from "darkmode-js";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "../lib/firebase-config";
 import { getFavoriteMovies } from "../lib/tmdb-api";
-import { auth } from "../lib/firebase-config";
+import { getAuth } from "firebase/auth";
 
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -26,7 +26,11 @@ interface Props {
 }
 
 const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
+  const [isEmailVerified, setIsEmailVerified] = useState<boolean | undefined>(
+    false
+  );
   const { state, dispatch } = useContext(AppContext);
+  const auth = getAuth();
 
   useEffect(() => {
     const setFavoriteMovies = async () => {
@@ -55,11 +59,22 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
     };
 
     setFilteredDishes();
-  }, [dispatch, favoriteMovies, favoriteDishes]);
 
-  console.log(auth.currentUser);
+    auth.currentUser?.reload().then(() => {
+      console.log("triggered");
+      setIsEmailVerified(auth.currentUser?.emailVerified);
+    });
+  }, [dispatch, favoriteMovies, favoriteDishes, auth.currentUser]);
   const darkmode = new Darkmode();
   darkmode.showWidget();
+
+  if (state.isLoggedIn && isEmailVerified === false) {
+    return (
+      <>
+        <h1>Please Verify Your Email Before Proceeding</h1>
+      </>
+    );
+  }
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });

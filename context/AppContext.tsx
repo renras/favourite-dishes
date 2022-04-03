@@ -29,6 +29,7 @@ interface InitialState {
   isLoggedIn: boolean;
   username: string | null;
   role: string | null;
+  isEmailVerified: boolean;
 }
 
 const initialState: InitialState = {
@@ -43,6 +44,7 @@ const initialState: InitialState = {
   isLoggedIn: false,
   username: null,
   role: null,
+  isEmailVerified: false,
 };
 
 const AppContext = createContext<{
@@ -66,7 +68,8 @@ type Action =
   | { type: "SET_FILTERED_DISHES"; payload: Dish[] }
   | { type: "SET_IS_LOGGED_IN"; payload: boolean }
   | { type: "SET_USERNAME"; payload: string }
-  | { type: "SET_ROLE"; payload: string };
+  | { type: "SET_ROLE"; payload: string }
+  | { type: "SET_IS_EMAIL_VERIFIED"; payload: boolean };
 
 const reducer = (state: InitialState, action: Action) => {
   switch (action.type) {
@@ -117,6 +120,8 @@ const reducer = (state: InitialState, action: Action) => {
       return { ...state, username: action.payload };
     case "SET_ROLE":
       return { ...state, role: action.payload };
+    case "SET_IS_EMAIL_VERIFIED":
+      return { ...state, isEmailVerified: action.payload };
     default:
       return state;
   }
