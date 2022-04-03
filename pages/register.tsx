@@ -1,9 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { createUserWithEmailAndPassword, signOut } from "firebase/auth";
+import {
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  getAuth,
+  onAuthStateChanged,
+} from "firebase/auth";
 import { auth, db } from "../lib/firebase-config";
-import { setDoc, doc } from "firebase/firestore";
+import { setDoc, doc, getDoc } from "firebase/firestore";
 import { useRouter } from "next/router";
+import AppContext from "../context/AppContext";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -23,6 +29,7 @@ interface IFormInput {
 }
 
 const Form = () => {
+  const { dispatch } = useContext(AppContext);
   const {
     control,
     handleSubmit,
@@ -48,25 +55,49 @@ const Form = () => {
           });
         })
         .then(() => {
-          router.push("/login").then(() => {
-            const notify = () => {
-              toast.success("Registration Successful!", {
-                position: "bottom-left",
-                autoClose: 1000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
+          const auth = getAuth();
+          if (auth.currentUser) {
+            sendEmailVerification(auth.currentUser).then(() => {
+              router.push("/").then(() => {
+                onAuthStateChanged(auth, async (user) => {
+                  if (user) {
+                    const docRef = doc(db, "users", user.uid);
+                    const docSnap = await getDoc(docRef);
+
+                    if (docSnap.exists()) {
+                      dispatch({
+                        type: "SET_ROLE",
+                        payload: docSnap.data().role,
+                      });
+                      dispatch({
+                        type: "SET_USERNAME",
+                        payload: docSnap.data().username,
+                      });
+                      dispatch({ type: "SET_IS_LOGGED_IN", payload: true });
+                    }
+                  } else {
+                    console.log("No user logged in");
+                  }
+                });
+
+                const notify = () => {
+                  toast.success("Registration Successful!", {
+                    position: "bottom-left",
+                    autoClose: 1000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                  });
+                };
+
+                notify();
+
+                return;
               });
-            };
-
-            notify();
-
-            signOut(auth);
-
-            return;
-          });
+            });
+          }
         });
     };
 
