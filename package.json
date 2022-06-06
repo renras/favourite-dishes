@@ -15,12 +15,15 @@
     "@hookform/resolvers": "^2.8.8",
     "@mui/icons-material": "^5.5.1",
     "@mui/material": "^5.5.2",
+    "@next-auth/prisma-adapter": "^1.0.3",
+    "@prisma/client": "^3.14.0",
     "@types/react-dom": "^17.0.13",
     "@types/validator": "^13.7.1",
     "darkmode-js": "^1.5.7",
     "firebase": "^9.6.10",
     "libphonenumber-js": "^1.9.49",
     "next": "12.1.0",
+    "next-auth": "^4.3.4",
     "normalize.css": "^8.0.1",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -41,6 +44,8 @@
     "eslint-plugin-css": "^0.6.0",
     "husky": "^7.0.4",
     "jest": "^27.5.1",
+    "prettier": "^2.6.2",
+    "prisma": "^3.14.0",
     "typescript": "4.5.5"
   }
 }
