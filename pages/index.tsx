@@ -55,7 +55,6 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
   const darkmode = new Darkmode();
   darkmode.showWidget();
 
-
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
     document.documentElement.style.setProperty("--overflow", "hidden");

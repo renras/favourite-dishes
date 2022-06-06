@@ -1,16 +1,20 @@
+import { ReactNode } from "react";
 import AppBar from "@mui/material/AppBar";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
-import Link from "next/link";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import {useRouter} from 'next/router';
+import { useRouter } from "next/router";
+import { useSession, signIn, signOut } from "next-auth/react";
 
-const Layout = ({ children }: { children: React.ReactNode }) => {
+const Layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
+  const { data: session } = useSession();
+
+  console.log(session);
 
   return (
     <>
@@ -26,9 +30,27 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
               >
                 MYFAVORITES
               </Typography>
-              <Link href="/login" passHref>
-                <Button color="inherit">Login</Button>
-              </Link>
+
+              {!session && (
+                <Button color="inherit" onClick={() => signIn()}>
+                  Login
+                </Button>
+              )}
+
+              {session && (
+                <Box
+                  sx={{ display: "flex", alignItems: "center", gap: "10px" }}
+                >
+                  <Typography>{session.user?.email}</Typography>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    onClick={() => signOut()}
+                  >
+                    Sign Out
+                  </Button>
+                </Box>
+              )}
             </Toolbar>
           </Container>
         </AppBar>

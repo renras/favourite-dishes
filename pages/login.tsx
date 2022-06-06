@@ -1,5 +1,13 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import {
+  getProviders,
+  signIn,
+  LiteralUnion,
+  ClientSafeProvider,
+} from "next-auth/react";
+import { BuiltInProviderType } from "next-auth/providers";
+import { GetServerSideProps } from "next";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -19,7 +27,14 @@ interface IFormInput {
   password: string;
 }
 
-const Form = () => {
+const Form = ({
+  providers,
+}: {
+  providers: Record<
+    LiteralUnion<BuiltInProviderType, string>,
+    ClientSafeProvider
+  > | null;
+}) => {
   const {
     control,
     handleSubmit,
@@ -130,9 +145,17 @@ const Form = () => {
             <IconButton>
               <TwitterIcon fontSize="large" sx={{ color: "#1da1f2" }} />
             </IconButton>
-            <IconButton>
-              <GoogleIcon fontSize="large" sx={{ color: "#DB4437" }} />
-            </IconButton>
+            {providers &&
+              Object.values(providers).map((provider) => {
+                return (
+                  <IconButton
+                    key={provider.name}
+                    onClick={() => signIn(provider.id)}
+                  >
+                    <GoogleIcon fontSize="large" sx={{ color: "#DB4437" }} />
+                  </IconButton>
+                );
+              })}
           </Box>
         </Paper>
       </Container>
@@ -141,3 +164,10 @@ const Form = () => {
 };
 
 export default Form;
+
+export const getServerSideProps: GetServerSideProps = async () => {
+  const providers = await getProviders();
+  return {
+    props: { providers },
+  };
+};
