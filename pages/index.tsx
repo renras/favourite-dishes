@@ -3,8 +3,6 @@ import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
 import Darkmode from "darkmode-js";
-import { getAuth } from "firebase/auth";
-import AuthContext from "../context/AuthContext";
 
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -25,8 +23,6 @@ interface Props {
 
 const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
   const { state, dispatch } = useContext(AppContext);
-  const auth = getAuth();
-  const { user } = useContext(AuthContext);
 
   useEffect(() => {
     const setFavoriteMovies = async () => {
@@ -55,17 +51,10 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
     };
 
     setFilteredDishes();
-  }, [dispatch, favoriteMovies, favoriteDishes, auth.currentUser]);
+  }, [dispatch, favoriteMovies, favoriteDishes]);
   const darkmode = new Darkmode();
   darkmode.showWidget();
 
-  if (user?.emailVerified === false) {
-    return (
-      <>
-        <h1>Please Verify Your Email Before Proceeding</h1>
-      </>
-    );
-  }
 
   const toggleModal = () => {
     dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });

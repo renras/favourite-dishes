@@ -12,7 +12,6 @@ import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { collection, addDoc } from "firebase/firestore";
-import { db } from "../../lib/firebase-config";
 import { useRouter } from "next/router";
 
 interface IFormInput {

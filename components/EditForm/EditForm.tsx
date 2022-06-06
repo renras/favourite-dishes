@@ -1,4 +1,4 @@
-import React, { useContext } from "react";
+import React from "react";
 import AppContext from "../../context/AppContext";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import isURL from "validator/lib/isURL";
@@ -11,8 +11,6 @@ import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { updateDoc, doc } from "firebase/firestore";
-import { db } from "../../lib/firebase-config";
 import Box from "@mui/material/Box";
 import { useRouter } from "next/router";
 
@@ -57,41 +55,9 @@ const EditForm = ({
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const { dispatch } = useContext(AppContext);
 
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    const update = async (data: Data) => {
-      const collectionDoc = doc(db, "favorite-dishes", id);
-      const newFields = {
-        name: data.title,
-        image: data.imgUrl,
-        description: data.description,
-        rating: data.rating,
-        phone: data.phone,
-      };
-      await updateDoc(collectionDoc, newFields);
-    };
-
-    update(data);
-
-    const notify = () => {
-      toast.success("Dish Edited!", {
-        position: "bottom-left",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    };
-
-    notify();
-
-    dispatch({ type: "SET_INPUT_TEXT", payload: "" });
-    dispatch({ type: "FILTER_DISHES" });
-    closeEditFormHandler();
-
+    console.log(data);
     document.documentElement.style.setProperty("--overflow", "auto");
     router.replace(router.asPath);
   };

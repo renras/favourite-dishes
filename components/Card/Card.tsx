@@ -24,8 +24,6 @@ import Modal from "../Modal/Modal";
 import EditForm from "../EditForm/EditForm";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
-import { doc, deleteDoc } from "firebase/firestore";
-import { db } from "../../lib/firebase-config";
 
 interface Props {
   id: string | number | undefined;
@@ -85,8 +83,6 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
   };
 
   const deleteHandler = async (id: string) => {
-    const cardDoc = doc(db, "favorite-dishes", id);
-    await deleteDoc(cardDoc);
     setIsDeleteConfirmationOpen(false);
     document.documentElement.style.setProperty("--overflow", "auto");
     document.documentElement.style.setProperty("--padding-right", "0");
