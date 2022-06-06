@@ -1,6 +1,5 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { useRouter } from "next/router";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -10,6 +9,10 @@ import Button from "@mui/material/Button";
 import "react-toastify/dist/ReactToastify.css";
 import Box from "@mui/material/Box";
 import Link from "next/link";
+import FacebookIcon from "@mui/icons-material/Facebook";
+import TwitterIcon from "@mui/icons-material/Twitter";
+import GoogleIcon from "@mui/icons-material/Google";
+import IconButton from "@mui/material/IconButton";
 
 interface IFormInput {
   email: string;
@@ -107,6 +110,29 @@ const Form = () => {
                 <Typography>Register</Typography>
               </Link>
             </Button>
+          </Box>
+          <Typography
+            component="p"
+            sx={{ textAlign: "center", marginTop: "40px" }}
+          >
+            Or Log In Using
+          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              marginTop: "10px",
+              justifyContent: "center",
+            }}
+          >
+            <IconButton>
+              <FacebookIcon fontSize="large" sx={{ color: "#4267B2" }} />
+            </IconButton>
+            <IconButton>
+              <TwitterIcon fontSize="large" sx={{ color: "#1da1f2" }} />
+            </IconButton>
+            <IconButton>
+              <GoogleIcon fontSize="large" sx={{ color: "#DB4437" }} />
+            </IconButton>
           </Box>
         </Paper>
       </Container>
