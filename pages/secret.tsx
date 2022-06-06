@@ -1,7 +1,7 @@
 import { useSession } from "next-auth/react";
 
 const Secret = () => {
-  const { status } = useSession();
+  const { data, status } = useSession();
 
   if (status === "loading") {
     return <p>Loading...</p>;
@@ -11,6 +11,7 @@ const Secret = () => {
     return <p>Access Denied</p>;
   }
 
+  console.log(data);
   return (
     <>
       <h1>Protected Page</h1>

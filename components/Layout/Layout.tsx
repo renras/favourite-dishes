@@ -14,8 +14,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
   const { data: session } = useSession();
 
-  console.log(session);
-
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
