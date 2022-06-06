@@ -3,9 +3,6 @@ import Head from "next/head";
 import AppContext from "../context/AppContext";
 import { NextPage } from "next";
 import Darkmode from "darkmode-js";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "../lib/firebase-config";
-import { getFavoriteMovies } from "../lib/tmdb-api";
 import { getAuth } from "firebase/auth";
 import AuthContext from "../context/AuthContext";
 
@@ -230,18 +227,8 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
 export default Home;
 
 export async function getStaticProps() {
-  const favoriteMovies = await getFavoriteMovies(
-    process.env.TMDB_API_KEY as string,
-    process.env.TMDB_USERNAME as string,
-    process.env.TMDB_PASSWORD as string
-  );
-
-  const dishesCollectionRef = collection(db, "favorite-dishes");
-  const data = await getDocs(dishesCollectionRef);
-  const favoriteDishes = data.docs.map((doc) => ({
-    ...doc.data(),
-    id: doc.id,
-  }));
+  const favoriteMovies = [];
+  const favoriteDishes = [];
 
   return {
     props: {
