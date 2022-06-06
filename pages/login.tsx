@@ -1,7 +1,5 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../lib/firebase-config";
 import { useRouter } from "next/router";
 
 import TextField from "@mui/material/TextField";
@@ -19,20 +17,13 @@ interface IFormInput {
 }
 
 const Form = () => {
-  const router = useRouter();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    signInWithEmailAndPassword(auth, data.email, data.password)
-      .then(() => {
-        router.push("/");
-      })
-      .catch((err) => {
-        console.log(err.message);
-      });
+    console.log(data);
   };
 
   return (
