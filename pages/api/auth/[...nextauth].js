@@ -14,4 +14,9 @@ export default NextAuth({
   pages: {
     signIn: "/login",
   },
+  callbacks: {
+    async redirect({ baseUrl }) {
+      return baseUrl;
+    },
+  },
 });
