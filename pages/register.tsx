@@ -1,23 +1,11 @@
-import React, { useContext } from "react";
+import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import {
-  createUserWithEmailAndPassword,
-  sendEmailVerification,
-  getAuth,
-  onAuthStateChanged,
-} from "firebase/auth";
-import { auth, db } from "../lib/firebase-config";
-import { setDoc, doc, getDoc } from "firebase/firestore";
-import { useRouter } from "next/router";
-import AppContext from "../context/AppContext";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
 import Link from "next/link";
 import Box from "@mui/material/Link";
 
@@ -29,79 +17,13 @@ interface IFormInput {
 }
 
 const Form = () => {
-  const { dispatch } = useContext(AppContext);
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const router = useRouter();
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    if (data.password !== data.confirmPassword) {
-      return;
-    }
-
-    const register = () => {
-      createUserWithEmailAndPassword(auth, data.email, data.password)
-        .then(async (cred) => {
-          const userRef = doc(db, "users", cred.user.uid);
-
-          return await setDoc(userRef, {
-            username: data.username,
-            role: "Viewer",
-          }).catch((err) => {
-            console.log(err.message);
-            return;
-          });
-        })
-        .then(() => {
-          const auth = getAuth();
-          if (auth.currentUser) {
-            sendEmailVerification(auth.currentUser).then(() => {
-              router.push("/").then(() => {
-                onAuthStateChanged(auth, async (user) => {
-                  if (user) {
-                    const docRef = doc(db, "users", user.uid);
-                    const docSnap = await getDoc(docRef);
-
-                    if (docSnap.exists()) {
-                      dispatch({
-                        type: "SET_ROLE",
-                        payload: docSnap.data().role,
-                      });
-                      dispatch({
-                        type: "SET_USERNAME",
-                        payload: docSnap.data().username,
-                      });
-                      dispatch({ type: "SET_IS_LOGGED_IN", payload: true });
-                    }
-                  } else {
-                    console.log("No user logged in");
-                  }
-                });
-
-                const notify = () => {
-                  toast.success("Registration Successful!", {
-                    position: "bottom-left",
-                    autoClose: 1000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                  });
-                };
-
-                notify();
-
-                return;
-              });
-            });
-          }
-        });
-    };
-
-    register();
+    console.log(data);
   };
 
   return (
