@@ -1,5 +1,6 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import isEmail from "validator/lib/isEmail";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -70,7 +71,12 @@ const Form = () => {
             name="email"
             defaultValue=""
             control={control}
-            rules={{ required: true }}
+            rules={{
+              required: true,
+              validate: {
+                isEmail: (v) => isEmail(v),
+              },
+            }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -88,6 +94,15 @@ const Form = () => {
               sx={{ marginLeft: "5px", color: "#e57373" }}
             >
               Email is required.
+            </Typography>
+          )}
+          {errors.email?.type === "isEmail" && (
+            <Typography
+              variant="caption"
+              component="p"
+              sx={{ marginLeft: "5px", color: "#e57373" }}
+            >
+              Please enter a valid e-mail.
             </Typography>
           )}
           <Controller
