@@ -1,7 +1,5 @@
 import { ComponentType } from "react";
-import { useSession } from "next-auth/react";
 import useSWR from "swr";
-import { User } from "../../types/user";
 import { Role, RoleType } from "../../types/role";
 import fetcher from "../../utils/fetcher";
 
@@ -14,23 +12,17 @@ export const withAuthorizationAndAuthentication =
   <T,>(Component: ComponentType<T>) =>
   // eslint-disable-next-line react/display-name
   (props: T) => {
-    const { status } = useSession();
-    const { data: userData, error: userError } = useSWR<User>(
-      "/api/v1/user",
-      fetcher
-    );
     const { data: userRoles, error: userRolesError } = useSWR<Role[]>(
-      userData ? `/api/v1/role/${userData.id}` : null,
+      `/api/v1/role`,
       fetcher
     );
     const roles = userRoles?.map((role) => role.title);
     const isAdmin = roles?.includes(RoleType.ADMIN);
 
-    if (userError || userRolesError) return <Error />;
+    if (userRolesError) return <Error />;
+    if (!userRoles) return <Loading />;
 
-    if (status === "loading" || !userData || !userRoles) return <Loading />;
-
-    if (status === "unauthenticated" || !isAdmin) {
+    if (!isAdmin) {
       return (
         <Container
           maxWidth="sm"

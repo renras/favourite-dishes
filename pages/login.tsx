@@ -31,7 +31,7 @@ const Form = ({
   providers,
 }: {
   providers: Record<
-    LiteralUnion<BuiltInProviderType, string>,
+    LiteralUnion<BuiltInProviderType>,
     ClientSafeProvider
   > | null;
 }) => {

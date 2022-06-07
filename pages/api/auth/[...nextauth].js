@@ -18,5 +18,9 @@ export default NextAuth({
     async redirect({ baseUrl }) {
       return baseUrl;
     },
+    async session({ session, user }) {
+      session.user.id = user.id;
+      return session;
+    },
   },
 });
