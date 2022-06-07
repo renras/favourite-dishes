@@ -3,6 +3,7 @@ import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import isEmail from "validator/lib/isEmail";
 import axios from "axios";
 import { useRouter } from "next/router";
+import { isUsernameRegistered, isEmailRegistered } from "../lib/validation";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -68,7 +69,13 @@ const Form = () => {
             name="username"
             defaultValue=""
             control={control}
-            rules={{ required: true }}
+            rules={{
+              required: true,
+              validate: {
+                isUsernameRegistered: async (v) =>
+                  !(await isUsernameRegistered(v)),
+              },
+            }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -87,6 +94,15 @@ const Form = () => {
               Username is required.
             </Typography>
           )}
+          {errors.username?.type === "isUsernameRegistered" && (
+            <Typography
+              variant="caption"
+              component="p"
+              sx={{ marginLeft: "5px", color: "#e57373" }}
+            >
+              Username is already taken.
+            </Typography>
+          )}
           <Controller
             name="email"
             defaultValue=""
@@ -95,6 +111,7 @@ const Form = () => {
               required: true,
               validate: {
                 isEmail: (v) => isEmail(v),
+                isEmailRegistered: async (v) => !(await isEmailRegistered(v)),
               },
             }}
             render={({ field }) => (
@@ -114,6 +131,15 @@ const Form = () => {
               sx={{ marginLeft: "5px", color: "#e57373" }}
             >
               Email is required.
+            </Typography>
+          )}
+          {errors.email?.type === "isEmailRegistered" && (
+            <Typography
+              variant="caption"
+              component="p"
+              sx={{ marginLeft: "5px", color: "#e57373" }}
+            >
+              Email is already taken.
             </Typography>
           )}
           {errors.email?.type === "isEmail" && (

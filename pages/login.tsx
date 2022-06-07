@@ -87,7 +87,7 @@ const Form = ({
             rules={{
               required: true,
               validate: {
-                isRegistered: (v) => isUsernameRegistered(v),
+                isRegistered: async (v) => await isUsernameRegistered(v),
               },
             }}
             render={({ field }) => (
