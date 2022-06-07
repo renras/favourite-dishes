@@ -1,6 +1,8 @@
 import React from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import isEmail from "validator/lib/isEmail";
+import axios from "axios";
+import { useRouter } from "next/router";
 
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
@@ -9,6 +11,7 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import Box from "@mui/material/Link";
+import { successToast, errorToast } from "../utils/toast";
 
 interface IFormInput {
   username: string;
@@ -18,13 +21,29 @@ interface IFormInput {
 }
 
 const Form = () => {
+  const router = useRouter();
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    console.log(data);
+    if (data.password !== data.confirmPassword) {
+      errorToast("Please make sure your passwords match.");
+      return;
+    }
+
+    try {
+      await axios.post("/api/v1/user", {
+        username: data.username,
+        email: data.email,
+        password: data.password,
+      });
+      successToast("Registration successful!");
+      await router.push("/login");
+    } catch (error) {
+      errorToast("Registration failed. Please try again.");
+    }
   };
 
   return (
