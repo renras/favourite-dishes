@@ -4,6 +4,8 @@ import useSWR from "swr";
 import { User } from "../../types/user";
 import { Role, RoleType } from "../../types/role";
 import axios from "axios";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
 const fetcher = async (url: string) => {
   const res = await axios.get(url);
@@ -27,15 +29,42 @@ export const withAuthorizationAndAuthentication =
     const isAdmin = roles?.includes(RoleType.ADMIN);
 
     if (userError || userRolesError) {
-      return <p>Failed to load page.</p>;
+      return (
+        <Container
+          maxWidth="sm"
+          sx={{ textAlign: "center", marginTop: "100px" }}
+        >
+          <Typography variant="h2" component="h1" gutterBottom>
+            Failed to load page.
+          </Typography>
+        </Container>
+      );
     }
 
     if (status === "loading" || !userData || !userRoles) {
-      return <p>Loading...</p>;
+      return (
+        <Container
+          maxWidth="sm"
+          sx={{ textAlign: "center", marginTop: "100px" }}
+        >
+          <Typography variant="h2" component="h1" gutterBottom>
+            Loading...
+          </Typography>
+        </Container>
+      );
     }
 
     if (status === "unauthenticated" || !isAdmin) {
-      return <p>Access Denied</p>;
+      return (
+        <Container
+          maxWidth="sm"
+          sx={{ textAlign: "center", marginTop: "100px" }}
+        >
+          <Typography variant="h2" component="h1" gutterBottom>
+            Access denied.
+          </Typography>
+        </Container>
+      );
     }
 
     return <Component {...props} />;

@@ -19,7 +19,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
           email: session?.user?.email,
         },
       });
-      res.send({ status: "OK", data: user });
+      res.status(200).send({ status: "OK", data: user });
     } catch (error) {
       res
         .status(500)

@@ -97,6 +97,16 @@ model RolePermission {
   @@map("role_permissions")
 }
 
+model Dish {
+  id            String  @id @default(cuid())
+  description   String
+  image         String
+  name          String
+  rating        Int
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
 enum RoleType {
   USER
   ADMIN
