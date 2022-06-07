@@ -1,8 +1,9 @@
-import { useContext, useEffect } from "react";
+import { useState } from "react";
 import Head from "next/head";
-import AppContext from "../context/AppContext";
-import { NextPage } from "next";
-import Darkmode from "darkmode-js";
+import { Dish } from "../types/dish";
+import useSWR from "swr";
+import fetcher from "../utils/fetcher";
+import { useSession } from "next-auth/react";
 
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -13,93 +14,40 @@ import styles from "../styles/index.module.css";
 import Card from "../components/Card/Card";
 import Search from "../components/ui/Search/Search";
 import Select from "../components/ui/Select/Select";
-import { Dish } from "../context/AppContext";
-import { Movie } from "../context/AppContext";
+import Error from "../components/Error/Error";
+import Loading from "../components/Loading/Loading";
 
-interface Props {
-  favoriteMovies: Movie[];
-  favoriteDishes: Dish[];
-}
+const Home = () => {
+  const { data: session } = useSession();
+  const { data: dishes, error: dishesError } = useSWR<Dish[]>(
+    "/api/v1/dish",
+    fetcher
+  );
+  const [currentActiveTab, setCurrentActiveTab] = useState<"DISHES" | "MOVIES">(
+    "DISHES"
+  );
+  const [isModalOpen] = useState(false);
 
-const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
-  const { state, dispatch } = useContext(AppContext);
-
-  useEffect(() => {
-    const setFavoriteMovies = async () => {
-      dispatch({
-        type: "SET_FAVORITE_MOVIES",
-        payload: favoriteMovies,
-      });
-    };
-
-    setFavoriteMovies();
-
-    const setFavoriteDishes = async () => {
-      dispatch({
-        type: "SET_DISHES",
-        payload: favoriteDishes,
-      });
-    };
-
-    setFavoriteDishes();
-
-    const setFilteredDishes = async () => {
-      dispatch({
-        type: "SET_FILTERED_DISHES",
-        payload: favoriteDishes,
-      });
-    };
-
-    setFilteredDishes();
-  }, [dispatch, favoriteMovies, favoriteDishes]);
-  const darkmode = new Darkmode();
-  darkmode.showWidget();
+  if (dishesError) return <Error />;
+  if (!dishes) return <Loading />;
 
   const toggleModal = () => {
-    dispatch({ type: "TOGGLE_MODAL", payload: !state.showModal });
     document.documentElement.style.setProperty("--overflow", "hidden");
     document.documentElement.style.setProperty("--padding-right", "15px");
   };
 
-  const inputChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    dispatch({ type: "SET_INPUT_TEXT", payload: e.target.value });
-    dispatch({ type: "FILTER_DISHES" });
+  const handleInputChange = () => {
+    console.log("input changed");
   };
 
-  const selectChangeHandler = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (e.target.value === "Ascending") {
-      dispatch({ type: "SET_SORT", payload: "ASCENDING" });
-      console.log("Ascending");
-    }
-
-    if (e.target.value === "Descending") {
-      dispatch({ type: "SET_SORT", payload: "DESCENDING" });
-      console.log("Descending");
-    }
-
-    dispatch({ type: "FILTER_DISHES" });
-  };
-
-  const showFavoriteDishes = () => {
-    dispatch({
-      type: "SET_SHOW_FAVORITE_DISHES",
-      payload: true,
-    });
-  };
-
-  const hideFavoriteDishes = () => {
-    dispatch({
-      type: "SET_SHOW_FAVORITE_DISHES",
-      payload: false,
-    });
+  const handleSelectChange = () => {
+    console.log("select changed");
   };
 
   return (
     <>
       <Head>
-        <title>
-          {state.showFavoriteDishes ? "Favorite Dishes" : "Favorite Movies"}
-        </title>
+        <title>`Favorite ${currentActiveTab.toUpperCase()}`</title>
         <meta
           name="description"
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
@@ -123,11 +71,12 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
           <MuiButton
             variant="text"
             size="large"
-            onClick={showFavoriteDishes}
+            onClick={() => setCurrentActiveTab("DISHES")}
             sx={{
-              borderBottom: state.showFavoriteDishes ? "2px solid #1976d2" : "",
+              borderBottom:
+                currentActiveTab === "DISHES" ? "2px solid #1976d2" : "",
               borderRadius: "0px",
-              color: state.showFavoriteDishes ? "#1976d2" : "#90caf9",
+              color: currentActiveTab === "DISHES" ? "#1976d2" : "#90caf9",
             }}
           >
             Dishes
@@ -135,13 +84,12 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
           <MuiButton
             variant="text"
             size="large"
-            onClick={hideFavoriteDishes}
+            onClick={() => setCurrentActiveTab("MOVIES")}
             sx={{
-              borderBottom: !state.showFavoriteDishes
-                ? "2px solid #1976d2"
-                : "",
+              borderBottom:
+                currentActiveTab === "MOVIES" ? "2px solid #1976d2" : "",
               borderRadius: "0px",
-              color: !state.showFavoriteDishes ? "#1976d2" : "#90caf9",
+              color: currentActiveTab === "DISHES" ? "#1976d2" : "#90caf9",
             }}
           >
             Movies
@@ -155,12 +103,12 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
         }}
       >
         <Box sx={{ display: "flex", gap: "20px" }}>
-          <Search onChange={(e) => inputChangeHandler(e)} />
+          <Search onChange={handleInputChange} />
           <Select
-            onChange={(e) => selectChangeHandler(e)}
+            onChange={handleSelectChange}
             options={["Ascending", "Descending"]}
           />
-          {state.isLoggedIn && (
+          {session && (
             <MuiButton
               onClick={toggleModal}
               variant="contained"
@@ -176,8 +124,8 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
           className={styles.dishes}
           sx={{ marginTop: "50px" }}
         >
-          {state.showFavoriteDishes &&
-            state.filteredDishes.map((dish: Dish) => (
+          {currentActiveTab === "DISHES" &&
+            dishes.map((dish: Dish) => (
               <Card
                 key={dish.id}
                 id={dish.id}
@@ -185,25 +133,25 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
                 image={dish.image}
                 description={dish.description}
                 rating={dish.rating}
-                phone={dish.phone || ""}
               />
             ))}
-          {!state.showFavoriteDishes &&
-            state.favoriteMovies?.map((movie: Movie) => (
-              <Card
-                key={movie.id}
-                id={movie.id}
-                name={movie.title as string}
-                image={
-                  "https://images.pexels.com/photos/5662857/pexels-photo-5662857.png?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200"
-                }
-                description={movie.overview as string}
-                rating={Math.floor((movie.vote_average as number) / 2)}
-              />
-            ))}
+          {/* TODO: MOVIES */}
+          {/*{!state.showFavoriteDishes &&*/}
+          {/*  state.favoriteMovies?.map((movie: Movie) => (*/}
+          {/*    <Card*/}
+          {/*      key={movie.id}*/}
+          {/*      id={movie.id}*/}
+          {/*      name={movie.title as string}*/}
+          {/*      image={*/}
+          {/*        "https://images.pexels.com/photos/5662857/pexels-photo-5662857.png?auto=compress&cs=tinysrgb&dpr=2&h=200&w=200"*/}
+          {/*      }*/}
+          {/*      description={movie.overview as string}*/}
+          {/*      rating={Math.floor((movie.vote_average as number) / 2)}*/}
+          {/*    />*/}
+          {/*  ))}*/}
         </Container>
       </Container>
-      {state.showModal && (
+      {isModalOpen && (
         <Modal>
           <Form />
         </Modal>
@@ -213,15 +161,3 @@ const Home: NextPage<Props> = ({ favoriteMovies, favoriteDishes }) => {
 };
 
 export default Home;
-
-export async function getStaticProps() {
-  const favoriteMovies = [];
-  const favoriteDishes = [];
-
-  return {
-    props: {
-      favoriteMovies,
-      favoriteDishes,
-    },
-  };
-}

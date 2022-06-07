@@ -3,14 +3,12 @@ import { useSession } from "next-auth/react";
 import useSWR from "swr";
 import { User } from "../../types/user";
 import { Role, RoleType } from "../../types/role";
-import axios from "axios";
+import fetcher from "../../utils/fetcher";
+
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
-
-const fetcher = async (url: string) => {
-  const res = await axios.get(url);
-  return res.data.data;
-};
+import Error from "../Error/Error";
+import Loading from "../Loading/Loading";
 
 export const withAuthorizationAndAuthentication =
   <T,>(Component: ComponentType<T>) =>
@@ -28,31 +26,9 @@ export const withAuthorizationAndAuthentication =
     const roles = userRoles?.map((role) => role.title);
     const isAdmin = roles?.includes(RoleType.ADMIN);
 
-    if (userError || userRolesError) {
-      return (
-        <Container
-          maxWidth="sm"
-          sx={{ textAlign: "center", marginTop: "100px" }}
-        >
-          <Typography variant="h2" component="h1" gutterBottom>
-            Failed to load page.
-          </Typography>
-        </Container>
-      );
-    }
+    if (userError || userRolesError) return <Error />;
 
-    if (status === "loading" || !userData || !userRoles) {
-      return (
-        <Container
-          maxWidth="sm"
-          sx={{ textAlign: "center", marginTop: "100px" }}
-        >
-          <Typography variant="h2" component="h1" gutterBottom>
-            Loading...
-          </Typography>
-        </Container>
-      );
-    }
+    if (status === "loading" || !userData || !userRoles) return <Loading />;
 
     if (status === "unauthenticated" || !isAdmin) {
       return (
