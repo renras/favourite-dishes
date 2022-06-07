@@ -8,13 +8,15 @@ import {
 } from "next-auth/react";
 import { BuiltInProviderType } from "next-auth/providers";
 import { GetServerSideProps } from "next";
+import axios from "axios";
+import { errorToast } from "../utils/toast";
 
+// import "react-toastify/dist/ReactToastify.css";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import "react-toastify/dist/ReactToastify.css";
 import Box from "@mui/material/Box";
 import Link from "next/link";
 import FacebookIcon from "@mui/icons-material/Facebook";
@@ -47,6 +49,19 @@ const Form = ({
         password: data.password,
       });
     } catch (error) {
+      errorToast("Sign in failed.");
+    }
+  };
+
+  const isUsernameRegistered = async (username: string) => {
+    try {
+      const res = await axios.get(
+        `http://localhost:3000/api/v1/user?username=${username}`
+      );
+      const user = res.data.data;
+
+      return !!user;
+    } catch (error) {
       console.log(error);
     }
   };
@@ -72,7 +87,12 @@ const Form = ({
             defaultValue=""
             name="username"
             control={control}
-            rules={{ required: true }}
+            rules={{
+              required: true,
+              validate: {
+                isRegistered: (v) => isUsernameRegistered(v),
+              },
+            }}
             render={({ field }) => (
               <TextField
                 {...field}
@@ -89,6 +109,15 @@ const Form = ({
               sx={{ marginLeft: "5px", color: "#e57373" }}
             >
               Username is required.
+            </Typography>
+          )}
+          {errors.username?.type === "isRegistered" && (
+            <Typography
+              variant="caption"
+              component="p"
+              sx={{ marginLeft: "5px", color: "#e57373" }}
+            >
+              Invalid username.
             </Typography>
           )}
           <Controller

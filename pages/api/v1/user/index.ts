@@ -15,12 +15,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         });
 
-        if (user) return res.status(200).send({ status: "OK", data: user });
-
-        return res.status(404).send({
-          status: "FAILED",
-          data: "Username does not exist in the database",
-        });
+        return res.status(200).send({ status: "OK", data: user });
       }
 
       if (!session?.user?.email) {
