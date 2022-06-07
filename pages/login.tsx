@@ -44,6 +44,16 @@ const Form = ({
   } = useForm<IFormInput>();
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
+      const res = await axios.get(
+        `http://localhost:3000/api/v1/user?username=${data.username}`
+      );
+      const user = res.data.data;
+
+      if (data.password !== user.password) {
+        errorToast("Invalid Password.");
+        return;
+      }
+
       await signIn("credentials", {
         username: data.username,
         password: data.password,
