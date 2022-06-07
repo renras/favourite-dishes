@@ -6,7 +6,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
       const session = await getSession({ req });
-      const { username } = req.query;
+      const { username, email } = req.query;
 
       if (typeof username === "string") {
         const user = await prisma.user.findUnique({
@@ -15,7 +15,19 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
           },
         });
 
-        return res.status(200).send({ status: "OK", data: user });
+        res.status(200).send({ status: "OK", data: user });
+        return;
+      }
+
+      if (typeof email === "string") {
+        const user = await prisma.user.findUnique({
+          where: {
+            email: email,
+          },
+        });
+
+        res.status(200).send({ status: "OK", data: user });
+        return;
       }
 
       if (!session?.user?.email) {

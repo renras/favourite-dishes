@@ -10,8 +10,8 @@ import { BuiltInProviderType } from "next-auth/providers";
 import { GetServerSideProps } from "next";
 import axios from "axios";
 import { errorToast } from "../utils/toast";
+import { isUsernameRegistered } from "../lib/validation";
 
-// import "react-toastify/dist/ReactToastify.css";
 import TextField from "@mui/material/TextField";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
@@ -60,19 +60,6 @@ const Form = ({
       });
     } catch (error) {
       errorToast("Sign in failed.");
-    }
-  };
-
-  const isUsernameRegistered = async (username: string) => {
-    try {
-      const res = await axios.get(
-        `http://localhost:3000/api/v1/user?username=${username}`
-      );
-      const user = res.data.data;
-
-      return !!user;
-    } catch (error) {
-      console.log(error);
     }
   };
 

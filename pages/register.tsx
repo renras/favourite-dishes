@@ -42,7 +42,8 @@ const Form = () => {
       successToast("Registration successful!");
       await router.push("/login");
     } catch (error) {
-      errorToast("Registration failed. Please try again.");
+      console.log(error);
+      errorToast("Registration failed.");
     }
   };
 
