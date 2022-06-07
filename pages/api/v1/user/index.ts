@@ -6,6 +6,22 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
       const session = await getSession({ req });
+      const { username } = req.query;
+
+      if (typeof username === "string") {
+        const user = await prisma.user.findUnique({
+          where: {
+            username: username,
+          },
+        });
+
+        if (user) return res.status(200).send({ status: "OK", data: user });
+
+        return res.status(404).send({
+          status: "FAILED",
+          data: "Username does not exist in the database",
+        });
+      }
 
       if (!session?.user?.email) {
         res
@@ -23,7 +39,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
     } catch (error) {
       res
         .status(500)
-        .send({ status: "Failed", data: "Internal server error." });
+        .send({ status: "Failed", data: { error: "Internal server error." } });
     }
   }
 };

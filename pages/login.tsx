@@ -23,7 +23,7 @@ import GoogleIcon from "@mui/icons-material/Google";
 import IconButton from "@mui/material/IconButton";
 
 interface IFormInput {
-  email: string;
+  username: string;
   password: string;
 }
 
@@ -40,8 +40,15 @@ const Form = ({
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    try {
+      await signIn("credentials", {
+        username: data.username,
+        password: data.password,
+      });
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -63,25 +70,25 @@ const Form = ({
         >
           <Controller
             defaultValue=""
-            name="email"
+            name="username"
             control={control}
             rules={{ required: true }}
             render={({ field }) => (
               <TextField
                 {...field}
-                label="Email"
+                label="Username"
                 variant="outlined"
                 fullWidth
               />
             )}
           />
-          {errors.email?.type === "required" && (
+          {errors.username?.type === "required" && (
             <Typography
               variant="caption"
               component="p"
               sx={{ marginLeft: "5px", color: "#e57373" }}
             >
-              Email is required.
+              Username is required.
             </Typography>
           )}
           <Controller
@@ -147,14 +154,16 @@ const Form = ({
             </IconButton>
             {providers &&
               Object.values(providers).map((provider) => {
-                return (
-                  <IconButton
-                    key={provider.name}
-                    onClick={() => signIn(provider.id)}
-                  >
-                    <GoogleIcon fontSize="large" sx={{ color: "#DB4437" }} />
-                  </IconButton>
-                );
+                if (provider.name === "Google") {
+                  return (
+                    <IconButton
+                      key={provider.name}
+                      onClick={() => signIn(provider.id)}
+                    >
+                      <GoogleIcon fontSize="large" sx={{ color: "#DB4437" }} />
+                    </IconButton>
+                  );
+                }
               })}
           </Box>
         </Paper>
