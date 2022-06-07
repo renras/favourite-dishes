@@ -37,6 +37,37 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         .send({ status: "Failed", data: { error: "Internal server error." } });
     }
   }
+
+  if (req.method === "POST") {
+    try {
+      const { username, email, password } = req.body;
+
+      if (!username || !email || !password) {
+        res.status(400).send({
+          status: "OK",
+          data: {
+            error:
+              "One of the following keys is missing in request body: 'username', 'email', 'password'",
+          },
+        });
+        return;
+      }
+
+      const user = await prisma.user.create({
+        data: {
+          username: username,
+          email: email,
+          password: password,
+        },
+      });
+
+      res.status(201).send({ status: "OK", data: user });
+    } catch (error) {
+      res
+        .status(500)
+        .send({ status: "Failed", data: { error: "Internal server error." } });
+    }
+  }
 };
 
 export default handle;
