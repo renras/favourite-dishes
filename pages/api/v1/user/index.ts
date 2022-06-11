@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../db";
 import { getSession } from "next-auth/react";
+import jwt from "jsonwebtoken";
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -73,7 +74,21 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      res.status(201).send({ status: "OK", data: user });
+      jwt.sign(
+        { id: user.id },
+        process.env.JWT_SECRET as string,
+        { expiresIn: "30d" },
+        (err, token) => {
+          if (err) {
+            res.status(500).send({
+              status: "Failed",
+              data: { error: "Internal Server Error." },
+            });
+          }
+
+          res.status(401).send({ status: "OK", data: token });
+        }
+      );
     } catch (error) {
       res
         .status(500)
