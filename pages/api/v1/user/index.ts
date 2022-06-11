@@ -99,6 +99,16 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         .send({ status: "Failed", data: { error: "Internal server error." } });
     }
   }
+
+  if (req.method === "PATCH") {
+    try {
+      const { id, email, token } = req.body;
+    } catch (error) {
+      res
+        .status(500)
+        .send({ status: "Failed", data: { error: "Internal server error." } });
+    }
+  }
 };
 
 export default handle;

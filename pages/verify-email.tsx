@@ -15,10 +15,16 @@ const VerifyEmail = () => {
     token ? `/api/v1/verificationToken?token=${token}` : null,
     fetcher
   );
+  const { data: verifyToken, error: verifyTokenError } = useSWR(
+    verificationToken
+      ? `/api/v1/verify-email-token?token=${verificationToken.token}`
+      : null,
+    fetcher
+  );
 
   if (!token) return <div>No token provided.</div>;
-  if (!verificationTokenError) return <div>Error...</div>;
-  if (!verificationToken) return <div>Loading...</div>;
+  if (verificationTokenError || verifyTokenError) return <div>Error...</div>;
+  if (!verificationToken || verifyToken) return <div>Loading...</div>;
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: "10rem" }}>
