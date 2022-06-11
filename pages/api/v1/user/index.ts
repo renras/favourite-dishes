@@ -78,11 +78,11 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
       jwt.sign(
         { id: user.id },
-        `${process.env.JWT_SECRET} ${user.email}`,
+        `${process.env.JWT_SECRET}`,
         { expiresIn: "30d" },
         (err, token) => {
           if (token) {
-            createVerificationToken(res, user.email as string, token);
+            createVerificationToken(res, token);
             sendVerificationEmail(res, token);
             return;
           }
