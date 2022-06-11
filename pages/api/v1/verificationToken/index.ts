@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../db";
-// import jwt from "jsonwebtoken";
-// import { JwtPayload } from "../../../../types/jwt";
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -28,35 +26,6 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
       });
 
       res.status(200).send({ status: "OK", data: verificationToken });
-
-      // if (!verificationToken) {
-      //   res
-      //     .status(404)
-      //     .send({ status: "FAILED", data: { error: "Token is invalid." } });
-      //   return;
-      // }
-      //
-      // jwt.verify(token, `${process.env.JWT_SECRET}`, async (err, decoded) => {
-      //   if (err) {
-      //     res
-      //       .status(400)
-      //       .send({ status: "FAILED", data: { error: "Token is invalid." } });
-      //     return;
-      //   }
-      //
-      //   const decodedToken = decoded as JwtPayload;
-      //   const user = await prisma.user.update({
-      //     where: {
-      //       id: decodedToken.id,
-      //     },
-      //     data: {
-      //       emailVerified: new Date().toISOString(),
-      //     },
-      //   });
-      //
-      //   res.status(200).send({ status: "OK", data: user });
-      //   return;
-      // });
     } catch (error) {
       res
         .status(500)
