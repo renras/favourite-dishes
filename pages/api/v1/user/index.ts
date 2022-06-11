@@ -5,6 +5,11 @@ import jwt from "jsonwebtoken";
 import { sendVerificationEmail } from "../controllers/sendVerificationEmail";
 import { createVerificationToken } from "../controllers/createVerificationToken";
 
+export interface ReqBody {
+  id?: string;
+  email?: string;
+}
+
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
@@ -102,8 +107,33 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "PATCH") {
     try {
-      const { id, email, token } = req.body;
+      const { id, emailVerified } = req.body;
+
+      if (!id) {
+        res
+          .status(400)
+          .send({ status: "FAILED", data: { error: "No id was provided." } });
+        return;
+      }
+
+      const updateUser = await prisma.user.update({
+        where: {
+          id: id,
+        },
+        data: {
+          emailVerified,
+        },
+      });
+
+      if (!updateUser) {
+        res
+          .status(404)
+          .send({ status: "FAILED", data: { error: "ID is invalid." } });
+      }
+
+      res.status(201).send({ status: "OK", data: updateUser });
     } catch (error) {
+      console.log(error);
       res
         .status(500)
         .send({ status: "Failed", data: { error: "Internal server error." } });

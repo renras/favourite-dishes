@@ -1,7 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { prisma } from "../../../../db";
 import jwt from "jsonwebtoken";
-import { JwtPayload } from "../../../../types/jwt";
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -37,16 +35,3 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 };
 
 export default handle;
-
-// const decodedToken = decoded as JwtPayload;
-// const user = await prisma.user.update({
-//   where: {
-//     id: decodedToken.id,
-//   },
-//   data: {
-//     emailVerified: new Date().toISOString(),
-//   },
-// });
-//
-// res.status(200).send({ status: "OK", data: user });
-// return;

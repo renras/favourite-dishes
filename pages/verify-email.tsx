@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import Container from "@mui/material/Container";
 import Paper from "@mui/material/Paper";
 import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined";
@@ -7,10 +8,13 @@ import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
+import axios from "axios";
 
 const VerifyEmail = () => {
   const router = useRouter();
   const { token } = router.query;
+  const [isEmailVerified, setIsEmailVerified] = useState(false);
+  const [emailVerificationError, setIsEmailVerificationError] = useState(false);
   const { data: verificationToken, error: verificationTokenError } = useSWR(
     token ? `/api/v1/verificationToken?token=${token}` : null,
     fetcher
@@ -22,9 +26,27 @@ const VerifyEmail = () => {
     fetcher
   );
 
+  useEffect(() => {
+    if (verifyToken) {
+      try {
+        (async () => {
+          await axios.patch("/api/v1/user/", {
+            id: verifyToken.id,
+            emailVerified: new Date(),
+          });
+          setIsEmailVerified(true);
+        })();
+      } catch (error) {
+        setIsEmailVerificationError(true);
+      }
+    }
+  }, [verifyToken]);
+
   if (!token) return <div>No token provided.</div>;
-  if (verificationTokenError || verifyTokenError) return <div>Error...</div>;
-  if (!verificationToken || verifyToken) return <div>Loading...</div>;
+  if (verificationTokenError || verifyTokenError || emailVerificationError)
+    return <div>Error...</div>;
+  if (!verificationToken || !verifyToken || !isEmailVerified)
+    return <div>Loading...</div>;
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: "10rem" }}>
