@@ -4,8 +4,14 @@ import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 const VerifyEmail = () => {
+  const router = useRouter();
+  const { token } = router.query;
+
+  if (!token) return <div>No token provided.</div>;
+
   return (
     <Container maxWidth="sm" sx={{ marginTop: "10rem" }}>
       <Paper

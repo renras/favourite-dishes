@@ -3,6 +3,7 @@ import { prisma } from "../../../../db";
 import { getSession } from "next-auth/react";
 import jwt from "jsonwebtoken";
 import { sendVerificationEmail } from "../controllers/sendVerificationEmail";
+import { createVerificationToken } from "../controllers/createVerificationToken";
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -77,10 +78,11 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
       jwt.sign(
         { id: user.id },
-        process.env.JWT_SECRET as string,
+        `${process.env.JWT_SECRET} ${user.email}`,
         { expiresIn: "30d" },
         (err, token) => {
           if (token) {
+            createVerificationToken(res, user.id, token);
             sendVerificationEmail(res, token);
             return;
           }
