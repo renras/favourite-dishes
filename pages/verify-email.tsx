@@ -5,12 +5,20 @@ import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
+import useSWR from "swr";
+import fetcher from "../utils/fetcher";
 
 const VerifyEmail = () => {
   const router = useRouter();
   const { token } = router.query;
+  const { data: verificationToken, error: verificationTokenError } = useSWR(
+    token ? `/api/v1/verificationToken?token=${token}` : null,
+    fetcher
+  );
 
   if (!token) return <div>No token provided.</div>;
+  if (!verificationTokenError) return <div>Error...</div>;
+  if (!verificationToken) return <div>Loading...</div>;
 
   return (
     <Container maxWidth="sm" sx={{ marginTop: "10rem" }}>
