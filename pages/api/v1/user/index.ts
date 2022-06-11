@@ -2,6 +2,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../db";
 import { getSession } from "next-auth/react";
 import jwt from "jsonwebtoken";
+import { sendVerificationEmail } from "../controllers/sendVerificationEmail";
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -79,14 +80,15 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         process.env.JWT_SECRET as string,
         { expiresIn: "30d" },
         (err, token) => {
-          if (err) {
-            res.status(500).send({
-              status: "Failed",
-              data: { error: "Internal Server Error." },
-            });
+          if (token) {
+            sendVerificationEmail(res, token);
+            return;
           }
 
-          res.status(401).send({ status: "OK", data: token });
+          res.status(500).send({
+            status: "Failed",
+            data: { error: "Internal Server Error." },
+          });
         }
       );
     } catch (error) {
