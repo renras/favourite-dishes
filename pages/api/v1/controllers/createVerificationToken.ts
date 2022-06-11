@@ -1,22 +1,34 @@
 import type { NextApiResponse } from "next";
 import { prisma } from "../../../../db";
-import { createExpiryDate } from "../../../../utils/date";
+import jwt from "jsonwebtoken";
 
 export const createVerificationToken = async (
   res: NextApiResponse,
-  id: string,
+  email: string,
   token: string
 ) => {
   try {
-    const verificationToken = await prisma.verificationToken.create({
-      data: {
-        identifier: id,
-        token: token,
-        expires: createExpiryDate(30),
-      },
-    });
+    jwt.verify(
+      token,
+      `${process.env.JWT_SECRET} ${email}`,
+      async (err, decoded) => {
+        if (decoded && typeof decoded !== "string") {
+          const verificationToken = await prisma.verificationToken.create({
+            data: {
+              identifier: "EMAIL_VERIFICATION",
+              token: token,
+              expires: new Date((decoded.exp as number) * 1000),
+            },
+          });
 
-    res.status(201).send({ status: "OK", data: verificationToken });
+          res.status(201).send({ status: "OK", data: verificationToken });
+        }
+
+        res
+          .status(400)
+          .send({ status: "FAILED", data: { error: "Invalid token." } });
+      }
+    );
   } catch (error) {
     res
       .status(500)

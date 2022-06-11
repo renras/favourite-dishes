@@ -82,7 +82,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         { expiresIn: "30d" },
         (err, token) => {
           if (token) {
-            createVerificationToken(res, user.id, token);
+            createVerificationToken(res, user.email as string, token);
             sendVerificationEmail(res, token);
             return;
           }
