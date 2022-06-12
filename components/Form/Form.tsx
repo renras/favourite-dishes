@@ -1,5 +1,4 @@
-import React, { useContext } from "react";
-import AppContext from "../../context/AppContext";
+import { Dispatch, SetStateAction } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import isURL from "validator/lib/isURL";
 import { isValidPhoneNumber } from "libphonenumber-js";
@@ -9,10 +8,7 @@ import Paper from "@mui/material/Paper";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import { collection, addDoc } from "firebase/firestore";
-import { useRouter } from "next/router";
+import Box from "@mui/material/Box";
 
 interface IFormInput {
   title: string;
@@ -22,56 +18,19 @@ interface IFormInput {
   phone?: string;
 }
 
-const Form = () => {
-  const router = useRouter();
+const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
   const {
     control,
     handleSubmit,
     formState: { errors },
   } = useForm<IFormInput>();
-  const { dispatch } = useContext(AppContext);
-
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    const dishesCollectionRef = collection(db, "favorite-dishes");
-
-    const addDish = async () => {
-      await addDoc(dishesCollectionRef, {
-        name: data.title,
-        image: data.imgUrl,
-        description: data.description,
-        rating: data.rating,
-        phone: data.phone,
-      });
-    };
-
-    addDish();
-
-    const notify = () => {
-      toast.success("Dish Added!", {
-        position: "bottom-left",
-        autoClose: 1000,
-        hideProgressBar: false,
-        closeOnClick: true,
-        pauseOnHover: true,
-        draggable: true,
-        progress: undefined,
-      });
-    };
-
-    notify();
-
-    dispatch({ type: "SET_INPUT_TEXT", payload: "" });
-    dispatch({ type: "FILTER_DISHES" });
-    dispatch({ type: "TOGGLE_MODAL", payload: false });
-
-    document.documentElement.style.setProperty("--overflow", "auto");
-    router.replace(router.asPath);
+    console.log(data);
   };
 
-  const toggleModal = () => {
-    dispatch({ type: "TOGGLE_MODAL", payload: false });
+  const handleClose = () => {
     document.documentElement.style.setProperty("--overflow", "auto");
-    document.documentElement.style.setProperty("--padding-right", "0");
+    onClose(false);
   };
 
   return (
@@ -97,7 +56,7 @@ const Form = () => {
             color: "#bdbdbd",
             cursor: "pointer",
           }}
-          onClick={toggleModal}
+          onClick={handleClose}
         />
         <Controller
           name="title"
@@ -234,13 +193,22 @@ const Form = () => {
             Enter a valid phone number.
           </Typography>
         )}
-        <Button
-          type="submit"
-          variant="contained"
-          sx={{ alignSelf: "center", marginTop: "50px" }}
-        >
-          Add Dish
-        </Button>
+        <Box sx={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
+          <Button
+            type="submit"
+            variant="outlined"
+            sx={{ alignSelf: "center", marginTop: "50px" }}
+          >
+            Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ alignSelf: "center", marginTop: "50px" }}
+          >
+            Add Dish
+          </Button>
+        </Box>
       </Paper>
     </Container>
   );

@@ -23,17 +23,17 @@ const Home = () => {
     "/api/v1/dish",
     fetcher
   );
+  const [isAddingDish, setIsAddingDish] = useState(false);
   const [currentActiveTab, setCurrentActiveTab] = useState<"DISHES" | "MOVIES">(
     "DISHES"
   );
-  const [isModalOpen] = useState(false);
 
   if (dishesError) return <Error />;
   if (!dishes) return <Loading />;
 
-  const toggleModal = () => {
+  const handleClickAddDish = () => {
     document.documentElement.style.setProperty("--overflow", "hidden");
-    document.documentElement.style.setProperty("--padding-right", "15px");
+    setIsAddingDish(true);
   };
 
   const handleInputChange = () => {
@@ -110,7 +110,7 @@ const Home = () => {
           />
           {session && (
             <MuiButton
-              onClick={toggleModal}
+              onClick={handleClickAddDish}
               variant="contained"
               sx={{ marginLeft: "auto" }}
             >
@@ -151,9 +151,9 @@ const Home = () => {
           {/*  ))}*/}
         </Container>
       </Container>
-      {isModalOpen && (
+      {isAddingDish && (
         <Modal>
-          <Form />
+          <Form onClose={setIsAddingDish} />
         </Modal>
       )}
     </>
