@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import useSWR from "swr";
+import useSWR, { mutate } from "swr";
 import fetcher from "../utils/fetcher";
 import axios from "axios";
 import withAuthentication from "../components/hoc/withAuthentication";
@@ -32,10 +32,11 @@ const VerifyEmail = () => {
     if (verifyToken) {
       try {
         (async () => {
-          await axios.patch("/api/v1/user/", {
+          await axios.patch("/api/v1/user", {
             id: verifyToken.id,
             emailVerified: new Date(),
           });
+          await mutate("/api/v1/user");
           setIsEmailVerified(true);
         })();
       } catch (error) {

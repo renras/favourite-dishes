@@ -1,11 +1,5 @@
 import { ReactNode } from "react";
 import AppBar from "@mui/material/AppBar";
-import Typography from "@mui/material/Typography";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import Button from "@mui/material/Button";
-import Container from "@mui/material/Container";
-import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
@@ -13,9 +7,18 @@ import useSWR from "swr";
 import fetcher from "../../utils/fetcher";
 import Loading from "../Loading/Loading";
 import Error from "../Error/Error";
-import Paper from "@mui/material/Paper";
 import Link from "next/link";
+import axios from "axios";
+
 import MarkEmailUnreadOutlinedIcon from "@mui/icons-material/MarkEmailUnreadOutlined";
+import Typography from "@mui/material/Typography";
+import Box from "@mui/material/Box";
+import Toolbar from "@mui/material/Toolbar";
+import Button from "@mui/material/Button";
+import Container from "@mui/material/Container";
+import { ToastContainer } from "react-toastify";
+import Paper from "@mui/material/Paper";
+import { successToast, errorToast } from "../../utils/toast";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
@@ -28,6 +31,15 @@ const Layout = ({ children }: { children: ReactNode }) => {
   if (userError) return <Error />;
   if (status === "loading" || (status === "authenticated" && !user))
     return <Loading />;
+
+  const handleResendEmailVerification = async () => {
+    try {
+      await axios.post("/api/v1/signUserJWT");
+      successToast("Email sent!");
+    } catch (error) {
+      errorToast("Failed to resend email. Please try again.");
+    }
+  };
 
   return (
     <>
@@ -94,6 +106,7 @@ const Layout = ({ children }: { children: ReactNode }) => {
               </Typography>
               <Link href="/login" passHref>
                 <Button
+                  onClick={() => handleResendEmailVerification()}
                   variant="text"
                   sx={{
                     marginTop: "2rem",
