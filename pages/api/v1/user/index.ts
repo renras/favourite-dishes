@@ -7,12 +7,12 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
       const session = await getSession({ req });
-      const email =
-        req.query.email === "string" ? req.query.email : req.query.email[0];
-      const username =
-        req.query.username === "string"
-          ? req.query.username
-          : req.query.username[0];
+      const username = Array.isArray(req.query.username)
+        ? req.query.username[0]
+        : req.query.username;
+      const email = Array.isArray(req.query.email)
+        ? req.query.email[0]
+        : req.query.email;
 
       if (username) {
         const user = await prisma.user.findUnique({
@@ -51,6 +51,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
       res.status(200).send({ status: "OK", data: user });
     } catch (error) {
+      console.log(error);
       res
         .status(500)
         .send({ status: "Failed", data: { error: "Internal server error." } });
