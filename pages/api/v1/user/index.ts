@@ -14,9 +14,14 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
       const session = await getSession({ req });
-      const { username, email } = req.query;
+      const email =
+        req.query.email === "string" ? req.query.email : req.query.email[0];
+      const username =
+        req.query.username === "string"
+          ? req.query.username
+          : req.query.username[0];
 
-      if (typeof username === "string") {
+      if (username) {
         const user = await prisma.user.findUnique({
           where: {
             username: username,
@@ -27,7 +32,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
-      if (typeof email === "string") {
+      if (email) {
         const user = await prisma.user.findUnique({
           where: {
             email: email,
@@ -38,7 +43,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         return;
       }
 
-      if (!session?.user?.email) {
+      if (!session) {
         res
           .status(401)
           .send({ status: "FAILED", data: { error: "Unauthenticated" } });
@@ -47,9 +52,10 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
       const user = await prisma.user.findUnique({
         where: {
-          email: session?.user?.email,
+          id: session?.user?.id,
         },
       });
+
       res.status(200).send({ status: "OK", data: user });
     } catch (error) {
       res
