@@ -1,9 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../db";
 import { getSession } from "next-auth/react";
-import jwt from "jsonwebtoken";
-import { sendVerificationEmail } from "../controllers/sendVerificationEmail";
-import { createVerificationToken } from "../controllers/createVerificationToken";
+import signUserJWT from "../controllers/signUserJWT";
 
 export interface ReqBody {
   id?: string;
@@ -87,23 +85,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      jwt.sign(
-        { id: user.id },
-        `${process.env.JWT_SECRET}`,
-        { expiresIn: "30d" },
-        (err, token) => {
-          if (token) {
-            createVerificationToken(res, token);
-            sendVerificationEmail(res, token);
-            return;
-          }
-
-          res.status(500).send({
-            status: "Failed",
-            data: { error: "Internal Server Error." },
-          });
-        }
-      );
+      await signUserJWT(res, user.id);
     } catch (error) {
       res
         .status(500)

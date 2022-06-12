@@ -3,10 +3,7 @@ import { prisma } from "../../../../db";
 import jwt from "jsonwebtoken";
 import { JwtPayload } from "../../../../types/jwt";
 
-export const createVerificationToken = async (
-  res: NextApiResponse,
-  token: string
-) => {
+const createVerificationToken = async (res: NextApiResponse, token: string) => {
   try {
     jwt.verify(token, `${process.env.JWT_SECRET}`, async (err, decoded) => {
       const decodedToken = decoded as JwtPayload;
@@ -34,3 +31,5 @@ export const createVerificationToken = async (
       .send({ status: "Failed", data: { error: "Internal server error." } });
   }
 };
+
+export default createVerificationToken;

@@ -1,10 +1,7 @@
 import nodemailer from "nodemailer";
 import type { NextApiResponse } from "next";
 
-export const sendVerificationEmail = async (
-  res: NextApiResponse,
-  token: string
-) => {
+const sendVerificationEmail = async (res: NextApiResponse, token: string) => {
   try {
     // create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
@@ -32,3 +29,5 @@ export const sendVerificationEmail = async (
       .send({ status: "Failed", data: { error: "Internal server error." } });
   }
 };
+
+export default sendVerificationEmail;
