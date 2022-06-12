@@ -3,11 +3,6 @@ import { prisma } from "../../../../db";
 import { getSession } from "next-auth/react";
 import signUserJWT from "../controllers/signUserJWT";
 
-export interface ReqBody {
-  id?: string;
-  email?: string;
-}
-
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
     try {
@@ -95,33 +90,26 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
 
   if (req.method === "PATCH") {
     try {
-      const { id, emailVerified } = req.body;
+      const session = await getSession({ req });
+      const { emailVerified } = req.body;
 
-      if (!id) {
+      if (!session) {
         res
-          .status(400)
-          .send({ status: "FAILED", data: { error: "No id was provided." } });
-        return;
+          .status(401)
+          .send({ status: "FAILED", data: { error: "Unauthenticated." } });
       }
 
       const updateUser = await prisma.user.update({
         where: {
-          id: id,
+          id: session?.user.id,
         },
         data: {
           emailVerified,
         },
       });
 
-      if (!updateUser) {
-        res
-          .status(404)
-          .send({ status: "FAILED", data: { error: "ID is invalid." } });
-      }
-
       res.status(201).send({ status: "OK", data: updateUser });
     } catch (error) {
-      console.log(error);
       res
         .status(500)
         .send({ status: "Failed", data: { error: "Internal server error." } });
