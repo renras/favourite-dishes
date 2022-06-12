@@ -9,6 +9,7 @@ import { useRouter } from "next/router";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import axios from "axios";
+import withAuthentication from "../components/hoc/withAuthentication";
 
 const VerifyEmail = () => {
   const router = useRouter();
@@ -77,4 +78,4 @@ const VerifyEmail = () => {
   );
 };
 
-export default VerifyEmail;
+export default withAuthentication(VerifyEmail);
