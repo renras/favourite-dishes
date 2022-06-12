@@ -41,6 +41,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
     }
   };
 
+  console.log(session);
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -82,7 +84,8 @@ const Layout = ({ children }: { children: ReactNode }) => {
       <main style={{ paddingBottom: "50px" }}>
         {user &&
         !user.emailVerified &&
-        !router.pathname.includes("verify-email") ? (
+        !router.pathname.includes("verify-email") &&
+        user.provider === "credentials" ? (
           <Container maxWidth="sm" sx={{ marginTop: "10rem" }}>
             <Paper
               sx={{
