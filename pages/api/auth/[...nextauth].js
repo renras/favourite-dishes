@@ -42,11 +42,11 @@ export default NextAuth({
       return baseUrl;
     },
     jwt: async ({ token, user }) => {
-      user && (token.user = user);
+      user && (token.id = user.id);
       return token;
     },
     session: async ({ session, token }) => {
-      session.user = token.user;
+      session.user.id = token.id;
       return session;
     },
   },

@@ -1,15 +1,16 @@
 import { useState, useEffect } from "react";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import axios from "axios";
 import withAuthentication from "../components/hoc/withAuthentication";
+
+import Container from "@mui/material/Container";
+import Paper from "@mui/material/Paper";
+import MarkEmailReadOutlinedIcon from "@mui/icons-material/MarkEmailReadOutlined";
+import Typography from "@mui/material/Typography";
+import Button from "@mui/material/Button";
 
 const VerifyEmail = () => {
   const router = useRouter();

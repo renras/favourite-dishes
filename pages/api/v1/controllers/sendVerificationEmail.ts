@@ -19,7 +19,7 @@ const sendVerificationEmail = async (res: NextApiResponse, token: string) => {
       from: '"MyFavourites" <myfavourites@gmail.com>', // sender address
       to: process.env.ETHEREAL_USERNAME, // list of receivers
       subject: "Email Verification", // Subject line
-      html: `<h1>Please verify your email.</h1> <a href="http://localhost:3000/verify?token=${token}">Click this link to verify email.</a>`, // html body
+      html: `<h1>Please verify your email.</h1> <a href="http://localhost:3000/verify-email?token=${token}">Click this link to verify email.</a>`, // html body
     });
 
     res.status(200).send({ status: "OK", data: info });

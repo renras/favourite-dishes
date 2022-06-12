@@ -9,12 +9,23 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { useRouter } from "next/router";
 import { useSession, signIn, signOut } from "next-auth/react";
+import useSWR from "swr";
+import fetcher from "../../utils/fetcher";
+import Loading from "../Loading/Loading";
+import Error from "../Error/Error";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+  const { data: user, error: userError } = useSWR(
+    session ? "/api/v1/user" : null,
+    fetcher
+  );
 
-  console.log(session);
+  if (userError) return <Error />;
+  if (status === "loading" || (status === "authenticated" && !user))
+    return <Loading />;
+
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>
@@ -35,7 +46,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
                   Login
                 </Button>
               )}
-
               {session && (
                 <Box
                   sx={{ display: "flex", alignItems: "center", gap: "10px" }}
@@ -54,7 +64,15 @@ const Layout = ({ children }: { children: ReactNode }) => {
           </Container>
         </AppBar>
       </Box>
-      <main style={{ paddingBottom: "50px" }}>{children}</main>
+      <main style={{ paddingBottom: "50px" }}>
+        {user &&
+        !user.emailVerified &&
+        !router.pathname.includes("verify-email") ? (
+          <>Please verify your email.</>
+        ) : (
+          <>{children}</>
+        )}
+      </main>
       <ToastContainer />
     </>
   );
