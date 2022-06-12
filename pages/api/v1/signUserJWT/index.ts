@@ -1,12 +1,20 @@
-import type { NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 import jwt from "jsonwebtoken";
-import createVerificationToken from "./createVerificationToken";
-import sendVerificationEmail from "./sendVerificationEmail";
+import createVerificationToken from "../controllers/createVerificationToken";
+import sendVerificationEmail from "../controllers/sendVerificationEmail";
+import { getSession } from "next-auth/react";
 
-const signUserJWT = async (res: NextApiResponse, id: string) => {
+const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
+    const session = await getSession({ req });
+
+    if (!session) {
+      res.status(401).send({ status: "FAILED", data: "Unauthenticated." });
+      return;
+    }
+
     jwt.sign(
-      { id: id },
+      { id: session.user.id },
       `${process.env.JWT_SECRET}`,
       { expiresIn: "30d" },
       async (err, token) => {
@@ -37,4 +45,4 @@ const signUserJWT = async (res: NextApiResponse, id: string) => {
   }
 };
 
-export default signUserJWT;
+export default handle;
