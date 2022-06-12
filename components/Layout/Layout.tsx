@@ -13,6 +13,9 @@ import useSWR from "swr";
 import fetcher from "../../utils/fetcher";
 import Loading from "../Loading/Loading";
 import Error from "../Error/Error";
+import Paper from "@mui/material/Paper";
+import Link from "next/link";
+import MarkEmailUnreadOutlinedIcon from "@mui/icons-material/MarkEmailUnreadOutlined";
 
 const Layout = ({ children }: { children: ReactNode }) => {
   const router = useRouter();
@@ -68,7 +71,41 @@ const Layout = ({ children }: { children: ReactNode }) => {
         {user &&
         !user.emailVerified &&
         !router.pathname.includes("verify-email") ? (
-          <>Please verify your email.</>
+          <Container maxWidth="sm" sx={{ marginTop: "10rem" }}>
+            <Paper
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+                alignItems: "center",
+                padding: "3rem 2rem",
+              }}
+            >
+              <MarkEmailUnreadOutlinedIcon
+                color="success"
+                sx={{ fontSize: "10rem" }}
+              />
+              <Typography
+                variant="h4"
+                component="h2"
+                gutterBottom
+                sx={{ marginTop: "1rem", textAlign: "center" }}
+              >
+                Please verify your email before continuing.
+              </Typography>
+              <Link href="/login" passHref>
+                <Button
+                  variant="text"
+                  sx={{
+                    marginTop: "2rem",
+                    textDecoration: "underline",
+                    textUnderlineOffset: "2px",
+                  }}
+                >
+                  Click here to resend email.
+                </Button>
+              </Link>
+            </Paper>
+          </Container>
         ) : (
           <>{children}</>
         )}

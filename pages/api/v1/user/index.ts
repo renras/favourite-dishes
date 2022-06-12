@@ -1,6 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { prisma } from "../../../../db";
 import { getSession } from "next-auth/react";
+import signUserJWT from "../controllers/signUserJWT";
 
 const handle = async (req: NextApiRequest, res: NextApiResponse) => {
   if (req.method === "GET") {
@@ -80,7 +81,7 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         },
       });
 
-      res.status(201).send({ status: "OK", data: user });
+      signUserJWT(res, user.id);
     } catch (error) {
       res
         .status(500)
