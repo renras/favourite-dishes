@@ -1,16 +1,19 @@
 import { Dispatch, SetStateAction } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import isURL from "validator/lib/isURL";
-import TextField from "@mui/material/TextField";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Button from "@mui/material/Button";
+
+import {
+  InputLabel,
+  TextField,
+  Container,
+  Paper,
+  Button,
+  Box,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import Box from "@mui/material/Box";
 
 interface IFormInput {
   title: string;
-  imgUrl: string;
+  image: string;
   description: string;
   rating: number;
   phone?: string;
@@ -56,6 +59,7 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
           }}
           onClick={handleClose}
         />
+        <InputLabel htmlFor="title">Title</InputLabel>
         <Controller
           name="title"
           control={control}
@@ -63,7 +67,6 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
           render={({ field }) => (
             <TextField
               {...field}
-              label="Title"
               variant="outlined"
               fullWidth
               error={!!errors.title}
@@ -71,31 +74,35 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
                 (errors.title?.type === "required" && "Title is required.") ||
                 ""
               }
+              margin="dense"
             />
           )}
         />
+        <InputLabel htmlFor="image" sx={{ marginTop: "1rem" }}>
+          Image
+        </InputLabel>
         <Controller
-          name="imgUrl"
+          name="image"
           control={control}
-          rules={{ required: true, validate: (value) => isURL(value) }}
+          rules={{ required: true }}
           render={({ field }) => (
             <TextField
               {...field}
-              label="Url of image"
-              variant="outlined"
+              type="file"
               fullWidth
-              sx={{ marginTop: "25px" }}
-              error={!!errors.imgUrl}
+              error={!!errors.image}
               helperText={
-                (errors.imgUrl?.type === "required" &&
+                (errors.image?.type === "required" &&
                   "Image src is required.") ||
-                (errors.imgUrl?.type === "validate" &&
-                  "Please enter a valid url.") ||
                 ""
               }
+              margin="dense"
             />
           )}
         />
+        <InputLabel htmlFor="description" sx={{ marginTop: "1rem" }}>
+          Description
+        </InputLabel>
         <Controller
           name="description"
           control={control}
@@ -103,19 +110,20 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
           render={({ field }) => (
             <TextField
               {...field}
-              label="Description"
-              variant="outlined"
               fullWidth
-              sx={{ marginTop: "25px" }}
               error={!!errors.description}
               helperText={
                 (errors.description?.type === "required" &&
                   "Description is required") ||
                 ""
               }
+              margin="dense"
             />
           )}
         />
+        <InputLabel htmlFor="rating" sx={{ marginTop: "1rem" }}>
+          Rating
+        </InputLabel>
         <Controller
           name="rating"
           control={control}
@@ -124,10 +132,8 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
             <TextField
               {...field}
               type="number"
-              label="Rating"
               variant="outlined"
               fullWidth
-              sx={{ marginTop: "25px" }}
               error={!!errors.rating}
               helperText={
                 (errors.rating?.type === "required" && "Rating is required") ||
@@ -136,14 +142,16 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
                   "Please pick a number from 1 to 5") ||
                 ""
               }
+              margin="dense"
             />
           )}
         />
         <Box sx={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
           <Button
-            type="submit"
+            type="button"
             variant="outlined"
             sx={{ alignSelf: "center", marginTop: "50px" }}
+            onClick={() => onClose(false)}
           >
             Cancel
           </Button>
