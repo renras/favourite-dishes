@@ -2,8 +2,9 @@ import { Dispatch, SetStateAction, ChangeEvent, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
 import { storage } from "../../firebase";
-import { errorToast } from "../../utils/toast";
+import { errorToast, successToast } from "../../utils/toast";
 import { v4 as uuidv4 } from "uuid";
+import { useSWRConfig } from "swr";
 
 import {
   InputLabel,
@@ -14,6 +15,7 @@ import {
   Box,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import axios from "axios";
 
 interface IFormInput {
   name: string;
@@ -24,6 +26,7 @@ interface IFormInput {
 
 const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
   const [image, setImage] = useState<File | null>(null);
+  const { mutate } = useSWRConfig();
   const {
     control,
     handleSubmit,
@@ -53,11 +56,20 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
   };
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
-    if (!image) return;
+    if (!image) {
+      errorToast("Please upload an image");
+      return;
+    }
     try {
       const downloadUrl = await uploadFile(image);
-      console.log(downloadUrl);
-      console.log(data);
+      await axios.post("/api/v1/dish", {
+        ...data,
+        image: downloadUrl,
+      });
+      await mutate("/api/v1/dish");
+      successToast("Dish added successfully");
+      setImage(null);
+      onClose(false);
     } catch (error) {
       errorToast("Failed to submit form");
     }
@@ -118,25 +130,11 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
         <InputLabel htmlFor="image" sx={{ marginTop: "1rem" }}>
           Image
         </InputLabel>
-        <Controller
-          name="image"
-          control={control}
-          rules={{ required: true }}
-          render={({ field }) => (
-            <TextField
-              {...field}
-              type="file"
-              fullWidth
-              margin="dense"
-              onChange={handleImageChange}
-              error={!!errors.image}
-              helperText={
-                (errors.image?.type === "required" &&
-                  "Please upload an image.") ||
-                ""
-              }
-            />
-          )}
+        <TextField
+          type="file"
+          fullWidth
+          margin="dense"
+          onChange={handleImageChange}
         />
         <InputLabel htmlFor="description" sx={{ marginTop: "1rem" }}>
           Description

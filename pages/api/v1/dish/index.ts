@@ -40,8 +40,9 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
           authorId: session.user.id,
         },
       });
-      res.status(200).send({ status: "OK", data: dish });
+      res.status(201).send({ status: "OK", data: dish });
     } catch (error) {
+      console.log(error);
       res
         .status(500)
         .send({ status: "Failed", data: "Internal server error." });
