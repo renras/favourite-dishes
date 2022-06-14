@@ -1,5 +1,9 @@
 import { Dispatch, SetStateAction, ChangeEvent, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../firebase";
+import { errorToast } from "../../utils/toast";
+import { v4 as uuidv4 } from "uuid";
 
 import {
   InputLabel,
@@ -31,9 +35,32 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
       rating: 5,
     },
   });
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
+
+  const uploadFile = async (file: File) => {
+    try {
+      const imageRef = ref(storage, `/images/${uuidv4()}-${file.name}`);
+      const uploadTask = await uploadBytes(imageRef, file);
+
+      if (uploadTask) {
+        const downloadUrl = await getDownloadURL(imageRef);
+        return downloadUrl;
+      }
+
+      return null;
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     if (!image) return;
-    console.log(data);
+    try {
+      const downloadUrl = await uploadFile(image);
+      console.log(downloadUrl);
+      console.log(data);
+    } catch (error) {
+      errorToast("Failed to submit form");
+    }
   };
 
   const handleClose = () => {
@@ -41,7 +68,7 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
     onClose(false);
   };
 
-  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) setImage(e.target.files[0]);
   };
 
