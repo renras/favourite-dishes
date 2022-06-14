@@ -48,6 +48,41 @@ const handle = async (req: NextApiRequest, res: NextApiResponse) => {
         .send({ status: "Failed", data: "Internal server error." });
     }
   }
+
+  if (req.method === "DELETE") {
+    try {
+      const session = await getSession({ req });
+
+      if (!session) {
+        res
+          .status(401)
+          .send({ status: "FAILED", data: { error: "Unauthenticated." } });
+        return;
+      }
+
+      const id = Array.isArray(req.query.id) ? req.query.id[0] : req.query.id;
+
+      if (!id) {
+        res
+          .status(400)
+          .send({ status: "Failed", data: "Missing required fields." });
+        return;
+      }
+
+      const dish = await prisma.dish.deleteMany({
+        where: {
+          id,
+          authorId: session.user.id,
+        },
+      });
+
+      res.status(200).send({ status: "OK", data: dish });
+    } catch (error) {
+      res
+        .status(500)
+        .send({ status: "Failed", data: "Internal server error." });
+    }
+  }
 };
 
 export default handle;

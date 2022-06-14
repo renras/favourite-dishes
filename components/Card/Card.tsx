@@ -1,6 +1,5 @@
 import { useState } from "react";
 import Image from "next/image";
-import { useRouter } from "next/router";
 
 import styles from "./Card.module.css";
 import MuiCard from "@mui/material/Card";
@@ -43,7 +42,6 @@ const Card = ({
   authorId,
   currentUserId,
 }: Props) => {
-  const router = useRouter();
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
     useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
@@ -63,37 +61,32 @@ const Card = ({
     starBorderIcons.push(<StarBorderIcon key={i} sx={{ color: "#fbc02d" }} />);
   }
 
-  const editCardHandler = () => {
+  const handleOpenEditForm = () => {
     setIsModalOpen(false);
     setIsEditFormOpen(true);
     document.documentElement.style.setProperty("--overflow", "hidden");
-    document.documentElement.style.setProperty("--padding-right", "15px");
   };
 
-  const closeEditFormHandler = () => {
+  const handleCloseEditForm = () => {
     setIsEditFormOpen(false);
     document.documentElement.style.setProperty("--overflow", "auto");
-    document.documentElement.style.setProperty("--padding-right", "0");
   };
 
-  const showDeleteConfirmation = () => {
+  const handleOpenDeleteConfirmation = () => {
     setIsDeleteConfirmationOpen(true);
     setIsModalOpen(false);
     document.documentElement.style.setProperty("--overflow", "hidden");
-    document.documentElement.style.setProperty("--padding-right", "15px");
   };
 
-  const cancelHandler = () => {
+  const handleCancel = () => {
     setIsDeleteConfirmationOpen(false);
     document.documentElement.style.setProperty("--overflow", "auto");
-    document.documentElement.style.setProperty("--padding-right", "0");
   };
 
-  const deleteHandler = async (id: string) => {
+  const handleDelete = async (id: string) => {
+    console.log(id);
     setIsDeleteConfirmationOpen(false);
     document.documentElement.style.setProperty("--overflow", "auto");
-    document.documentElement.style.setProperty("--padding-right", "0");
-    router.replace(router.asPath);
   };
 
   return (
@@ -162,7 +155,7 @@ const Card = ({
               }}
             >
               <MenuList>
-                <MenuItem onClick={editCardHandler}>
+                <MenuItem onClick={handleOpenEditForm}>
                   <ListItemIcon>
                     <EditIcon fontSize="small" sx={{ color: "#b2ff59" }} />
                   </ListItemIcon>
@@ -170,7 +163,7 @@ const Card = ({
                     Edit Item
                   </Typography>
                 </MenuItem>
-                <MenuItem onClick={showDeleteConfirmation}>
+                <MenuItem onClick={handleOpenDeleteConfirmation}>
                   <ListItemIcon>
                     <DeleteIcon fontSize="small" sx={{ color: "#ff5252" }} />
                   </ListItemIcon>
@@ -190,7 +183,7 @@ const Card = ({
       {isEditFormOpen && (
         <Modal>
           <EditForm
-            closeEditFormHandler={closeEditFormHandler}
+            closeEditFormHandler={handleCloseEditForm}
             id={id}
             name={name}
             image={image}
@@ -224,7 +217,7 @@ const Card = ({
                   size="small"
                   variant="outlined"
                   color="error"
-                  onClick={cancelHandler}
+                  onClick={handleCancel}
                 >
                   Cancel
                 </Button>
@@ -232,7 +225,7 @@ const Card = ({
                   size="small"
                   variant="contained"
                   color="error"
-                  onClick={() => deleteHandler(id as string)}
+                  onClick={() => handleDelete(id)}
                 >
                   Yes
                 </Button>
