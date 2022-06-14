@@ -19,7 +19,6 @@ import axios from "axios";
 
 interface IFormInput {
   name: string;
-  image: string;
   description: string;
   rating: number;
 }

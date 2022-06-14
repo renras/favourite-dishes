@@ -19,7 +19,6 @@ import axios from "axios";
 
 interface IFormInput {
   name: string;
-  image: string;
   description: string;
   rating: number;
 }
@@ -73,17 +72,19 @@ const EditForm = ({
 
   const onSubmit: SubmitHandler<IFormInput> = async (data) => {
     try {
+      console.log(typeof data.rating);
       const downloadUrl = image ? await uploadFile(image) : imageProp;
       await axios.patch(`/api/v1/dish?id=${id}`, {
         ...data,
         image: downloadUrl,
+        rating: Number(data.rating),
       });
       await mutate("/api/v1/dish");
-      successToast("Dish added successfully");
+      successToast("Save successful");
       setImage(null);
       onClose();
     } catch (error) {
-      errorToast("Failed to submit form");
+      errorToast("Failed to save");
     }
   };
 
