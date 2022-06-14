@@ -41,8 +41,6 @@ const Layout = ({ children }: { children: ReactNode }) => {
     }
   };
 
-  console.log(session);
-
   return (
     <>
       <Box sx={{ flexGrow: 1 }}>

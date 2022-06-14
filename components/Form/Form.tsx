@@ -1,4 +1,4 @@
-import { Dispatch, SetStateAction } from "react";
+import { Dispatch, SetStateAction, ChangeEvent, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 
 import {
@@ -16,22 +16,33 @@ interface IFormInput {
   image: string;
   description: string;
   rating: number;
-  phone?: string;
 }
 
 const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
+  const [image, setImage] = useState<File | null>(null);
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({
+    defaultValues: {
+      title: "",
+      description: "",
+      rating: 5,
+    },
+  });
   const onSubmit: SubmitHandler<IFormInput> = (data) => {
+    if (!image) return;
     console.log(data);
   };
 
   const handleClose = () => {
     document.documentElement.style.setProperty("--overflow", "auto");
     onClose(false);
+  };
+
+  const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) setImage(e.target.files[0]);
   };
 
   return (
@@ -90,13 +101,14 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
               {...field}
               type="file"
               fullWidth
+              margin="dense"
+              onChange={handleImageChange}
               error={!!errors.image}
               helperText={
                 (errors.image?.type === "required" &&
-                  "Image src is required.") ||
+                  "Please upload an image.") ||
                 ""
               }
-              margin="dense"
             />
           )}
         />
