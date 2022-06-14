@@ -4,6 +4,7 @@ import { Dish } from "../types/dish";
 import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import { useSession } from "next-auth/react";
+import { useSWRConfig } from "swr";
 
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -16,8 +17,11 @@ import Search from "../components/ui/Search/Search";
 import Select from "../components/ui/Select/Select";
 import Error from "../components/Error/Error";
 import Loading from "../components/Loading/Loading";
+import axios from "axios";
+import { successToast } from "../utils/toast";
 
 const Home = () => {
+  const { mutate } = useSWRConfig();
   const { data: session } = useSession();
   const { data: dishes, error: dishesError } = useSWR<Dish[]>(
     "/api/v1/dish",
@@ -42,6 +46,17 @@ const Home = () => {
 
   const handleSelectChange = () => {
     console.log("select changed");
+  };
+
+  const handleDeleteCard = async (id: string) => {
+    try {
+      await axios.delete(`/api/v1/dish?id=${id}`);
+      await mutate("/api/v1/dish");
+      successToast("Dish deleted successfully");
+      document.documentElement.style.setProperty("--overflow", "auto");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -135,6 +150,7 @@ const Home = () => {
                 rating={dish.rating}
                 authorId={dish.authorId}
                 currentUserId={session?.user?.id}
+                onDelete={handleDeleteCard}
               />
             ))}
           {/* TODO: MOVIES */}

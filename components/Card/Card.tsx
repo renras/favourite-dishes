@@ -31,6 +31,7 @@ interface Props {
   rating: number;
   authorId: string;
   currentUserId?: string;
+  onDelete: (id: string) => void;
 }
 
 const Card = ({
@@ -41,6 +42,7 @@ const Card = ({
   rating,
   authorId,
   currentUserId,
+  onDelete,
 }: Props) => {
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
     useState(false);
@@ -79,12 +81,6 @@ const Card = ({
   };
 
   const handleCancel = () => {
-    setIsDeleteConfirmationOpen(false);
-    document.documentElement.style.setProperty("--overflow", "auto");
-  };
-
-  const handleDelete = async (id: string) => {
-    console.log(id);
     setIsDeleteConfirmationOpen(false);
     document.documentElement.style.setProperty("--overflow", "auto");
   };
@@ -225,7 +221,7 @@ const Card = ({
                   size="small"
                   variant="contained"
                   color="error"
-                  onClick={() => handleDelete(id)}
+                  onClick={() => onDelete(id)}
                 >
                   Yes
                 </Button>
