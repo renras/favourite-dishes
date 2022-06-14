@@ -133,6 +133,8 @@ const Home = () => {
                 image={dish.image}
                 description={dish.description}
                 rating={dish.rating}
+                authorId={dish.authorId}
+                currentUserId={session?.user?.id}
               />
             ))}
           {/* TODO: MOVIES */}

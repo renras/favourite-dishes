@@ -6,4 +6,5 @@ export interface Dish {
   rating: number;
   createdAt: Date;
   updatedAt: Date;
+  authorId: string;
 }

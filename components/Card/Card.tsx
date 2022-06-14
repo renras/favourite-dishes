@@ -1,6 +1,5 @@
-import { useState, useContext } from "react";
+import { useState } from "react";
 import Image from "next/image";
-import AppContext from "../../context/AppContext";
 import { useRouter } from "next/router";
 
 import styles from "./Card.module.css";
@@ -26,17 +25,25 @@ import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 
 interface Props {
-  id: string | number | undefined;
+  id: string;
   name: string;
   image: string;
   description: string;
   rating: number;
-  phone?: string;
+  authorId: string;
+  currentUserId?: string;
 }
 
-const Card = ({ id, name, image, description, rating, phone }: Props) => {
+const Card = ({
+  id,
+  name,
+  image,
+  description,
+  rating,
+  authorId,
+  currentUserId,
+}: Props) => {
   const router = useRouter();
-  const { state } = useContext(AppContext);
   const [isDeleteConfirmationOpen, setIsDeleteConfirmationOpen] =
     useState(false);
   const [isEditFormOpen, setIsEditFormOpen] = useState(false);
@@ -96,7 +103,7 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
           title={name}
           action={
             <>
-              {state.isLoggedIn && state.role === "Editor" && (
+              {authorId === currentUserId && (
                 <IconButton onClick={() => setIsModalOpen(!isModalOpen)}>
                   <MoreHorizIcon sx={{ transform: "rotate(90deg)" }} />
                 </IconButton>
@@ -133,7 +140,6 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
               description
             )}
           </Typography>
-          {phone && <p>Phone: {phone}</p>}
         </CardContent>
         <CardActions sx={{ padding: "16px" }}>
           <Typography
@@ -185,12 +191,11 @@ const Card = ({ id, name, image, description, rating, phone }: Props) => {
         <Modal>
           <EditForm
             closeEditFormHandler={closeEditFormHandler}
-            id={id as string}
+            id={id}
             name={name}
             image={image}
             description={description}
             rating={rating}
-            phone={phone}
           />
         </Modal>
       )}
