@@ -66,23 +66,11 @@ const Card = ({
   const handleOpenEditForm = () => {
     setIsModalOpen(false);
     setIsEditFormOpen(true);
-    document.documentElement.style.setProperty("--overflow", "hidden");
-  };
-
-  const handleCloseEditForm = () => {
-    setIsEditFormOpen(false);
-    document.documentElement.style.setProperty("--overflow", "auto");
   };
 
   const handleOpenDeleteConfirmation = () => {
     setIsDeleteConfirmationOpen(true);
     setIsModalOpen(false);
-    document.documentElement.style.setProperty("--overflow", "hidden");
-  };
-
-  const handleCancel = () => {
-    setIsDeleteConfirmationOpen(false);
-    document.documentElement.style.setProperty("--overflow", "auto");
   };
 
   return (
@@ -179,7 +167,7 @@ const Card = ({
       {isEditFormOpen && (
         <Modal>
           <EditForm
-            closeEditFormHandler={handleCloseEditForm}
+            onClose={() => setIsEditFormOpen(false)}
             id={id}
             name={name}
             image={image}
@@ -213,7 +201,7 @@ const Card = ({
                   size="small"
                   variant="outlined"
                   color="error"
-                  onClick={handleCancel}
+                  onClick={() => setIsDeleteConfirmationOpen(false)}
                 >
                   Cancel
                 </Button>

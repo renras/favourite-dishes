@@ -10,6 +10,10 @@ interface Props {
 const Modal = ({ children }: Props) => {
   useEffect(() => {
     document.documentElement.style.setProperty("--overflow", "hidden");
+
+    return () => {
+      document.documentElement.style.setProperty("--overflow", "auto");
+    };
   }, []);
 
   if (typeof window === "object") {

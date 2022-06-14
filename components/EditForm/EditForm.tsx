@@ -1,65 +1,94 @@
-import React from "react";
-import AppContext from "../../context/AppContext";
+import { ChangeEvent, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
-import isURL from "validator/lib/isURL";
-import { isValidPhoneNumber } from "libphonenumber-js";
-import TextField from "@mui/material/TextField";
-import Container from "@mui/material/Container";
-import Paper from "@mui/material/Paper";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
+import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
+import { storage } from "../../firebase";
+import { errorToast, successToast } from "../../utils/toast";
+import { v4 as uuidv4 } from "uuid";
+import { useSWRConfig } from "swr";
+
+import {
+  InputLabel,
+  TextField,
+  Container,
+  Paper,
+  Button,
+  Box,
+} from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { toast } from "react-toastify";
-import "react-toastify/dist/ReactToastify.css";
-import Box from "@mui/material/Box";
-import { useRouter } from "next/router";
+import axios from "axios";
 
 interface IFormInput {
-  title: string;
-  imgUrl: string;
+  name: string;
+  image: string;
   description: string;
   rating: number;
-  phone?: string;
 }
 
 interface Props {
-  closeEditFormHandler: () => void;
   id: string;
   name: string;
   image: string;
   description: string;
   rating: number;
-  phone?: string;
-}
-
-interface Data {
-  title: string;
-  imgUrl: string;
-  description: string;
-  rating: number;
-  phone?: string | undefined;
+  onClose: () => void;
 }
 
 const EditForm = ({
-  closeEditFormHandler,
   id,
   name,
-  image,
+  image: imageProp,
   description,
   rating,
-  phone,
+  onClose,
 }: Props) => {
-  const router = useRouter();
+  const [image, setImage] = useState<File | null>(null);
+  const { mutate } = useSWRConfig();
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<IFormInput>();
+  } = useForm<IFormInput>({
+    defaultValues: {
+      name: name,
+      description: description,
+      rating: rating,
+    },
+  });
 
-  const onSubmit: SubmitHandler<IFormInput> = (data) => {
-    console.log(data);
-    document.documentElement.style.setProperty("--overflow", "auto");
-    router.replace(router.asPath);
+  const uploadFile = async (file: File) => {
+    try {
+      const imageRef = ref(storage, `/images/${uuidv4()}-${file.name}`);
+      const uploadTask = await uploadBytes(imageRef, file);
+
+      if (uploadTask) {
+        const downloadUrl = await getDownloadURL(imageRef);
+        return downloadUrl;
+      }
+
+      return null;
+    } catch (error) {
+      throw new Error();
+    }
+  };
+
+  const onSubmit: SubmitHandler<IFormInput> = async (data) => {
+    try {
+      const downloadUrl = image ? await uploadFile(image) : imageProp;
+      await axios.patch(`/api/v1/dish?id=${id}`, {
+        ...data,
+        image: downloadUrl,
+      });
+      await mutate("/api/v1/dish");
+      successToast("Dish added successfully");
+      setImage(null);
+      onClose();
+    } catch (error) {
+      errorToast("Failed to submit form");
+    }
+  };
+
+  const handleImageChange = async (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files) setImage(e.target.files[0]);
   };
 
   return (
@@ -85,162 +114,96 @@ const EditForm = ({
             color: "#bdbdbd",
             cursor: "pointer",
           }}
-          onClick={closeEditFormHandler}
+          onClick={onClose}
         />
+        <InputLabel htmlFor="name">Title</InputLabel>
         <Controller
-          name="title"
+          name="name"
           control={control}
           rules={{ required: true }}
-          defaultValue={name}
-          render={({ field }) => (
-            <TextField {...field} label="Title" variant="outlined" fullWidth />
-          )}
-        />
-        {errors.title?.type === "required" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Title is required.
-          </Typography>
-        )}
-        <Controller
-          name="imgUrl"
-          defaultValue={image}
-          control={control}
-          rules={{ required: true, validate: (value) => isURL(value) }}
           render={({ field }) => (
             <TextField
               {...field}
-              label="Url of image"
               variant="outlined"
               fullWidth
-              sx={{ marginTop: "25px" }}
+              error={!!errors.name}
+              helperText={
+                (errors.name?.type === "required" && "Title is required.") || ""
+              }
+              margin="dense"
             />
           )}
         />
-        {errors.imgUrl?.type === "required" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Title is required.
-          </Typography>
-        )}
-        {errors.imgUrl?.type === "validate" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Title is required.
-          </Typography>
-        )}
+        <InputLabel htmlFor="image" sx={{ marginTop: "1rem" }}>
+          Image
+        </InputLabel>
+        <TextField
+          type="file"
+          fullWidth
+          margin="dense"
+          onChange={handleImageChange}
+        />
+        <InputLabel htmlFor="description" sx={{ marginTop: "1rem" }}>
+          Description
+        </InputLabel>
         <Controller
           name="description"
           control={control}
-          defaultValue={description}
           rules={{ required: true }}
           render={({ field }) => (
             <TextField
               {...field}
-              label="Description"
-              variant="outlined"
               fullWidth
-              sx={{ marginTop: "25px" }}
+              error={!!errors.description}
+              helperText={
+                (errors.description?.type === "required" &&
+                  "Description is required") ||
+                ""
+              }
+              margin="dense"
             />
           )}
         />
-        {errors.description?.type === "required" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Description is required.
-          </Typography>
-        )}
+        <InputLabel htmlFor="rating" sx={{ marginTop: "1rem" }}>
+          Rating
+        </InputLabel>
         <Controller
           name="rating"
           control={control}
-          defaultValue={rating}
           rules={{ required: true, min: 1, max: 5 }}
           render={({ field }) => (
             <TextField
               {...field}
               type="number"
-              label="Rating"
               variant="outlined"
               fullWidth
-              sx={{ marginTop: "25px" }}
+              error={!!errors.rating}
+              helperText={
+                (errors.rating?.type === "required" && "Rating is required") ||
+                ((errors.rating?.type === "min" ||
+                  errors.rating?.type === "max") &&
+                  "Please pick a number from 1 to 5") ||
+                ""
+              }
+              margin="dense"
             />
           )}
         />
-        {errors.rating?.type === "required" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
+        <Box sx={{ display: "flex", justifyContent: "center", gap: "1rem" }}>
+          <Button
+            type="button"
+            variant="outlined"
+            sx={{ alignSelf: "center", marginTop: "50px" }}
+            onClick={onClose}
           >
-            Rating is required.
-          </Typography>
-        )}
-        {errors.rating?.type === ("min" || "max") && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Pick a number from 1 to 5.
-          </Typography>
-        )}
-        <Controller
-          name="phone"
-          control={control}
-          defaultValue={phone}
-          rules={{
-            required: false,
-            validate: {
-              isValidPhoneNumber: (value) =>
-                value !== "" ? isValidPhoneNumber(value as string, "PH") : true,
-            },
-          }}
-          render={({ field }) => (
-            <TextField
-              type="tel"
-              {...field}
-              label="Phone"
-              variant="outlined"
-              fullWidth
-              sx={{ marginTop: "25px" }}
-            />
-          )}
-        />
-        {errors.phone?.type === "isValidPhoneNumber" && (
-          <Typography
-            variant="caption"
-            component="p"
-            sx={{ marginLeft: "5px", color: "#e57373" }}
-          >
-            Enter a valid phone number.
-          </Typography>
-        )}
-        <Box
-          sx={{
-            display: "flex",
-            gap: "20px",
-            marginTop: "50px",
-
-            justifyContent: "center",
-          }}
-        >
-          <Button type="submit" variant="contained">
-            Update
-          </Button>
-          <Button onClick={closeEditFormHandler} variant="outlined">
             Cancel
+          </Button>
+          <Button
+            type="submit"
+            variant="contained"
+            sx={{ alignSelf: "center", marginTop: "50px" }}
+          >
+            SAVE
           </Button>
         </Box>
       </Paper>

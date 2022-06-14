@@ -5,6 +5,7 @@ import useSWR from "swr";
 import fetcher from "../utils/fetcher";
 import { useSession } from "next-auth/react";
 import { useSWRConfig } from "swr";
+import { startCase, toLower } from "lodash";
 
 import Container from "@mui/material/Container";
 import Box from "@mui/material/Box";
@@ -35,11 +36,6 @@ const Home = () => {
   if (dishesError) return <Error />;
   if (!dishes) return <Loading />;
 
-  const handleClickAddDish = () => {
-    document.documentElement.style.setProperty("--overflow", "hidden");
-    setIsAddingDish(true);
-  };
-
   const handleInputChange = () => {
     console.log("input changed");
   };
@@ -53,7 +49,6 @@ const Home = () => {
       await axios.delete(`/api/v1/dish?id=${id}`);
       await mutate("/api/v1/dish");
       successToast("Dish deleted successfully");
-      document.documentElement.style.setProperty("--overflow", "auto");
     } catch (error) {
       console.error(error);
     }
@@ -62,7 +57,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>`Favorite ${currentActiveTab.toUpperCase()}`</title>
+        <title>{`Favorite ${startCase(toLower(currentActiveTab))}`}</title>
         <meta
           name="description"
           content="A list of my favourite dishes in the Philippinies which includes chicharon bulakak, pork sisig, lumpia, pork barbecue, chicken inasal and crispy pata."
@@ -125,7 +120,7 @@ const Home = () => {
           />
           {session && (
             <MuiButton
-              onClick={handleClickAddDish}
+              onClick={() => setIsAddingDish(true)}
               variant="contained"
               sx={{ marginLeft: "auto" }}
             >
