@@ -1,26 +1,26 @@
 datasource db {
-  provider = "postgresql"
-  url      = env("DATABASE_URL")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
   shadowDatabaseUrl = env("SHADOW_DATABASE_URL")
 }
 
 generator client {
-  provider        = "prisma-client-js"
+  provider = "prisma-client-js"
 }
 
 model Account {
-  id                 String  @id @default(cuid())
-  userId             String  @map("user_id")
-  type               String
-  provider           String
-  providerAccountId  String  @map("provider_account_id")
-  refresh_token      String? @db.Text
-  access_token       String? @db.Text
-  expires_at         Int?
-  token_type         String?
-  scope              String?
-  id_token           String? @db.Text
-  session_state      String?
+  id                String  @id @default(cuid())
+  userId            String  @map("user_id")
+  type              String
+  provider          String
+  providerAccountId String  @map("provider_account_id")
+  refresh_token     String? @db.Text
+  access_token      String? @db.Text
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String? @db.Text
+  session_state     String?
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
@@ -39,11 +39,11 @@ model Session {
 }
 
 model User {
-  id            String      @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  username      String?     @unique
-  email         String?     @unique
-  emailVerified DateTime?   @map("email_verified")
+  username      String?    @unique
+  email         String?    @unique
+  emailVerified DateTime?  @map("email_verified")
   password      String?
   image         String?
   accounts      Account[]
@@ -63,54 +63,53 @@ model VerificationToken {
 }
 
 model Role {
-  id                String              @id @default(cuid())
-  title             RoleType            @default(USER)
-  userRoles         UserRole[]
-  rolePermissions   RolePermission[]
+  id              String           @id @default(cuid())
+  title           RoleType         @default(USER)
+  userRoles       UserRole[]
+  rolePermissions RolePermission[]
 
   @@map("roles")
 }
 
 model UserRole {
- id     String  @id @default(cuid())
- userId String  @map("user_id")
- roleId String  @map("role_id")
- user   User    @relation(fields: [userId], references: [id], onDelete: Cascade)
- role   Role    @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  id     String @id @default(cuid())
+  userId String @map("user_id")
+  roleId String @map("role_id")
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+  role   Role   @relation(fields: [roleId], references: [id], onDelete: Cascade)
 
- @@map("user_roles")
+  @@map("user_roles")
 }
 
 model Permission {
-  id                String              @id @default(cuid())
-  type              String
-  rolePermissions   RolePermission[]
+  id              String           @id @default(cuid())
+  type            String
+  rolePermissions RolePermission[]
 
   @@map("permissions")
 }
 
 model RolePermission {
-  id            String      @id @default(cuid())
-  roleId        String      @map("role_id")
-  permissionId  String      @map("permission_id")
-  role          Role        @relation(fields: [roleId], references: [id], onDelete: Cascade)
-  permission    Permission  @relation(fields: [permissionId], references: [id], onDelete: Cascade)
+  id           String     @id @default(cuid())
+  roleId       String     @map("role_id")
+  permissionId String     @map("permission_id")
+  role         Role       @relation(fields: [roleId], references: [id], onDelete: Cascade)
+  permission   Permission @relation(fields: [permissionId], references: [id], onDelete: Cascade)
 
   @@map("role_permissions")
 }
 
 model Dish {
-  id            String  @id @default(cuid())
-  description   String
-  image         String
-  name          String
-  rating        Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  id          String   @id @default(cuid())
+  description String
+  image       String
+  name        String
+  rating      Int
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 }
 
 enum RoleType {
   USER
   ADMIN
 }
-

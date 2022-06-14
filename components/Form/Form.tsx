@@ -16,7 +16,7 @@ import {
 import CloseIcon from "@mui/icons-material/Close";
 
 interface IFormInput {
-  title: string;
+  name: string;
   image: string;
   description: string;
   rating: number;
@@ -30,7 +30,7 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
     formState: { errors },
   } = useForm<IFormInput>({
     defaultValues: {
-      title: "",
+      name: "",
       description: "",
       rating: 5,
     },
@@ -97,9 +97,9 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
           }}
           onClick={handleClose}
         />
-        <InputLabel htmlFor="title">Title</InputLabel>
+        <InputLabel htmlFor="name">Title</InputLabel>
         <Controller
-          name="title"
+          name="name"
           control={control}
           rules={{ required: true }}
           render={({ field }) => (
@@ -107,10 +107,9 @@ const Form = ({ onClose }: { onClose: Dispatch<SetStateAction<boolean>> }) => {
               {...field}
               variant="outlined"
               fullWidth
-              error={!!errors.title}
+              error={!!errors.name}
               helperText={
-                (errors.title?.type === "required" && "Title is required.") ||
-                ""
+                (errors.name?.type === "required" && "Title is required.") || ""
               }
               margin="dense"
             />
