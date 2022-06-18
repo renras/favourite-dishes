@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 import { useForm, SubmitHandler, Controller } from "react-hook-form";
 import { getDownloadURL, ref, uploadBytes } from "firebase/storage";
-import { storage } from "../../firebase";
+import { storage } from "../../firebase/client";
 import { errorToast, successToast } from "../../utils/toast";
 import { v4 as uuidv4 } from "uuid";
 import { useSWRConfig } from "swr";

@@ -10,6 +10,7 @@ module.exports = {
       "images.pexels.com",
       "www.willflyforfood.net",
       "firebasestorage.googleapis.com",
+      "localhost",
     ],
   },
 };

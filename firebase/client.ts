@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
-import { getStorage } from "firebase/storage";
+import { getStorage, connectStorageEmulator } from "firebase/storage";
+import { getFunctions, connectFunctionsEmulator } from "firebase/functions";
 
 const firebaseConfig = {
   apiKey: "AIzaSyCbVvF_SrGsW81i3mPq13RM_FjnpcOjr3U",
@@ -18,3 +19,6 @@ const app = initializeApp(firebaseConfig);
 // Initialize Cloud Firestore and get a reference to the service
 export const db = getFirestore(app);
 export const storage = getStorage(app);
+const functions = getFunctions(app);
+connectStorageEmulator(storage, "localhost", 9199);
+connectFunctionsEmulator(functions, "localhost", 5001);
